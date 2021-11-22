@@ -4,6 +4,7 @@ from sklearn.preprocessing import StandardScaler
 import pickle
 import random
 import math
+from influx.query_to_dataset import query_to_dataset
 
 
 class Dataset:
@@ -133,6 +134,43 @@ class Dataset:
         self.X_test = self.X_test.reshape(self.X_test.shape[1:])
         self.metadata_test = metadata[active, :]
         self.metadata_test = self.metadata_test.reshape(self.metadata_test.shape[1:])
+
+        if self.verbose:
+            print("Test size ", self.X_test.shape)
+
+        if self.verbose:
+            print("Data normalization")
+        # Normalization
+        self.scalers = {}
+        for i in range(self.channels):
+            self.scalers[i] = StandardScaler()
+            self.X_train[:, :, i] = self.scalers[i].fit_transform(self.X_train[:, :, i])
+        for i in range(self.channels):
+            self.X_test[:, :, i] = self.scalers[i].transform(self.X_test[:, :, i])
+
+
+    def dataset_creation_influx(self):
+        print("Influx let's go")
+        if self.verbose:
+            print("Data load from influx")
+
+        self.X_train = query_to_dataset(self.time_train_start,
+                                        self.time_train_end,
+                                        self.signal,
+                                        self.nr_sample,
+                                        self.machine,
+                                        self.speed_limit,
+                                        self.read_write_dict)
+
+        print("Xtrain shape:", self.X_train.shape)
+
+        self.X_test = query_to_dataset(self.time_test_start,
+                                       self.time_test_end,
+                                       self.signal,
+                                       self.nr_sample,
+                                       self.machine,
+                                       self.speed_limit,
+                                       self.read_write_dict)
 
         if self.verbose:
             print("Test size ", self.X_test.shape)
