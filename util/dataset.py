@@ -37,7 +37,7 @@ class Dataset:
         self.machine = "Grundfoss"
 
         # Type of  data normalization used
-        self.normalizaion = "scale"
+        self.normalization = "scale"
         self.scalers = []
 
         # Speed filter, samples under this are removed

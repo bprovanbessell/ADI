@@ -13,7 +13,7 @@ class DatasetConfiguration:
             ds.metadata_file = data_path + 'np_metadata.npy'
             ds.signal = 'vibration'
             ds.machine = 0
-            ds.normalizaion = 'scale'
+            ds.normalization = 'scale'
             ds.speed_limit = 0
             ds.time_train_start = time.mktime(time.strptime("01.01.2021 00:00:00", "%d.%m.%Y %H:%M:%S"))
             ds.time_train_end = time.mktime(time.strptime("01.02.2021 00:00:00", "%d.%m.%Y %H:%M:%S"))
@@ -25,7 +25,7 @@ class DatasetConfiguration:
             ds.metadata_file = data_path + 'np_metadata.npy'
             ds.signal = 'flux'
             ds.machine = 0
-            ds.normalizaion = 'scale'
+            ds.normalization = 'scale'
             ds.speed_limit = 0
             ds.time_train_start = time.mktime(time.strptime("01.01.2021 00:00:00", "%d.%m.%Y %H:%M:%S"))
             ds.time_train_end = time.mktime(time.strptime("01.02.2021 00:00:00", "%d.%m.%Y %H:%M:%S"))
@@ -37,7 +37,7 @@ class DatasetConfiguration:
             ds.metadata_file = data_path + 'np_metadata_ver.npy'
             ds.signal = 'current'
             ds.machine = 0
-            ds.normalizaion = 'scale'
+            ds.normalization = 'scale'
             ds.speed_limit = 0
             ds.time_train_start = time.mktime(time.strptime("01.03.2021 00:00:00", "%d.%m.%Y %H:%M:%S"))
             ds.time_train_end = time.mktime(time.strptime("01.04.2021 00:00:00", "%d.%m.%Y %H:%M:%S"))
@@ -49,7 +49,7 @@ class DatasetConfiguration:
             ds.metadata_file = data_path + 'np_metadata_ver.npy'
             ds.signal = 'current'
             ds.machine = 1
-            ds.normalizaion = 'scale'
+            ds.normalization = 'scale'
             ds.speed_limit = 0
             ds.time_train_start = time.mktime(time.strptime("15.03.2021 00:00:00", "%d.%m.%Y %H:%M:%S"))
             ds.time_train_end = time.mktime(time.strptime("15.04.2021 00:00:00", "%d.%m.%Y %H:%M:%S"))
@@ -61,7 +61,7 @@ class DatasetConfiguration:
             ds.metadata_file = data_path + 'np_metadata_ver.npy'
             ds.signal = 'vibration'
             ds.machine = 1
-            ds.normalizaion = 'scale'
+            ds.normalization = 'scale'
             ds.speed_limit = 0
             ds.time_train_start = time.mktime(time.strptime("15.03.2021 00:00:00", "%d.%m.%Y %H:%M:%S"))
             ds.time_train_end = time.mktime(time.strptime("15.04.2021 00:00:00", "%d.%m.%Y %H:%M:%S"))
@@ -73,7 +73,7 @@ class DatasetConfiguration:
             ds.metadata_file = data_path + 'np_metadata.npy'
             ds.signal = 'flux'
             ds.machine = 1
-            ds.normalizaion = 'scale'
+            ds.normalization = 'scale'
             ds.speed_limit = 0
             ds.time_train_start = time.mktime(time.strptime("15.03.2021 00:00:00", "%d.%m.%Y %H:%M:%S"))
             ds.time_train_end = time.mktime(time.strptime("15.04.2021 00:00:00", "%d.%m.%Y %H:%M:%S"))
@@ -85,7 +85,7 @@ class DatasetConfiguration:
             ds.metadata_file = data_path + 'np_metadata.npy'
             ds.signal = 'vibration'
             ds.machine = 0
-            ds.normalizaion = 'scale'
+            ds.normalization = 'scale'
             ds.speed_limit = 0
             ds.time_train_start = time.mktime(time.strptime("01.04.2021 00:00:00", "%d.%m.%Y %H:%M:%S"))
             ds.time_train_end = time.mktime(time.strptime("02.04.2021 00:00:00", "%d.%m.%Y %H:%M:%S"))
@@ -97,7 +97,7 @@ class DatasetConfiguration:
             ds.metadata_file = data_path + 'np_metadata.npy'
             ds.signal = 'vibration'
             ds.machine = 0
-            ds.normalizaion = 'scale'
+            ds.normalization = 'scale'
             ds.speed_limit = 0
             ds.verbose = 1
             ds.time_train_start = time.mktime(time.strptime("01.08.2021 01:00:00", "%d.%m.%Y %H:%M:%S"))
@@ -120,7 +120,7 @@ class DatasetConfiguration:
             ds.metadata_file = data_path + 'np_metadata_ver.npy'
             ds.signal = 'current'
             ds.machine = 0
-            ds.normalizaion = 'scale'
+            ds.normalization = 'scale'
             ds.speed_limit = 0
             ds.verbose = 1
             ds.time_train_start = time.mktime(time.strptime("01.08.2021 01:00:00", "%d.%m.%Y %H:%M:%S"))
