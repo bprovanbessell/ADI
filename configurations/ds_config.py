@@ -111,6 +111,28 @@ class DatasetConfiguration:
             ds.time_train_end = time.mktime(time.strptime("15.04.2021 00:00:00", "%d.%m.%Y %H:%M:%S"))
             ds.time_test_start = time.mktime(time.strptime("15.04.2021 00:00:00", "%d.%m.%Y %H:%M:%S"))
             ds.time_test_end = time.mktime(time.strptime("01.08.2021 00:00:00", "%d.%m.%Y %H:%M:%S"))
+        if config_name == 'EXa_1_Flux_small':
+            ds.name = config_name
+            ds.data_file = data_path + 'np_dataset.npy'
+            ds.metadata_file = data_path + 'np_metadata.npy'
+            ds.signal = 'flux'
+            ds.machine = 1
+            ds.normalization = 'scale'
+            ds.speed_limit = 0
+            ds.time_train_start = time.mktime(time.strptime("15.03.2021 00:00:00", "%d.%m.%Y %H:%M:%S"))
+            ds.time_train_end = time.mktime(time.strptime("01.04.2021 00:00:00", "%d.%m.%Y %H:%M:%S"))
+            ds.time_test_start = time.mktime(time.strptime("15.04.2021 00:00:00", "%d.%m.%Y %H:%M:%S"))
+            ds.time_test_end = time.mktime(time.strptime("30.04.2021 00:00:00", "%d.%m.%Y %H:%M:%S"))
+
+            ds.nr_sample = 15000
+            url = "http://localhost:8086"
+            token = "xZQSsWwOWDRoVwN4fx0o78_ZUgDgGE15Gbllb4iunKYTb9mutrcX4fvapJ2AkAC8buGih0qopwaumkHzIUjWFA=="
+            org = "Insight"
+            bucket = "ADI"
+            ds.read_write_dict = {"url": url,
+                                  "token": token,
+                                  "org": org,
+                                  "bucket": bucket}
         if config_name == 'Vib_Grundfoss_June':
             ds.name = 'Vib_Grundfoss'
             ds.data_file = data_path + 'np_dataset.npy'

@@ -8,19 +8,27 @@ data_path = '/Volumes/Elements/ADI/data_tm20/'
 
 # Data creation and load
 ds = dataset.Dataset()
-ds_config.DatasetConfiguration().SetConfiguration(ds, data_path,'EXa_1_Flux')
+ds_config.DatasetConfiguration().SetConfiguration(ds, data_path,'EXa_1_Flux_small')
 # ds_config.DatasetConfiguration().SetConfiguration(ds, data_path,'EXa_1_Curr')
 #
 # ds.dataset_creation()
 # ds.data_save(ds.name)
 
-ds = ds.data_load(ds.name)
+# ds = ds.data_load(ds.name)
+t0 = time.time()
+ds.dataset_creation_influx()
+t1 = time.time()
+
+print("Minutes to load data: ", (t1 - t0)/60)
+
 ds.data_summary()
 
 
 
 vae = convolutional_vae.ConvolutionalVAE()
-vae.load_models("Vib_Grundfoss0114")
+# should be flux model
+vae.load_models("Flux_Grundfoss0057")
+# vae.load_models("Vib_Grundfoss0114")
 # vae.load_models("EXa_1_Curr0127")
 
 
@@ -32,21 +40,21 @@ p.name = ds.name
 p.model = vae
 p.X_train = np.asarray(ds.X_train)
 p.X_test = np.asarray(ds.X_test)
-p.meta_train = ds.metadata_train
-p.meta_test = ds.metadata_test
+# p.meta_train = ds.metadata_train
+# p.meta_test = ds.metadata_test
 
 
 # # Plot the latent space
-p.rpm_time(train=False)
-# p.latent_space_complete()
+# p.rpm_time(train=False)
+p.latent_space_complete()
 # p.plot_tsne(anomaly=False, train=False)
 # p.reconstruction_error_time(test=False)
-p.reconstruction_error_time()
+# p.reconstruction_error_time()
 # p.roc()
-# p.reconstruction_error(np.linspace(0, 3, 50))
+p.reconstruction_error(np.linspace(0, 3, 50))
 # p.pdf(np.linspace(-16, 0, 50))
 
-
+'''
 """ This part allows to plot an analysis with an anomaly time
 """
 err_time = time.mktime(time.strptime("09.02.2021 12:20:00", "%d.%m.%Y %H:%M:%S"))
@@ -84,7 +92,7 @@ p.reconstruction_error_time(limit=1.5)
 p.roc()
 p.reconstruction_error(np.linspace(0, 3, 50))
 p.pdf(np.linspace(-16, 0, 50))
-
+'''
 
 # begin_time = time.mktime(time.strptime("09.02.2021 11:00:00", "%d.%m.%Y %H:%M:%S"))
 # rows = np.where(meta_test[:,2] >= begin_time)

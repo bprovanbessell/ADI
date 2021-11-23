@@ -44,6 +44,10 @@ def query_to_dataset(start, end, signal, nr_sample, machine, speed_limit, write_
     # upper limit on what it will be, reshaping later will be necessary
     np_dataset = np.zeros((upper_intervals, nr_sample, channels))
 
+    np_meta_data = np.zeros((upper_intervals, 3))
+    for u in range(upper_intervals): 
+        np_meta_data[u, 0] = machine
+
     print("init shape: ", np_dataset.shape)
 #     query to get the 20 minute interval
 #     writer it to the dataset
@@ -60,7 +64,7 @@ def query_to_dataset(start, end, signal, nr_sample, machine, speed_limit, write_
 
     print(machine_name)
 
-    valid_intervals = get_and_set_intervals(np_dataset, start, end, machine_name, columns, columns_str, speed_limit, write_dict)
+    valid_intervals = get_and_set_intervals(np_dataset, np_meta_data, start, end, machine_name, columns, columns_str, speed_limit, write_dict)
     # trim the dataset
     # Do some normalization aswell
     print(valid_intervals)
@@ -71,7 +75,7 @@ def query_to_dataset(start, end, signal, nr_sample, machine, speed_limit, write_
     return np_dataset
 
 
-def get_and_set_intervals(np_dataset, start, end, machine_name, columns, columns_str, speed_limit, write_dict):
+def get_and_set_intervals(np_dataset, np_meta_data, start, end, machine_name, columns, columns_str, speed_limit, write_dict):
     url = write_dict["url"]
     token = write_dict["token"]
     org = write_dict["org"]
@@ -84,32 +88,40 @@ def get_and_set_intervals(np_dataset, start, end, machine_name, columns, columns
         print("end: ", end)
 
         # can ignore speed limit if it is less than or equal to 0 (no need for filtering by metadata)
-        if(speed_limit <= 0 and "test_motor" in machine_name):
-            np_dataset = get_tm_start_end(client, startstr, newstartstr, machine_name, columns, columns_str, bucket)
-
-            return np_dataset.shape[0]
+        # if speed_limit <= 0 and "test_motor" in machine_name:
+        #     startstr = str(int(start.timestamp()))
+        #     endstr = str(int(end.timestamp()))
+        #     np_dataset = get_tm_start_end(client, startstr, endstr, machine_name, columns, columns_str, bucket)
+        #
+        #     return np_dataset.shape[0]
 
         # inclusive, exclusive
+        counter = 0
         while start < end:
             newstart = start + datetime.timedelta(minutes=20)
 
-            startstr = str(int(start.timestamp()))
-            newstartstr = str(int(newstart.timestamp()))
+            start_stamp = int(start.timestamp())
+            newstart_stamp = int(newstart.timestamp())
+
+            startstr = str(start_stamp)
+            newstartstr = str(newstart_stamp)
 
             if "verdigris" in machine_name:
                 interval = get_ver_interval(client, startstr, newstartstr, machine_name, columns, columns_str, bucket)
             else:
                 # flux or vib
-                interval = get_tm_interval(client, startstr, newstartstr, machine_name, columns, columns_str, speed_limit, bucket)
+                interval, rpm = get_tm_interval(client, startstr, newstartstr, machine_name, columns, columns_str, speed_limit, bucket)
 
             if interval is not None:
                 # print("length: ", len(interval))
                 if len(interval) >= 15000:
                     np_dataset[valid_intervals] = interval[:15000]
+                    np_meta_data[valid_intervals, 2] = start_stamp
                     valid_intervals += 1
                 else:
                     # np_dataset[valid_intervals, 0:len(interval)] = interval[0:len(interval)]
                     print("less than 15000")
+                    print(interval.shape)
                 # valid_intervals += 1
 
             start = newstart
@@ -127,31 +139,36 @@ Then get the window, convert it to np array, set the training dataset
 
 def get_tm_interval(client, start, end, tm_name, columns, columns_str, speed_limit, bucket):
 
-    query = 'from(bucket:"' + bucket + '") ' \
-            '|> range(start: ' + start + ', stop: ' + end + ') ' \
-            '|> filter(fn: (r) => r._measurement == "' + tm_name + "_metadata" + '")'
+    try:
+        query = 'from(bucket:"' + bucket + '") ' \
+                '|> range(start: ' + start + ', stop: ' + end + ') ' \
+                '|> filter(fn: (r) => r._measurement == "' + tm_name + "_metadata" + '")'
 
-    res = client.query_api().query(query)
+        res = client.query_api().query(query)
 
-    if len(res) > 0:
+        if len(res) > 0:
 
-        rpm = res[0].records[0].get_value()
-        # check is only necessary if speed limit greater than 0
-        if rpm > speed_limit or speed_limit <= 0:
-            # rpm is alright, fetch the points for this interval window
-            query = 'from(bucket:"' + bucket + '") ' \
-                    '|> range(start: ' + start + ', stop: ' + end + ') ' \
-                    '|> filter(fn: (r) => r._measurement == "' + tm_name + '")' \
-                    '|> pivot(rowKey:["_time"], columnKey: ["_field"], valueColumn: "_value") ' \
-                    '|> keep(columns: ' + columns_str + ')'
+            rpm = res[0].records[0].get_value()
+            # check is only necessary if speed limit greater than 0
+            if rpm > speed_limit or speed_limit <= 0:
+                # rpm is alright, fetch the points for this interval window
+                query = 'from(bucket:"' + bucket + '") ' \
+                        '|> range(start: ' + start + ', stop: ' + end + ') ' \
+                        '|> filter(fn: (r) => r._measurement == "' + tm_name + '")' \
+                        '|> pivot(rowKey:["_time"], columnKey: ["_field"], valueColumn: "_value") ' \
+                        '|> keep(columns: ' + columns_str + ')'
 
-            data_frame = client.query_api().query_data_frame(query=query)
-            cols = data_frame[columns]
-            cols = cols.to_numpy()
+                data_frame = client.query_api().query_data_frame(query=query)
+                cols = data_frame[columns]
+                cols = cols.to_numpy()
 
-            return cols
+                return cols, rpm
 
-    return None
+    except Exception as E:
+        print(E)
+        print("Start: ", start)
+        print("End  : ", end)
+        return None, 0
 
 
 def get_tm_start_end(client, start, end, tm_name, columns, columns_str, bucket):
@@ -178,6 +195,35 @@ def get_tm_start_end(client, start, end, tm_name, columns, columns_str, bucket):
         print("End  : ", end)
         return None
 
+
+def get_tm_metadata(client, start, end, tm_name, columns, columns_str, bucket):
+
+    # we want rpm and timestamp
+    columns = ["rpm", ]
+
+    query = 'from(bucket:"' + bucket + '") ' \
+                                       '|> range(start: ' + start + ', stop: ' + end + ') ' \
+                                       '|> filter(fn: (r) => r._measurement == "' + tm_name + '_metadata")' \
+                                       '|> pivot(rowKey:["_time"], columnKey: ["_field"], valueColumn: "_value") ' \
+                                       # '|> keep(columns: ' + columns_str + ')'
+
+    try:
+        data_frame = client.query_api().query_data_frame(query=query)
+        # cols = data_frame[columns]
+        # cols = cols.to_numpy()
+        cols = data_frame
+        print(cols.head(10))
+
+        print(cols.shape)
+        return None
+
+        # return cols
+
+    except Exception as E:
+        print(E)
+        print("Start: ", start)
+        print("End  : ", end)
+        return None
 
 def get_ver_interval(client, start, end, ver_name, columns, columns_str, bucket):
 
