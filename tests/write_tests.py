@@ -1,13 +1,11 @@
 import unittest
-from TS.influx.query_to_dataset import get_tm_interval
-from TS.influx.raw_data_to_infux import format_dt_ns
+from influx.query_to_dataset import get_tm_interval
+from influx.raw_data_to_infux import format_dt_ns
 import numpy as np
 import time
 from influxdb_client import Point, InfluxDBClient, WriteOptions
 import datetime
-
-
-from TS.influx.raw_data_to_infux import make_tm_points_batch
+from influx.raw_data_to_infux import make_tm_points_batch
 
 
 class WriteTest(unittest.TestCase):
@@ -28,7 +26,7 @@ class WriteTest(unittest.TestCase):
                       "org": org,
                       "bucket": bucket}
 
-        path_to_data = "../data/test-motors/data-31-08-2021/"
+        path_to_data = "../../time-series-influx/TS/data/test-motors/data-31-08-2021/"
 
         motors_data = np.load(path_to_data + "np_dataset.npy")
         motors_metadata = np.load(path_to_data + "np_metadata.npy")

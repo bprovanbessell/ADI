@@ -1,7 +1,7 @@
 import unittest
-from TS.configurations import ds_config
-from TS.util import dataset
-from TS.influx.query_to_dataset import query_to_dataset
+from configurations import ds_config
+from util import dataset
+from influx.query_to_dataset import query_to_dataset
 import numpy as np
 import time
 from sklearn.preprocessing import StandardScaler
@@ -16,7 +16,8 @@ class QueryTest(unittest.TestCase):
     """
 
     def test_tm_0(self):
-        data_path = "../data/test-motors/data-31-08-2021/"
+        data_path = "../../time-series-influx/TS/data/test-motors/data-31-08-2021/"
+        # data_path = "../data/test-motors/data-31-08-2021/"
 
         test_dataset_baseline = dataset.Dataset()
         ds_config.DatasetConfiguration().SetConfiguration(test_dataset_baseline, data_path, 'Test_tm_1')
@@ -52,7 +53,7 @@ class QueryTest(unittest.TestCase):
         np.testing.assert_allclose(test_dataset_baseline.X_train, test_dataset_query.X_train)
 
     def test_tm_2(self):
-        data_path = "../data/test-motors/data-31-08-2021/"
+        data_path = "../../time-series-influx/TS/data/test-motors/data-31-08-2021/"
 
         test_dataset_baseline = dataset.Dataset()
         ds_config.DatasetConfiguration().SetConfiguration(test_dataset_baseline, data_path, 'Test_tm_1')
@@ -76,7 +77,7 @@ class QueryTest(unittest.TestCase):
 
     def test_verdigris(self):
         # Similar to above, but checks verdigris data
-        data_path = "../data/verdigris/"
+        data_path = "../../time-series-influx/TS/data/verdigris/"
 
         test_dataset_baseline = dataset.Dataset()
         ds_config.DatasetConfiguration().SetConfiguration(test_dataset_baseline, data_path, 'Test_ver_0')
