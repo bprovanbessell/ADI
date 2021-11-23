@@ -1,5 +1,5 @@
-from TS.util import dataset
-from TS.configurations import ds_config
+from util import dataset
+from configurations import ds_config
 import numpy as np
 import datetime
 import time
@@ -80,6 +80,14 @@ def get_and_set_intervals(np_dataset, start, end, machine_name, columns, columns
     valid_intervals = 0
 
     with InfluxDBClient(url=url, token=token, org=org) as client:
+        print("start: ", start)
+        print("end: ", end)
+
+        # can ignore speed limit if it is less than or equal to 0 (no need for filtering by metadata)
+        if(speed_limit <= 0 and "test_motor" in machine_name):
+            np_dataset = get_tm_start_end(client, startstr, newstartstr, machine_name, columns, columns_str, bucket)
+
+            return np_dataset.shape[0]
 
         # inclusive, exclusive
         while start < end:
@@ -95,7 +103,7 @@ def get_and_set_intervals(np_dataset, start, end, machine_name, columns, columns
                 interval = get_tm_interval(client, startstr, newstartstr, machine_name, columns, columns_str, speed_limit, bucket)
 
             if interval is not None:
-                print("length: ", len(interval))
+                # print("length: ", len(interval))
                 if len(interval) >= 15000:
                     np_dataset[valid_intervals] = interval[:15000]
                     valid_intervals += 1
@@ -146,7 +154,37 @@ def get_tm_interval(client, start, end, tm_name, columns, columns_str, speed_lim
     return None
 
 
+def get_tm_start_end(client, start, end, tm_name, columns, columns_str, bucket):
+
+    query = 'from(bucket:"' + bucket + '") ' \
+            '|> range(start: ' + start + ', stop: ' + end + ') ' \
+            '|> filter(fn: (r) => r._measurement == "' + tm_name + '")' \
+            '|> pivot(rowKey:["_time"], columnKey: ["_field"], valueColumn: "_value") ' \
+            '|> keep(columns: ' + columns_str + ')'
+
+    try:
+        data_frame = client.query_api().query_data_frame(query=query)
+        cols = data_frame[columns]
+        cols = cols.to_numpy()
+        nr_samples = 15000
+        total_samples = int(cols.shape[0] / nr_samples)
+        cols = np.reshape(cols, (total_samples, nr_samples, cols.shape[1]))
+
+        return cols
+
+    except Exception as E:
+        print(E)
+        print("Start: ", start)
+        print("End  : ", end)
+        return None
+
+
 def get_ver_interval(client, start, end, ver_name, columns, columns_str, bucket):
+
+    # cannot query an empty range ->, should be that start is later than stop...
+    # start: 1616895600
+    # End:  1616893200
+    # for some reason start > end...
 
     query = 'from(bucket:"' + bucket + '") ' \
             '|> range(start: ' + start + ', stop: ' + end + ') ' \
@@ -154,14 +192,22 @@ def get_ver_interval(client, start, end, ver_name, columns, columns_str, bucket)
             '|> pivot(rowKey:["_time"], columnKey: ["_field"], valueColumn: "_value") ' \
             '|> keep(columns: ' + columns_str + ')'
 
-    data_frame = client.query_api().query_data_frame(query=query)
-    if not data_frame.empty:
+    try:
 
-        cols = data_frame[columns]
-        cols = cols.to_numpy()
+        data_frame = client.query_api().query_data_frame(query=query)
+        if not data_frame.empty:
 
-        return cols
-    else:
+            cols = data_frame[columns]
+            cols = cols.to_numpy()
+
+            return cols
+        else:
+            return None
+
+    except Exception as E:
+        print(E)
+        print("Start: ", start)
+        print("End  : ", end)
         return None
 
 
