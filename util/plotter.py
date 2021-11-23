@@ -21,7 +21,7 @@ class Plotter:
         self.best_val_loss = np.Inf
         self.input_shape = None
         self.latent_dim = 2
-        self.image_folder = "./img/"
+        self.image_folder = "img/"
 
 
     # def plot_latent_space(self, index_x=0, index_y=1):

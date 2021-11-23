@@ -9,13 +9,20 @@ data_path = '/Users/andreavisentin/ADI/data_verdigris/'
 # Data creation and load
 ds = dataset.Dataset()
 # ds_config.DatasetConfiguration().SetConfiguration(ds, data_path,'Vib_Grundfoss')
-ds_config.DatasetConfiguration().SetConfiguration(ds, data_path,'EXa_1_Curr')
+ds_config.DatasetConfiguration().SetConfiguration(ds, data_path,'EXa_1_Curr_small')
 #
 # ds.dataset_creation()
 # ds.data_save(ds.name)
 
+# tested with other data
+t0 = time.time()
+ds.dataset_creation_influx()
+t1 = time.time()
+
+print("Minutes to load data: ", (t1 - t0)/60)
+
 print("show this")
-ds = ds.data_load(ds.name)
+# ds = ds.data_load(ds.name)
 ds.data_summary()
 
 
@@ -31,16 +38,20 @@ vae.load_models("EXa_1_Curr0127")
 p = plotter.Plotter()
 p.name = ds.name
 p.model = vae
-p.X_train = np.moveaxis(ds.X_train,1,2)
-p.X_test = np.moveaxis(ds.X_test,1,2)
-p.meta_train = ds.metadata_train
-p.meta_test = ds.metadata_test
+# p.X_train = np.moveaxis(ds.X_train,1,2)
+# p.X_test = np.moveaxis(ds.X_test,1,2)
+p.X_train = ds.X_train
+p.X_test = ds.X_test
+
+# write script to make these later, Will also need a way to upload the results to influx
+# p.meta_train = ds.metadata_train
+# p.meta_test = ds.metadata_test
 
 
 # Plot the latent space
 # p.rpm_time()
-# p.latent_space_complete()
-# p.plot_tsne(anomaly=False, train=True)
+p.latent_space_complete()
+p.plot_tsne(anomaly=False, train=True)
 # p.reconstruction_error_time(test=False)
 # p.reconstruction_error_time(limit=1.5)
 # p.roc()
@@ -49,6 +60,7 @@ p.pdf(np.linspace(-16, 0, 50))
 
 
 """ This part allows to plot an analysis with an anomaly time
+"""
 """
 err_time = time.mktime(time.strptime("09.02.2021 12:20:00", "%d.%m.%Y %H:%M:%S"))
 rows = np.where(ds.metadata_test[:,2] <= err_time)
@@ -85,6 +97,7 @@ p.reconstruction_error_time(limit=1.5)
 p.roc()
 p.reconstruction_error(np.linspace(0, 3, 50))
 p.pdf(np.linspace(-16, 0, 50))
+"""
 
 
 # begin_time = time.mktime(time.strptime("09.02.2021 11:00:00", "%d.%m.%Y %H:%M:%S"))
