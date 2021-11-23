@@ -91,8 +91,9 @@ class Dataset:
             active = metadata[:, 1] > self.speed_limit
             X = X[active, :, ]
             metadata = metadata[active, :]
-        if self.signal != "current":
-            X = np.moveaxis(X, 1, 2)
+        # if self.signal != "current":
+        # This should be done in all cases
+        X = np.moveaxis(X, 1, 2)
         print(X.shape)
 
         if self.verbose:
@@ -153,6 +154,13 @@ class Dataset:
         print("Influx let's go")
         if self.verbose:
             print("Data load from influx")
+
+        if self.signal == "current":
+            self.channels = 3
+        if self.signal == "vibration":
+            self.channels = 2
+        if self.signal == "flux":
+            self.channels = 1
 
         self.X_train = query_to_dataset(self.time_train_start,
                                         self.time_train_end,
