@@ -13,7 +13,11 @@ experiment_name = 'Flux_Grundfoss'
 # Data creation and load
 ds = dataset.Dataset()
 ds_config.DatasetConfiguration().SetConfiguration(ds, data_path, experiment_name)
-ds = ds.data_load(ds.name)
+# ds = ds.data_load(ds.name)
+
+# get the data from influx
+ds.dataset_creation_influx()
+
 ds.data_summary()
 
 model = convolutional_vae.ConvolutionalVAE()
