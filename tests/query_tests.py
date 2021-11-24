@@ -60,17 +60,19 @@ class QueryTest(unittest.TestCase):
         test_dataset_baseline.dataset_creation()
         test_dataset_query.dataset_creation_influx()
 
+        # check training data
         self.assertEqual(test_dataset_baseline.X_train.shape, test_dataset_query.X_train.shape)
         np.testing.assert_allclose(test_dataset_baseline.X_train, test_dataset_query.X_train)
 
         self.assertEqual(test_dataset_baseline.X_test.shape, test_dataset_query.X_test.shape)
         np.testing.assert_allclose(test_dataset_baseline.X_test, test_dataset_query.X_test)
 
-        print("md train: ", test_dataset_baseline.metadata_train)
-        print("md train query: ", test_dataset_query.metadata_train)
-
+        # Check metadata
         self.assertEqual(test_dataset_baseline.metadata_train.shape, test_dataset_query.metadata_train.shape)
         np.testing.assert_allclose(test_dataset_baseline.metadata_train, test_dataset_query.metadata_train)
+
+        self.assertEqual(test_dataset_baseline.metadata_test.shape, test_dataset_query.metadata_test.shape)
+        np.testing.assert_allclose(test_dataset_baseline.metadata_test, test_dataset_query.metadata_test)
 
     def test_verdigris(self):
         # Similar to above, but checks verdigris data
@@ -88,8 +90,16 @@ class QueryTest(unittest.TestCase):
         print(test_dataset_baseline.X_train)
         print(test_dataset_query.X_train)
 
+        # check training data
         self.assertEqual(test_dataset_baseline.X_train.shape, test_dataset_query.X_train.shape)
         np.testing.assert_allclose(test_dataset_baseline.X_train, test_dataset_query.X_train)
+
+        # check metadata
+        self.assertEqual(test_dataset_baseline.X_test.shape, test_dataset_query.X_test.shape)
+        np.testing.assert_allclose(test_dataset_baseline.X_test, test_dataset_query.X_test)
+
+        self.assertEqual(test_dataset_baseline.metadata_train.shape, test_dataset_query.metadata_train.shape)
+        np.testing.assert_allclose(test_dataset_baseline.metadata_train, test_dataset_query.metadata_train)
 
 
 def dataset_intermediate(ds):
