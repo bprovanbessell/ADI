@@ -1,4 +1,6 @@
 import time
+import datetime
+from backports.zoneinfo import ZoneInfo
 from raw_data_to_infux import otosense_influx_write, verdigris_influx_write
 
 if __name__ == "__main__":
@@ -17,8 +19,6 @@ if __name__ == "__main__":
 
     batches = 50
     write_threshold = 15000 * batches
-
-    # 100 sets of records for each machine -> 300 sets per test
 
     # path_to_tm_data = "data/test-motors/data-31-08-2021/"
 
@@ -39,7 +39,7 @@ if __name__ == "__main__":
     # The numpy arrays contain many columns, the one of interest start at these indexes
     indexes = [6, 12, 9]
 
-    otosense_influx_write(path_to_tm_data, tm_devices, write_threshold, write_dict)
+    # otosense_influx_write(path_to_tm_data, tm_devices, write_threshold, write_dict)
 
     # path_to_ver_data = "../../all_data/2021-05/"
     # verdigris_influx_write(path_to_ver_data, ver_devices, indexes, write_threshold, write_dict)
@@ -51,6 +51,15 @@ if __name__ == "__main__":
     # verdigris_influx_write(path_to_ver_data, ver_devices, indexes, write_threshold, write_dict)
 
     t1 = time.time()
+
+    zone = ZoneInfo("Europe/Dublin")
+
+    dt = datetime.datetime.fromtimestamp(t1, tz=ZoneInfo("Europe/Dublin"))
+    dt2 = datetime.datetime(2021, 3, 28, 2, 0, 0, tzinfo=zone)
+    print(zone)
+    print(dt.tzinfo)
+    print(dt.tzinfo.utcoffset(dt))
+    print(type(dt2.tzinfo.utcoffset(dt2)))
 
     total = t1 - t0
     print("Total seconds is: ", total)

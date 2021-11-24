@@ -29,11 +29,6 @@ class QueryTest(unittest.TestCase):
         # test_dataset_baseline.dataset_creation()
         baseline_x_train = dataset_intermediate(test_dataset_baseline)
 
-        # it is one hour later, maybe to do with daylight savings
-        # (not problem with writing script, which has been tested)
-        test_dataset_query.time_train_start = time.mktime(time.strptime("01.08.2021 02:00:00", "%d.%m.%Y %H:%M:%S"))
-        test_dataset_query.time_train_end = time.mktime(time.strptime("01.08.2021 03:20:00", "%d.%m.%Y %H:%M:%S"))
-
         query_x_train, querymetadata = query_to_dataset(test_dataset_query.time_train_start,
                                                         test_dataset_query.time_train_end,
                                                         test_dataset_query.signal,
@@ -61,13 +56,6 @@ class QueryTest(unittest.TestCase):
         test_dataset_query = dataset.Dataset()
         ds_config.DatasetConfiguration().SetConfiguration(test_dataset_query, data_path, 'Test_tm_1')
         # make the datasets
-        # it is one hour later, maybe to do with daylight savings
-        # (not problem with writing script, which has been tested)
-        test_dataset_query.time_train_start = time.mktime(time.strptime("01.08.2021 02:00:00", "%d.%m.%Y %H:%M:%S"))
-        test_dataset_query.time_train_end = time.mktime(time.strptime("01.08.2021 03:20:00", "%d.%m.%Y %H:%M:%S"))
-
-        test_dataset_query.time_test_start = time.mktime(time.strptime("01.08.2021 03:20:00", "%d.%m.%Y %H:%M:%S"))
-        test_dataset_query.time_test_end = time.mktime(time.strptime("01.08.2021 03:40:00", "%d.%m.%Y %H:%M:%S"))
 
         test_dataset_baseline.dataset_creation()
         test_dataset_query.dataset_creation_influx()
@@ -93,14 +81,6 @@ class QueryTest(unittest.TestCase):
 
         test_dataset_query = dataset.Dataset()
         ds_config.DatasetConfiguration().SetConfiguration(test_dataset_query, data_path, 'Test_ver_0')
-
-        # add the extra hour, still not entirely sure why this has to happen
-        # Could be some weird issue with UTC and daylight savings
-        test_dataset_query.time_train_start = time.mktime(time.strptime("01.08.2021 02:00:00", "%d.%m.%Y %H:%M:%S"))
-        test_dataset_query.time_train_end = time.mktime(time.strptime("01.08.2021 03:20:00", "%d.%m.%Y %H:%M:%S"))
-
-        test_dataset_query.time_test_start = time.mktime(time.strptime("01.08.2021 02:00:00", "%d.%m.%Y %H:%M:%S"))
-        test_dataset_query.time_test_end = time.mktime(time.strptime("01.08.2021 02:20:00", "%d.%m.%Y %H:%M:%S"))
 
         test_dataset_baseline.dataset_creation()
         test_dataset_query.dataset_creation_influx()

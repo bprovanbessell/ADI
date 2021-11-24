@@ -3,6 +3,7 @@ from configurations import ds_config
 import numpy as np
 import datetime
 import time
+from backports.zoneinfo import ZoneInfo
 from influxdb_client import InfluxDBClient, Point, WritePrecision
 
 
@@ -23,8 +24,10 @@ def query_to_dataset(start, end, signal, nr_sample, machine, speed_limit, write_
     twentymins = 60 * 20
     upper_intervals = int(time_length / twentymins)
 
-    start = datetime.datetime.fromtimestamp(start)
-    end = datetime.datetime.fromtimestamp(end)
+    zone = ZoneInfo("Europe/Dublin")
+
+    start = datetime.datetime.fromtimestamp(start, tz=zone)
+    end = datetime.datetime.fromtimestamp(end, tz=zone)
 
     columns = []
     # get columns we want
@@ -97,16 +100,20 @@ def get_and_set_intervals(np_dataset, np_meta_data, start, end, machine_name, co
 
         # inclusive, exclusive
         while start < end:
+            # next 20 minute interval
             newstart = start + datetime.timedelta(minutes=20)
+
+            # check if we are in non daylight savings, if that is the case, then increment start by 1 hour
+            utcoffset = start.tzinfo.utcoffset(start)
             # 2 second intervals, 20 minutes apart
-            interval_end = start + datetime.timedelta(seconds=2)
+            interval_end = start + datetime.timedelta(seconds=2) + utcoffset
             interval_endstr = str(int(interval_end.timestamp()))
 
-            start_stamp = int(start.timestamp())
-            newstart_stamp = int(newstart.timestamp())
-
+            start_stamp = int((start + utcoffset).timestamp())
             startstr = str(start_stamp)
-            newstartstr = str(newstart_stamp)
+
+            # newstart_stamp = int(newstart.timestamp())
+            # newstartstr = str(newstart_stamp)
 
             if "verdigris" in machine_name:
                 interval = get_ver_interval(client, startstr, interval_endstr, machine_name, columns, columns_str, bucket)
@@ -120,7 +127,9 @@ def get_and_set_intervals(np_dataset, np_meta_data, start, end, machine_name, co
                 if len(interval) >= 15000:
                     np_dataset[valid_intervals] = interval[:15000]
                     # again, for some reason these times are 1 hour off
-                    np_meta_data[valid_intervals, 2] = start_stamp
+                    # due to daylight savings, so if it is between 28 March and 31 October, then this timestamp should be decremented by 1 hour
+
+                    np_meta_data[valid_intervals, 2] = start_stamp - utcoffset.seconds
                     np_meta_data[valid_intervals, 1] = rpm
                     valid_intervals += 1
                 else:
