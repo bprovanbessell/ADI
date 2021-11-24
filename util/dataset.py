@@ -162,7 +162,7 @@ class Dataset:
         if self.signal == "flux":
             self.channels = 1
 
-        self.X_train = query_to_dataset(self.time_train_start,
+        self.X_train, self.metadata_train = query_to_dataset(self.time_train_start,
                                         self.time_train_end,
                                         self.signal,
                                         self.nr_sample,
@@ -172,7 +172,7 @@ class Dataset:
 
         print("Xtrain shape:", self.X_train.shape)
 
-        self.X_test = query_to_dataset(self.time_test_start,
+        self.X_test, self.metadata_test = query_to_dataset(self.time_test_start,
                                        self.time_test_end,
                                        self.signal,
                                        self.nr_sample,

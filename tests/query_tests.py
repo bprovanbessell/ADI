@@ -34,13 +34,13 @@ class QueryTest(unittest.TestCase):
         test_dataset_query.time_train_start = time.mktime(time.strptime("01.08.2021 02:00:00", "%d.%m.%Y %H:%M:%S"))
         test_dataset_query.time_train_end = time.mktime(time.strptime("01.08.2021 03:20:00", "%d.%m.%Y %H:%M:%S"))
 
-        query_x_train = query_to_dataset(test_dataset_query.time_train_start,
-                                         test_dataset_query.time_train_end,
-                                         test_dataset_query.signal,
-                                         test_dataset_query.nr_sample,
-                                         test_dataset_query.machine,
-                                         test_dataset_query.speed_limit,
-                                         test_dataset_query.read_write_dict)
+        query_x_train, querymetadata = query_to_dataset(test_dataset_query.time_train_start,
+                                                        test_dataset_query.time_train_end,
+                                                        test_dataset_query.signal,
+                                                        test_dataset_query.nr_sample,
+                                                        test_dataset_query.machine,
+                                                        test_dataset_query.speed_limit,
+                                                        test_dataset_query.read_write_dict)
 
         self.assertEqual(baseline_x_train.shape, query_x_train.shape)
         np.testing.assert_allclose(baseline_x_train, query_x_train)
@@ -74,6 +74,15 @@ class QueryTest(unittest.TestCase):
 
         self.assertEqual(test_dataset_baseline.X_train.shape, test_dataset_query.X_train.shape)
         np.testing.assert_allclose(test_dataset_baseline.X_train, test_dataset_query.X_train)
+
+        self.assertEqual(test_dataset_baseline.X_test.shape, test_dataset_query.X_test.shape)
+        np.testing.assert_allclose(test_dataset_baseline.X_test, test_dataset_query.X_test)
+
+        print("md train: ", test_dataset_baseline.metadata_train)
+        print("md train query: ", test_dataset_query.metadata_train)
+
+        self.assertEqual(test_dataset_baseline.metadata_train.shape, test_dataset_query.metadata_train.shape)
+        np.testing.assert_allclose(test_dataset_baseline.metadata_train, test_dataset_query.metadata_train)
 
     def test_verdigris(self):
         # Similar to above, but checks verdigris data
