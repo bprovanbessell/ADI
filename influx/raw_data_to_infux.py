@@ -9,7 +9,7 @@ import pandas as pd
 from influxdb_client import Point, InfluxDBClient, WriteOptions
 
 """
-Convert the json and compressed files into a csv, instead of npy file
+Write the compressed files to the influx database
 """
 
 
@@ -31,13 +31,12 @@ def otosense_influx_write(path_to_data, devices, write_threshold, write_dict):
                 nr_channels = 3
                 nr_samples = 15000
 
-                # try out batching, see how long it takes to write based on batches - probably dependent on memory
                 list_of_points = []
                 metadata_points = []
 
                 # test config should be 100 sets of 15 points
-                for i in range(100):
-                # for i in range(len(f_lib)):
+                # for i in range(100):
+                for i in range(len(f_lib)):
 
                     dataset = np.zeros((nr_channels, nr_samples))
                     print("File " + str(i) + "of" + str(len(f_lib)), end="\r")
@@ -74,10 +73,8 @@ def otosense_influx_write(path_to_data, devices, write_threshold, write_dict):
                             metadata_points.append(metadata_point)
 
                         # when there are a number of points above the threshold, write them to the db
-                        # perhaps using an rx datatype is better, something to figure out and experiment with
                         if len(list_of_points) >= write_threshold:
-                            # influx_write_points(write_api, list_of_points, write_dict)
-                            # influx_write_points(write_api, metadata_points, write_dict)
+
                             write_api.write(bucket=bucket, record=list_of_points)
                             write_api.write(bucket=bucket, record=metadata_points)
 
@@ -89,12 +86,8 @@ def otosense_influx_write(path_to_data, devices, write_threshold, write_dict):
                         print("warning:" + f_lib[i])
 
                 # write all final points
-                # influx_write_points(list_of_points, write_dict)
-                # influx_write_points(metadata_points, write_dict)
-
                 write_api.write(bucket=bucket, record=list_of_points)
                 write_api.write(bucket=bucket, record=metadata_points)
-
 
     client.close()
 
@@ -119,6 +112,7 @@ def get_files_list_tm(path_to_data, device):
                     print("Missing vib:" + filename)
             except Exception as E:
                 print("warning:" + filename + "\nTime:" + str(time_text))
+                print(E)
     print("Total files found: ", len(f_lib))
     print("Total files found: ", len(timestamp))
 
@@ -274,35 +268,16 @@ def round_minutes(mins):
         return rounded
 
 
-# def influx_write_points(write_api, points_list, write_dict):
-#             """
-#             Write data into InfluxDB
-#             """
-#     write_api.write(bucket=bucket, record=points_list)
-
-
-
 if __name__ == "__main__":
 
-    # cloud url
-    # url = "https://europe-west1-1.gcp.cloud2.influxdata.com"
-
     url = "http://localhost:8086"
-
-    # You can generate an API token from the "API Tokens Tab" in the UI
-    # cloud token
-    # token = "aJUuFIEwQpH6Lvu55WSFB0AId6mYiz9vonQPv-RAqb0XK9xrhmQGPdaWohyJdZVhoMvXSVhWruQaTAPSwuiD5A=="
 
     # local machine token
     token = "xZQSsWwOWDRoVwN4fx0o78_ZUgDgGE15Gbllb4iunKYTb9mutrcX4fvapJ2AkAC8buGih0qopwaumkHzIUjWFA=="
 
-    # org = "benjaminlpb123@gmail.com"
     org = "Insight"
 
-    # bucket = "benjaminlpb123's Bucket"
-    # bucket = "bitcoin_test"
-    # bucket = "test_motors"
-
+    # bucket = "test_bucket"
     bucket = "ADI"
 
     write_dict = {"url": url,
@@ -322,4 +297,3 @@ if __name__ == "__main__":
     # otosense_influx_write(path_to_tm_data, tm_devices, write_threshold, write_dict)
 
     # verdigris_influx_write(path_to_ver_data, ver_devices, indexes, write_threshold, write_dict)
-

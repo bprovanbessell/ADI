@@ -90,14 +90,6 @@ def get_and_set_intervals(np_dataset, np_meta_data, start, end, machine_name, co
         print("start: ", start)
         print("end: ", end)
 
-        # can ignore speed limit if it is less than or equal to 0 (no need for filtering by metadata)
-        # if speed_limit <= 0 and "test_motor" in machine_name:
-        #     startstr = str(int(start.timestamp()))
-        #     endstr = str(int(end.timestamp()))
-        #     np_dataset = get_tm_start_end(client, startstr, endstr, machine_name, columns, columns_str, bucket)
-        #
-        #     return np_dataset.shape[0]
-
         # inclusive, exclusive
         while start < end:
             # next 20 minute interval
@@ -126,7 +118,6 @@ def get_and_set_intervals(np_dataset, np_meta_data, start, end, machine_name, co
                 # print("length: ", len(interval))
                 if len(interval) >= 15000:
                     np_dataset[valid_intervals] = interval[:15000]
-                    # again, for some reason these times are 1 hour off
                     # due to daylight savings, so if it is between 28 March and 31 October, then this timestamp should be decremented by 1 hour
 
                     np_meta_data[valid_intervals, 2] = start_stamp - utcoffset.seconds
@@ -214,11 +205,6 @@ def get_tm_start_end(client, start, end, tm_name, columns, columns_str, bucket):
 
 def get_ver_interval(client, start, end, ver_name, columns, columns_str, bucket):
 
-    # cannot query an empty range ->, should be that start is later than stop...
-    # start: 1616895600
-    # End:  1616893200
-    # for some reason start > end...
-
     query = 'from(bucket:"' + bucket + '") ' \
             '|> range(start: ' + start + ', stop: ' + end + ') ' \
             '|> filter(fn: (r) => r._measurement == "' + ver_name + '")' \
@@ -286,4 +272,3 @@ if __name__ == "__main__":
     query_to_dataset(test_dataset, write_dict)
 #     init should be 72
 #     final should be <= 72, intervals start at 2am
-

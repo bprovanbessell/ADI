@@ -54,12 +54,19 @@ if __name__ == "__main__":
 
     zone = ZoneInfo("Europe/Dublin")
 
+    x = 1616895600
+
+    dt3 = datetime.datetime.fromtimestamp(x, tz=ZoneInfo("Europe/Dublin"))
+
     dt = datetime.datetime.fromtimestamp(t1, tz=ZoneInfo("Europe/Dublin"))
     dt2 = datetime.datetime(2021, 3, 28, 2, 0, 0, tzinfo=zone)
     print(zone)
     print(dt.tzinfo)
     print(dt.tzinfo.utcoffset(dt))
-    print(type(dt2.tzinfo.utcoffset(dt2)))
+    print(type(dt3.tzinfo.utcoffset(dt3)))
+
+    print(dt3)
+
 
     total = t1 - t0
     print("Total seconds is: ", total)
