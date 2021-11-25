@@ -161,6 +161,8 @@ class Dataset:
             self.channels = 2
         if self.signal == "flux":
             self.channels = 1
+        if self.signal == "all":
+            self.channels = 6
 
         self.X_train, self.metadata_train = query_to_dataset(self.time_train_start,
                                         self.time_train_end,

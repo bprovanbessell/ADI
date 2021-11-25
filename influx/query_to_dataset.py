@@ -43,6 +43,10 @@ def query_to_dataset(start, end, signal, nr_sample, machine, speed_limit, write_
         columns = ["current0", "current1", "current2"]
         channels = 3
 
+    if signal == "all":
+        columns = (["flux", "vibx", "vibz"], ["current0", "current1", "current2"])
+        channels = 6
+
     # set np array of zeros
     # upper limit on what it will be, reshaping later will be necessary
     np_dataset = np.zeros((upper_intervals, nr_sample, channels))
@@ -54,16 +58,19 @@ def query_to_dataset(start, end, signal, nr_sample, machine, speed_limit, write_
     print("init shape: ", np_dataset.shape)
 #     query to get the 20 minute interval
 #     writer it to the dataset
-    columns_str = "["
-    for c in columns:
-        columns_str += '"' + c + '", '
-    columns_str += "]"
+    if signal == "all":
+        columns_str = (get_columns_str(columns[0]), get_columns_str(columns[1]))
+
+    else:
+        columns_str = get_columns_str(columns)
 
     # current is verdigris, flux and vibration are test_motor
     if signal == "current":
         machine_name = "verdigris_" + str(machine)
-    else:
+    elif signal == "flux" or signal == "vibration":
         machine_name = "test_motor_" + str(machine)
+    else:
+        machine_name = ["test_motor_" + str(machine), "verdigris_" + str(machine)]
 
     print(machine_name)
 
@@ -107,27 +114,48 @@ def get_and_set_intervals(np_dataset, np_meta_data, start, end, machine_name, co
             # newstart_stamp = int(newstart.timestamp())
             # newstartstr = str(newstart_stamp)
 
-            if "verdigris" in machine_name:
-                interval = get_ver_interval(client, startstr, interval_endstr, machine_name, columns, columns_str, bucket)
-                rpm = -1
-            else:
-                # flux or vib
-                interval, rpm = get_tm_interval(client, startstr, interval_endstr, machine_name, columns, columns_str, speed_limit, bucket)
+            if len(machine_name) == 2:
+                # get both of the machine intervals
+                ver_interval = get_ver_interval(client, startstr, interval_endstr, machine_name[1], columns[1], columns_str[1], bucket)
+                tm_interval, rpm = get_tm_interval(client, startstr, interval_endstr, machine_name[0], columns[0], columns_str[0],
+                                                speed_limit, bucket)
 
-            if interval is not None:
-                # print("length: ", len(interval))
-                if len(interval) >= 15000:
-                    np_dataset[valid_intervals] = interval[:15000]
+                if is_valid_interval(ver_interval) and is_valid_interval(tm_interval):
+                    np_dataset[valid_intervals, :, 0:3] = tm_interval[:15000]
+                    np_dataset[valid_intervals, :, 3:6] = ver_interval[:15000]
+
                     # due to daylight savings, so if it is between 28 March and 31 October, then this timestamp should be decremented by 1 hour
-
                     np_meta_data[valid_intervals, 2] = start_stamp - utcoffset.seconds
                     np_meta_data[valid_intervals, 1] = rpm
                     valid_intervals += 1
                 else:
-                    # np_dataset[valid_intervals, 0:len(interval)] = interval[0:len(interval)]
                     print("less than 15000")
-                    print(interval.shape)
-                # valid_intervals += 1
+                    print(tm_interval.shape)
+                    print(ver_interval.shape)
+
+            else:
+
+                if "verdigris" in machine_name:
+                    interval = get_ver_interval(client, startstr, interval_endstr, machine_name, columns, columns_str, bucket)
+                    rpm = -1
+                else:
+                    # flux or vib
+                    interval, rpm = get_tm_interval(client, startstr, interval_endstr, machine_name, columns, columns_str, speed_limit, bucket)
+
+                if interval is not None:
+                    # print("length: ", len(interval))
+                    if len(interval) >= 15000:
+                        np_dataset[valid_intervals] = interval[:15000]
+                        # due to daylight savings, so if it is between 28 March and 31 October, then this timestamp should be decremented by 1 hour
+
+                        np_meta_data[valid_intervals, 2] = start_stamp - utcoffset.seconds
+                        np_meta_data[valid_intervals, 1] = rpm
+                        valid_intervals += 1
+                    else:
+                        # np_dataset[valid_intervals, 0:len(interval)] = interval[0:len(interval)]
+                        print("less than 15000")
+                        print(interval.shape)
+                    # valid_intervals += 1
 
             start = newstart
 
@@ -135,6 +163,21 @@ def get_and_set_intervals(np_dataset, np_meta_data, start, end, machine_name, co
 
     return valid_intervals
 
+
+def is_valid_interval(interval):
+    if interval is not None:
+        if len(interval) >= 15000:
+            return True
+
+    return False
+
+
+def get_columns_str(columns):
+    columns_str = "["
+    for c in columns:
+        columns_str += '"' + c + '", '
+    columns_str += "]"
+    return columns_str
 
 """
 First get the metadata and make sure the rpm is high enough
@@ -176,31 +219,6 @@ def get_tm_interval(client, start, end, tm_name, columns, columns_str, speed_lim
         print("Start: ", start)
         print("End  : ", end)
         return None, 0
-
-
-def get_tm_start_end(client, start, end, tm_name, columns, columns_str, bucket):
-
-    query = 'from(bucket:"' + bucket + '") ' \
-            '|> range(start: ' + start + ', stop: ' + end + ') ' \
-            '|> filter(fn: (r) => r._measurement == "' + tm_name + '")' \
-            '|> pivot(rowKey:["_time"], columnKey: ["_field"], valueColumn: "_value") ' \
-            '|> keep(columns: ' + columns_str + ')'
-
-    try:
-        data_frame = client.query_api().query_data_frame(query=query)
-        cols = data_frame[columns]
-        cols = cols.to_numpy()
-        nr_samples = 15000
-        total_samples = int(cols.shape[0] / nr_samples)
-        cols = np.reshape(cols, (total_samples, nr_samples, cols.shape[1]))
-
-        return cols
-
-    except Exception as E:
-        print(E)
-        print("Start: ", start)
-        print("End  : ", end)
-        return None
 
 
 def get_ver_interval(client, start, end, ver_name, columns, columns_str, bucket):

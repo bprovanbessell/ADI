@@ -101,6 +101,31 @@ class QueryTest(unittest.TestCase):
         self.assertEqual(test_dataset_baseline.metadata_train.shape, test_dataset_query.metadata_train.shape)
         np.testing.assert_allclose(test_dataset_baseline.metadata_train, test_dataset_query.metadata_train)
 
+    def test_all_channels(self):
+        data_path = "../../time-series-influx/TS/data/verdigris/"
+
+        test_dataset_query = dataset.Dataset()
+        ds_config.DatasetConfiguration().SetConfiguration(test_dataset_query, data_path, 'Test_ver_0')
+
+        test_dataset_query.signal = "all"
+
+        test_dataset_query.dataset_creation_influx()
+
+        print(test_dataset_query.X_train)
+
+        # individual methods work fine, just that it gets all 6
+
+        # check training data
+        # self.assertEqual(test_dataset_baseline.X_train.shape, test_dataset_query.X_train.shape)
+        # np.testing.assert_allclose(test_dataset_baseline.X_train, test_dataset_query.X_train)
+        #
+        # # check metadata
+        # self.assertEqual(test_dataset_baseline.X_test.shape, test_dataset_query.X_test.shape)
+        # np.testing.assert_allclose(test_dataset_baseline.X_test, test_dataset_query.X_test)
+        #
+        # self.assertEqual(test_dataset_baseline.metadata_train.shape, test_dataset_query.metadata_train.shape)
+        # np.testing.assert_allclose(test_dataset_baseline.metadata_train, test_dataset_query.metadata_train)
+
 
 def dataset_intermediate(ds):
     X = np.load(ds.data_file)
