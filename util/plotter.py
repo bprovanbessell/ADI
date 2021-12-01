@@ -5,6 +5,7 @@ from sklearn import manifold
 from sklearn.neighbors import KernelDensity
 from sklearn.metrics import roc_auc_score, roc_curve
 from datetime import datetime
+from influx import results_to_influx
 
 class Plotter:
     def __init__(self):
@@ -194,6 +195,24 @@ class Plotter:
         plt.figure(figsize=(6, 6))
         plt.savefig(f + "_reconstruction_error_time.png", transparent=True)
         plt.show()
+
+    def reconstruction_error_time_influx(self, train, test, model_name, write_dict):
+
+        if test:
+            time_list = self.meta_test[:, 2]
+            results = self.model_mse(self.X_test)
+
+        if train:
+            if test:
+                time_list = np.concatenate([time_list, self.meta_train[:, 2]], 0)
+                results = np.concatenate([results, self.model_mse(self.X_train)], 0)
+            else:
+                time_list = self.meta_train[:, 2]
+                results = results = self.model_mse(self.X_train)
+
+        points = results_to_influx.make_results_points(time_list, results, self.name, model_name)
+        results_to_influx.write_results_to_influx(write_dict, points)
+
 
     def rpm_time(self, limit = 0, train = True, anomaly=False):
         fig, ax = plt.subplots()
