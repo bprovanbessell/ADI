@@ -1,4 +1,5 @@
 from influxdb_client import Point, InfluxDBClient, WriteOptions
+import datetime
 
 # Should have list of results, along with a list of timestamps for those results
 # for certain machine as well
@@ -18,20 +19,30 @@ def write_results_to_influx(write_dict, list_of_points):
 
 
 def make_results_points(timestamps, results, model_name, dataset_name):
-    print(timestamps[0])
+
+    datetimes = [format_dt(x) for x in timestamps]
+
+    print(datetimes[0])
     print(results[0])
 
-    print(len(timestamps), len(results))
+    print(len(datetimes), len(results))
 
     points = []
 
-    for timestamp, result in zip(timestamps, results):
+    for dt, result in zip(datetimes, results):
 
         p = Point(model_name + "/" + dataset_name) \
             .field("result", float(result)) \
-            .time(int(timestamp))
+            .time(dt)
         points.append(p)
 
     return points
+
+
+def format_dt(timestamp):
+
+    dt = datetime.datetime.fromtimestamp(int(timestamp))
+
+    return dt.strftime('%Y-%m-%dT%H:%M:00.000Z')
 
 
