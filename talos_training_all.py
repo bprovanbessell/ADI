@@ -7,7 +7,8 @@ import pickle
 
 data_path = '/Users/andreavisentin/ADI/data_tm/'
 data_path = '/home/avisentin/data/'
-# os.environ["CUDA_VISIBLE_DEVICES"] = "0"
+# 3 GPUS available on the cluster
+# os.environ["CUDA_VISIBLE_DEVICES"] = "2"
 os.environ["CUDA_VISIBLE_DEVICES"] = "-1"
 experiment_name = 'All_measurements_test'
 

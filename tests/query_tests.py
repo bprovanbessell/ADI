@@ -112,6 +112,7 @@ class QueryTest(unittest.TestCase):
         test_dataset_query.dataset_creation_influx()
 
         print(test_dataset_query.X_train)
+        print(test_dataset_query.X_train.shape)
 
         # individual methods work fine, just that it gets all 6
 
@@ -125,6 +126,22 @@ class QueryTest(unittest.TestCase):
         #
         # self.assertEqual(test_dataset_baseline.metadata_train.shape, test_dataset_query.metadata_train.shape)
         # np.testing.assert_allclose(test_dataset_baseline.metadata_train, test_dataset_query.metadata_train)
+
+
+    def test_all_channels2(self):
+        experiment_name = 'All_measurements_test'
+
+        # Data creation and load
+        # Make new dataset configuration for all of these tests
+        data_path = ""
+        ds = dataset.Dataset()
+        ds_config.DatasetConfiguration().SetConfiguration(ds, data_path, experiment_name)
+        # ds = ds.data_load(ds.name)
+        ds.dataset_creation_influx()
+        ds.data_summary()
+
+        print(ds.X_train.shape)
+        print(ds.X_test.shape)
 
 
 def dataset_intermediate(ds):

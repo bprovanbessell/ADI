@@ -129,9 +129,9 @@ def get_and_set_intervals(np_dataset, np_meta_data, start, end, machine_name, co
                     np_meta_data[valid_intervals, 1] = rpm
                     valid_intervals += 1
                 else:
-                    print("less than 15000")
-                    print(tm_interval.shape)
-                    print(ver_interval.shape)
+                    print("Invalid Interval")
+                    # print(ver_interval)
+                    # print(tm_interval)
 
             else:
 

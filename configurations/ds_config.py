@@ -211,3 +211,26 @@ class DatasetConfiguration:
                                   "token": token,
                                   "org": org,
                                   "bucket": bucket}
+
+        if config_name == 'All_measurements_test':
+            ds.name = config_name
+            ds.data_file = data_path + 'np_dataset.npy'
+            ds.metadata_file = data_path + 'np_metadata.npy'
+            ds.signal = 'all'
+            ds.machine = 1
+            ds.normalization = 'scale'
+            ds.speed_limit = 0
+            ds.time_train_start = time.mktime(time.strptime("08.06.2021 00:00:00", "%d.%m.%Y %H:%M:%S"))
+            ds.time_train_end = time.mktime(time.strptime("10.06.2021 00:00:00", "%d.%m.%Y %H:%M:%S"))
+            ds.time_test_start = time.mktime(time.strptime("11.06.2021 00:00:00", "%d.%m.%Y %H:%M:%S"))
+            ds.time_test_end = time.mktime(time.strptime("11.06.2021 12:00:00", "%d.%m.%Y %H:%M:%S"))
+
+            ds.nr_sample = 15000
+            url = "http://localhost:8086"
+            token = "xZQSsWwOWDRoVwN4fx0o78_ZUgDgGE15Gbllb4iunKYTb9mutrcX4fvapJ2AkAC8buGih0qopwaumkHzIUjWFA=="
+            org = "Insight"
+            bucket = "ADI"
+            ds.read_write_dict = {"url": url,
+                                  "token": token,
+                                  "org": org,
+                                  "bucket": bucket}
