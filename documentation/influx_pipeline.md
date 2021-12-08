@@ -15,8 +15,9 @@
 5. Connect to that job: ```srun--jobid=123 --pty bash -i```.
 6. Set up ssh tunnel to headnode ```ssh -L 9090:localhost:8086 10.0.0.250```. Unfortunately logs back into the headnode.
 7. Re-log on to the job on node001 ```srun--jobid=123 --pty bash -i```.
-8. Activate conda environment ```conda activate adi_test```
-9. Run training scripts ```...```
+8. Check that the tunnel has been set up correctly: ```lsof -i:9090```
+9. Activate conda environment ```conda activate adi_test```
+10. Run training scripts ```...```
 
 
 ####Connecting to Github

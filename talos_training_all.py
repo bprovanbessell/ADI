@@ -10,7 +10,7 @@ data_path = '/home/avisentin/data/'
 # 3 GPUS available on the cluster
 os.environ["CUDA_VISIBLE_DEVICES"] = "2"
 # os.environ["CUDA_VISIBLE_DEVICES"] = "-1"
-experiment_name = 'All_measurements_test'
+experiment_name = 'All_measurements'
 
 # Data creation and load
 # Make new dataset configuration for all of these tests

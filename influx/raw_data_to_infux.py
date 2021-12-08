@@ -253,11 +253,13 @@ def get_files_list_ver(path_to_data, device):
 
     return f_lib
 
+
 def format_dt_ns(init_dt, ns, s):
     # round to nearest 20
     minute = round_minutes(init_dt.minute)
 
     return '{}:{:02.0f}:0{}.{:09.0f}Z'.format(init_dt.strftime('%Y-%m-%dT%H'), minute, s, ns)
+
 
 def round_minutes(mins):
     rounded = 20 * round(mins / 20)

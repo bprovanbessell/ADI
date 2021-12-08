@@ -6,6 +6,13 @@ class DatasetConfiguration:
     def __init__(self):
         self.local_token = "xZQSsWwOWDRoVwN4fx0o78_ZUgDgGE15Gbllb4iunKYTb9mutrcX4fvapJ2AkAC8buGih0qopwaumkHzIUjWFA=="
         self.gpu_token = "sPxOPI2tfrYVVjpC3b8IwxtJnv8ISRmTr_rEDaX4Q6WDj_SA1TjXPpplR26oJwHFB9aIei07jhsqHXdXkT6VnQ=="
+
+        # train test times for dataset common to all training and testing
+        self.standard_time_train_start = time.mktime(time.strptime("10.06.2021 00:00:00", "%d.%m.%Y %H:%M:%S"))
+        self.standard_time_train_end = time.mktime(time.strptime("10.07.2021 00:00:00", "%d.%m.%Y %H:%M:%S"))
+        self.standard_time_test_start = time.mktime(time.strptime("10.07.2021 00:00:00", "%d.%m.%Y %H:%M:%S"))
+        self.standard_time_test_end = time.mktime(time.strptime("01.08.2021 00:00:00", "%d.%m.%Y %H:%M:%S"))
+
         return
 
     def SetConfiguration(self, ds, data_path, config_name='Vib_Grundfoss'):
@@ -226,6 +233,28 @@ class DatasetConfiguration:
             ds.time_train_end = time.mktime(time.strptime("10.06.2021 00:00:00", "%d.%m.%Y %H:%M:%S"))
             ds.time_test_start = time.mktime(time.strptime("11.06.2021 00:00:00", "%d.%m.%Y %H:%M:%S"))
             ds.time_test_end = time.mktime(time.strptime("11.06.2021 12:00:00", "%d.%m.%Y %H:%M:%S"))
+
+            ds.nr_sample = 15000
+            url = "http://localhost:9090"
+            org = "Insight"
+            bucket = "ADI"
+            ds.read_write_dict = {"url": url,
+                                  "token": self.gpu_token,
+                                  "org": org,
+                                  "bucket": bucket}
+
+        if config_name == 'All_measurements':
+            ds.name = config_name
+            ds.data_file = data_path + 'np_dataset.npy'
+            ds.metadata_file = data_path + 'np_metadata.npy'
+            ds.signal = 'all'
+            ds.machine = 1
+            ds.normalization = 'scale'
+            ds.speed_limit = 0
+            ds.time_train_start = self.standard_time_train_start
+            ds.time_train_end = self.standard_time_train_end
+            ds.time_test_start = self.standard_time_test_start
+            ds.time_test_end = self.standard_time_test_end
 
             ds.nr_sample = 15000
             url = "http://localhost:9090"
