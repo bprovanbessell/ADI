@@ -10,9 +10,14 @@
 ###Running code on gpu cluster
 1. ssh to headnode
 2. Start influxdb server ```./influxdb2-2.1.1-linux-amd64/influxd ```.
-3. Create job on gpunode (node001) with ```salloc -p confirm ...```.
-4. Connect to that job: ```srun--jobid=123 --pty bash -i```.
-5. Set up ssh tunnel to headnode ```ssh -L 9090:localhost:8086 10.0.0.250```. Unfortunately logs back into the headnode.
-6. Re-log on to the job on node001 ```srun--jobid=123 --pty bash -i```.
-7. Activate conda environment ```conda activate adi_test```
-8. Run training scripts ```...```
+3. ssh to headnode in a new terminal.
+4. Create job on gpunode (node001) with ```salloc -p confirm ...```.
+5. Connect to that job: ```srun--jobid=123 --pty bash -i```.
+6. Set up ssh tunnel to headnode ```ssh -L 9090:localhost:8086 10.0.0.250```. Unfortunately logs back into the headnode.
+7. Re-log on to the job on node001 ```srun--jobid=123 --pty bash -i```.
+8. Activate conda environment ```conda activate adi_test```
+9. Run training scripts ```...```
+
+
+####Connecting to Github
+Personal access token: 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

@@ -4,6 +4,8 @@ import time
 
 class DatasetConfiguration:
     def __init__(self):
+        self.local_token = "xZQSsWwOWDRoVwN4fx0o78_ZUgDgGE15Gbllb4iunKYTb9mutrcX4fvapJ2AkAC8buGih0qopwaumkHzIUjWFA=="
+        self.gpu_token = "sPxOPI2tfrYVVjpC3b8IwxtJnv8ISRmTr_rEDaX4Q6WDj_SA1TjXPpplR26oJwHFB9aIei07jhsqHXdXkT6VnQ=="
         return
 
     def SetConfiguration(self, ds, data_path, config_name='Vib_Grundfoss'):
@@ -226,11 +228,10 @@ class DatasetConfiguration:
             ds.time_test_end = time.mktime(time.strptime("11.06.2021 12:00:00", "%d.%m.%Y %H:%M:%S"))
 
             ds.nr_sample = 15000
-            url = "http://localhost:8086"
-            token = "xZQSsWwOWDRoVwN4fx0o78_ZUgDgGE15Gbllb4iunKYTb9mutrcX4fvapJ2AkAC8buGih0qopwaumkHzIUjWFA=="
+            url = "http://localhost:9090"
             org = "Insight"
             bucket = "ADI"
             ds.read_write_dict = {"url": url,
-                                  "token": token,
+                                  "token": self.gpu_token,
                                   "org": org,
                                   "bucket": bucket}
