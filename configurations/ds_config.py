@@ -6,6 +6,8 @@ class DatasetConfiguration:
     def __init__(self):
         self.local_token = "xZQSsWwOWDRoVwN4fx0o78_ZUgDgGE15Gbllb4iunKYTb9mutrcX4fvapJ2AkAC8buGih0qopwaumkHzIUjWFA=="
         self.gpu_token = "sPxOPI2tfrYVVjpC3b8IwxtJnv8ISRmTr_rEDaX4Q6WDj_SA1TjXPpplR26oJwHFB9aIei07jhsqHXdXkT6VnQ=="
+        self.local_url = "http://localhost:8086"
+        self.remote_url = "http://localhost:9090"
 
         # train test times for dataset common to all training and testing
         self.standard_time_train_start = time.mktime(time.strptime("10.06.2021 00:00:00", "%d.%m.%Y %H:%M:%S"))
@@ -260,7 +262,7 @@ class DatasetConfiguration:
             url = "http://localhost:9090"
             org = "Insight"
             bucket = "ADI"
-            ds.read_write_dict = {"url": url,
-                                  "token": self.gpu_token,
+            ds.read_write_dict = {"url": self.local_url,
+                                  "token": self.local_token,
                                   "org": org,
                                   "bucket": bucket}

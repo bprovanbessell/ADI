@@ -3,3 +3,5 @@ saved_models
 .DS_Store
 */__pycache__/*
 img
+documentation/detailed_setup.md
+vae_param_experiment
