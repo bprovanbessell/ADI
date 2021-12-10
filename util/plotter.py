@@ -237,7 +237,7 @@ class Plotter:
         plt.xlabel("Sample timestamp")
         plt.ylabel("RPM")
         plt.figure(figsize=(6, 6))
-        plt.savefig(f + "_rmp_time.png", transparent=True)
+        plt.savefig(f + "_rpm_time.png", transparent=True)
         plt.show()
 
 def reconstruction_comparison(solvers, X, limit, input_shape):

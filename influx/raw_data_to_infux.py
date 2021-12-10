@@ -92,6 +92,94 @@ def otosense_influx_write(path_to_data, devices, write_threshold, write_dict):
     client.close()
 
 
+def otosense_influx_write_old(path_to_data, devices, write_threshold, write_dict):
+    url = write_dict["url"]
+    token = write_dict["token"]
+    org = write_dict["org"]
+    bucket = write_dict["bucket"]
+
+    with InfluxDBClient(url=url, token=token, org=org) as client:
+        with client.write_api(write_options=WriteOptions(batch_size=15_000, flush_interval=5000)) as write_api:
+
+            # for each device/machine create a measurement
+            for j, device in enumerate(devices):
+                # get the list of files to generate the data from
+                f_lib, timestamp = get_files_list_tm_old(path_to_data, device)
+
+                nr_channels = 3
+                nr_samples = 15000
+
+                list_of_points = []
+                metadata_points = []
+
+                # test config should be 100 sets of 15 points
+                # for i in range(100):
+                for i in range(len(f_lib)):
+
+                    dataset = np.zeros((nr_channels, nr_samples))
+                    print("File " + str(i) + "of" + str(len(f_lib)), end="\r")
+
+                    try:
+                        print("File " + str(i) + "of" + str(len(f_lib)), end="\r")
+                        with open(f_lib[i]) as f:
+                            data = json.load(f)
+                            dataset[0, :] = data["flux"]
+                            dataset[1, :] = data["vibx"]
+                            dataset[2, :] = data["vibz"]
+
+                        dt = timestamp[i]
+
+                        points = make_tm_points_batch(nr_samples, dt, dataset, j)
+
+                        list_of_points.extend(points)
+
+                        # for metadata only, here only the timestamp is needed
+                        # keep if other info is necessary
+                        with open(f_lib[i].replace("completeSample", "performance")) as f:
+                            data = json.load(f)
+                            metadata_point = Point("test_motor_" + str(j) + "_metadata") \
+                                .tag("machine_id", str(j)) \
+                                .field("rpm", float(data["rpm"])) \
+                                .time(format_dt_ns(dt, 0, 0))
+
+                            metadata_points.append(metadata_point)
+
+                        # when there are a number of points above the threshold, write them to the db
+                        if len(list_of_points) >= write_threshold:
+                            write_api.write(bucket=bucket, record=list_of_points)
+                            write_api.write(bucket=bucket, record=metadata_points)
+
+                            list_of_points = []
+                            metadata_points = []
+
+                    except Exception as E:
+                        print(E)
+                        print("warning:" + f_lib[i])
+
+                # write all final points
+                write_api.write(bucket=bucket, record=list_of_points)
+                write_api.write(bucket=bucket, record=metadata_points)
+
+    client.close()
+
+
+def get_files_list_tm_old(path_to_data, device):
+    f_lib = []
+    timestamp = []
+    for filename in sorted(glob.glob(path_to_data + device + "/completeSample/data*")):
+        try:
+            f_lib.append(filename)
+            timestamp.append(
+                datetime.datetime.fromtimestamp(int(re.split("[# .]", filename)[-2]) / 1000)
+            )
+        except Exception as E:
+            print("warning:" + filename)
+            print(E)
+    print("Total files found: ", len(f_lib))
+
+    return f_lib, timestamp
+
+
 def get_files_list_tm(path_to_data, device):
     f_lib = []
     timestamp = []
