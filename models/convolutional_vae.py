@@ -37,7 +37,7 @@ class ConvolutionalVAE:
                            'dense_layer_dim': [32, 64, 128, 256],
                            'latent_dim': [4, 8, 16, 32],
                            'batch_size': [20],
-                           'epochs': [400],
+                           'epochs': [1000],
                            'patience': [30],
                            'optimizer': ['adam', 'nadam', 'rmsprop'],
                            'conv_activation': ['relu', 'elu', 'selu'],

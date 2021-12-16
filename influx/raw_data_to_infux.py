@@ -3,6 +3,8 @@ import datetime
 import re
 import csv
 import json
+import time
+
 import numpy as np
 import gzip
 import pandas as pd
@@ -11,6 +13,73 @@ from influxdb_client import Point, InfluxDBClient, WriteOptions
 """
 Write the compressed files to the influx database
 """
+
+
+def otosense_influx_write_new(path_to_data, devices, write_threshold, write_dict):
+
+    url = write_dict["url"]
+    token = write_dict["token"]
+    org = write_dict["org"]
+    bucket = write_dict["bucket"]
+
+    with InfluxDBClient(url=url, token=token, org=org) as client:
+        with client.write_api(write_options=WriteOptions(batch_size=15_000, flush_interval=5000)) as write_api:
+            # for each device/machine create a measurement
+
+            # mew format contains a file for each machine, and each line within that file represents a 2 second sample
+            for j, device in enumerate(devices):
+                filename = glob.glob(path_to_data + "*" + device + "*")[0]
+                print(filename)
+
+                nr_channels = 3
+                nr_samples = 15000
+
+                list_of_points = []
+                metadata_points = []
+
+                i = 0
+                try:
+                    with open(filename) as f:
+                        for line in f:
+                            i += 1
+                            print("Line " + str(i), end="\r")
+                            data = eval(line)
+                            # print(data.keys())
+                            dt = datetime.datetime.fromtimestamp(int(data["timestamp"]) // 1000)
+
+                            dataset = np.zeros((nr_channels, nr_samples))
+                            dataset[0, :] = data["flux"]
+                            dataset[1, :] = data["vibx"]
+                            dataset[2, :] = data["vibz"]
+
+                            points = make_tm_points_batch(nr_samples, dt, dataset, j)
+                            list_of_points.extend(points)
+
+                            # no rpm in this data format
+                            metadata_point = Point("test_motor_" + str(j) + "_metadata") \
+                                .tag("machine_id", str(j)) \
+                                .field("rpm", float(0)) \
+                                .time(format_dt_ns(dt, 0, 0))
+
+                            metadata_points.append(metadata_point)
+
+                            if len(list_of_points) >= write_threshold:
+
+                                write_api.write(bucket=bucket, record=list_of_points)
+                                write_api.write(bucket=bucket, record=metadata_points)
+
+                                list_of_points = []
+                                metadata_points = []
+
+                except Exception as E:
+                    print(E)
+                    print("warning:" + filename)
+
+                # write all final points
+                write_api.write(bucket=bucket, record=list_of_points)
+                write_api.write(bucket=bucket, record=metadata_points)
+
+        client.close()
 
 
 def otosense_influx_write(path_to_data, devices, write_threshold, write_dict):
@@ -103,6 +172,8 @@ def otosense_influx_write_old(path_to_data, devices, write_threshold, write_dict
 
             # for each device/machine create a measurement
             for j, device in enumerate(devices):
+            # for j in range(1, 3):
+                device = devices[j]
                 # get the list of files to generate the data from
                 f_lib, timestamp = get_files_list_tm_old(path_to_data, device)
 
@@ -383,6 +454,11 @@ if __name__ == "__main__":
 
     # Machine names
     tm_devices = ["BlockAScrubber", "PU7001", "GeneralCoolingLoop"]
+    tm_devices_new = ["Block-A-Scrubber", "PU7001", "General_Cooling_Loop"]
+
+    path_to_tm_data_new = "../../all_data/Dec data/data-31-10-2021/"
+
+    otosense_influx_write_new(path_to_tm_data_new, tm_devices_new, write_threshold, write_dict)
 
     # otosense_influx_write(path_to_tm_data, tm_devices, write_threshold, write_dict)
 
