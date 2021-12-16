@@ -20,8 +20,8 @@ ds_config.DatasetConfiguration().SetConfiguration(ds, data_path, experiment_name
 ds.dataset_creation_influx()
 ds.data_summary()
 
-if not os.path.exists("../saved_models"):
-    os.mkdir("../saved_models")
+if not os.path.exists("saved_models"):
+    os.mkdir("saved_models")
 
 model = convolutional_vae.ConvolutionalVAE()
 model.name = experiment_name
@@ -33,8 +33,8 @@ t = talos.Scan(x=ds.X_train,
                round_limit=100,
                print_params=True)
 
-if not os.path.exists("../talos_results/"):
-    os.mkdir("../talos_results")
+if not os.path.exists("talos_results/"):
+    os.mkdir("talos_results")
 
 filehandler = open("talos_results/" + ds.name + ".obj", 'wb')
 pickle.dump(t.data, filehandler)
