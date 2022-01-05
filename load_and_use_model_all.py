@@ -8,7 +8,8 @@ data_path = '/Volumes/Elements/ADI/data_tm20/'
 
 # Data creation and load
 ds = dataset.Dataset()
-ds_config.DatasetConfiguration().SetConfiguration(ds, data_path, 'All_measurements_sept_oct')
+ds_config.DatasetConfiguration().SetConfiguration(ds, data_path, 'All_measurements_sept_oct_gcl_error')
+
 # ds_config.DatasetConfiguration().SetConfiguration(ds, data_path,'EXa_1_Curr')
 #
 # ds.dataset_creation()
@@ -35,7 +36,7 @@ print("Minutes to load data: ", (t1 - t0) / 60)
 ds.data_summary()
 
 vae = convolutional_vae.ConvolutionalVAE()
-model_name = "All_measurements_sept_oct0293"
+model_name = "All_measurements_sept_oct_gcl_error0112"
 vae.load_models(model_name)
 
 
@@ -61,6 +62,9 @@ p.reconstruction_error_time()
 # p.reconstruction_error(np.linspace(0, 3, 50))
 # p.pdf(np.linspace(-16, 0, 50))
 
+print("Model summary")
+print(vae.model.summary)
+
 print("upload reconstruction error to influx")
 p.reconstruction_error_time_influx(True, True, model_name, write_dict)
 
@@ -68,7 +72,7 @@ print("train pca model")
 pca = pca.PCAModel()
 pca.training(ds.X_train, None, None, None, None)
 
-model_name = "All_measurements_sept_oct_pca"
+model_name = "All_measurements_sept_oct_pca_gcl"
 
 
 p = plotter.Plotter()

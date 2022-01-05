@@ -288,11 +288,11 @@ class DatasetConfiguration:
                                   "org": org,
                                   "bucket": bucket}
 
-        if config_name == 'All_measurements_sept_oct_gcl_error':
+        if config_name == 'vib_sept_oct_gcl_error':
             ds.name = config_name
             ds.data_file = data_path + 'np_dataset.npy'
             ds.metadata_file = data_path + 'np_metadata.npy'
-            ds.signal = 'all'
+            ds.signal = 'vib'
             ds.machine = 2
             ds.normalization = 'scale'
             ds.speed_limit = 0
@@ -302,10 +302,17 @@ class DatasetConfiguration:
             ds.time_test_end = time.mktime(time.strptime("31.10.2021 00:00:00", "%d.%m.%Y %H:%M:%S"))
 
             ds.nr_sample = 15000
-            url = "http://localhost:9090"
+            url = "http://localhost:9093"
             org = "Insight"
             bucket = "ADI"
-            ds.read_write_dict = {"url": self.remote_url,
+            # train
+            # ds.read_write_dict = {"url": self.remote_url,
+            #                       "token": self.gpu_token,
+            #                       "org": org,
+            #                       "bucket": bucket}
+            # local test
+            ds.read_write_dict = {"url": url,
                                   "token": self.gpu_token,
                                   "org": org,
                                   "bucket": bucket}
+
