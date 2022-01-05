@@ -306,13 +306,13 @@ class DatasetConfiguration:
             org = "Insight"
             bucket = "ADI"
             # train
-            # ds.read_write_dict = {"url": self.remote_url,
-            #                       "token": self.gpu_token,
-            #                       "org": org,
-            #                       "bucket": bucket}
-            # local test
-            ds.read_write_dict = {"url": url,
+            ds.read_write_dict = {"url": self.remote_url,
                                   "token": self.gpu_token,
                                   "org": org,
                                   "bucket": bucket}
+            # local test
+            # ds.read_write_dict = {"url": url,
+            #                       "token": self.gpu_token,
+            #                       "org": org,
+            #                       "bucket": bucket}
 
