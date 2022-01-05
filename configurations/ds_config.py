@@ -292,7 +292,7 @@ class DatasetConfiguration:
             ds.name = config_name
             ds.data_file = data_path + 'np_dataset.npy'
             ds.metadata_file = data_path + 'np_metadata.npy'
-            ds.signal = 'vib'
+            ds.signal = 'vibration'
             ds.machine = 2
             ds.normalization = 'scale'
             ds.speed_limit = 0
