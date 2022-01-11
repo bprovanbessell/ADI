@@ -51,7 +51,7 @@ p.X_test = np.asarray(ds.X_test)
 p.meta_train = ds.metadata_train
 p.meta_test = ds.metadata_test
 
-p.reconstruction_error_time_influx(True, True, model_name, write_dict)
+# p.reconstruction_error_time_influx(True, True, model_name, write_dict)
 
 # # Plot the latent space
 # p.rpm_time(train=False)

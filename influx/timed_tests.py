@@ -10,7 +10,7 @@ if __name__ == "__main__":
 
     # url = "http://localhost:8086"
     # for the gpu ssh tunnel
-    url = "http://localhost:9093"
+    url = "http://localhost:9090"
     # token = "xZQSsWwOWDRoVwN4fx0o78_ZUgDgGE15Gbllb4iunKYTb9mutrcX4fvapJ2AkAC8buGih0qopwaumkHzIUjWFA=="
     # gpu token
     token = "sPxOPI2tfrYVVjpC3b8IwxtJnv8ISRmTr_rEDaX4Q6WDj_SA1TjXPpplR26oJwHFB9aIei07jhsqHXdXkT6VnQ=="
@@ -39,7 +39,7 @@ if __name__ == "__main__":
     # path_to_ver_data = "data/verdigris/"
 
     # all the data
-    path_to_ver_data = "../../all_data/ADI/data_verdigris/"
+    path_to_ver_data = "../../all_data/upload/"
 
     # Name of the motors (they are in the same order as the previous ones)
     ver_devices = ["JBE10001123", "JBE10001196", "JBE10001268"]
@@ -49,21 +49,10 @@ if __name__ == "__main__":
     # path_to_tm_data = "../../all_data/Dec data/31-05-2021/"
     # otosense_influx_write(path_to_tm_data, tm_devices, write_threshold, write_dict)
 
-    path_to_tm_data = "../../all_data/Dec data/data-31-10-2021/"
-    otosense_influx_write_new(path_to_tm_data, tm_devices_new, write_threshold, write_dict)
-
-    # path_to_tm_data = "../../all_data/Dec data/june, you should have it/data-30-06-2021/"
-    # otosense_influx_write(path_to_tm_data, tm_devices, write_threshold, write_dict)
-    # dataset, metadata = preprocessing.npy_creation_otosense(path_to_tm_data, tm_devices)
+    # otosense_influx_write_new(path_to_tm_data, tm_devices_new, write_threshold, write_dict)
 
     # path_to_ver_data = "../../all_data/Dec data/verd new/"
-    # verdigris_influx_write(path_to_ver_data, ver_devices, indexes, write_threshold, write_dict)
-    #
-    # path_to_ver_data = "../../all_data/2021-06/"
-    # verdigris_influx_write(path_to_ver_data, ver_devices, indexes, write_threshold, write_dict)
-    #
-    # path_to_ver_data = "../../all_data/2021-07/"
-    # verdigris_influx_write(path_to_ver_data, ver_devices, indexes, write_threshold, write_dict)
+    verdigris_influx_write(path_to_ver_data, ver_devices, indexes, write_threshold, write_dict)
 
     t1 = time.time()
 

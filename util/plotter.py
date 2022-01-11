@@ -196,6 +196,55 @@ class Plotter:
         plt.savefig(f + "_reconstruction_error_time.png", transparent=True)
         plt.show()
 
+    def reconstruction_error_time_moving_avg(self, limit=0, train=True, test=True, anomaly=False, window_size=6):
+        fig, ax = plt.subplots()
+        f = self.image_folder + self.name
+        if test:
+            time_list = self.meta_test[:, 2]
+            moving_res = self.moving_average(self.model_mse(self.X_test), window_size)
+            time_list = time_list[0:len(time_list) - window_size + 1]
+            plt.scatter([datetime.fromtimestamp(x) for x in time_list], moving_res, c='g')
+        if train:
+            f += "_train"
+            time_list = self.meta_train[:, 2]
+            moving_res = self.moving_average(self.model_mse(self.X_train), window_size)
+            time_list = time_list[0:len(time_list) - window_size + 1]
+            plt.scatter([datetime.fromtimestamp(x) for x in time_list], moving_res, c='b')
+            if test:
+                time_list = np.concatenate([time_list, self.meta_train[:, 2]], 0)
+
+
+        if anomaly:
+            f += "_anomaly"
+            time_list = self.meta_anomaly[:, 2]
+            moving_res = self.moving_average(self.model_mse(self.X_anomaly), window_size)
+            time_list = time_list[0:len(time_list) - window_size + 1]
+            plt.scatter([datetime.fromtimestamp(x) for x in time_list], moving_res, c='r')
+            time_list = np.concatenate([time_list, self.meta_anomaly[:, 2]], 0)
+
+        # width = np.diff(time_list).min()
+        ax.xaxis_date()
+
+        # Make space for and rotate the x-axis tick labels
+        fig.autofmt_xdate()
+        if limit > 0:
+            f += "_" + str(limit)
+            plt.ylim(0, limit)
+        plt.title("Reconstruction error over time moving average" + self.name)
+        plt.xlabel("Sample timestamp")
+        plt.ylabel("Reconstruction error")
+        plt.figure(figsize=(6, 6))
+        plt.savefig(f + "_reconstruction_error_time_moving_avg.png", transparent=True)
+        plt.show()
+
+    def moving_average(self, X, window_size):
+        res = []
+        for i in range(0, len(X) - window_size + 1):
+            w_avg = sum(X[i:i + window_size]) / window_size
+            res.append(w_avg)
+
+        return res
+
     def reconstruction_error_time_influx(self, train, test, model_name, write_dict):
 
         if test:
@@ -208,7 +257,7 @@ class Plotter:
                 results = np.concatenate([results, self.model_mse(self.X_train)], 0)
             else:
                 time_list = self.meta_train[:, 2]
-                results = results = self.model_mse(self.X_train)
+                results = self.model_mse(self.X_train)
 
         points = results_to_influx.make_results_points(time_list, results, self.name, model_name)
         results_to_influx.write_results_to_influx(write_dict, points)
