@@ -10,7 +10,7 @@ data_path = '/home/avisentin/data/'
 # os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 os.environ["CUDA_VISIBLE_DEVICES"] = "2"
 # os.environ["CUDA_VISIBLE_DEVICES"] = "-1"
-experiment_name = 'vib_sept_oct_gcl_error'
+experiment_name = 'curr_sept_oct_gcl_error'
 
 # Data creation and load
 # Make new dataset configuration for all of these tests

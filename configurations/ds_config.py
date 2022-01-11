@@ -288,11 +288,11 @@ class DatasetConfiguration:
                                   "org": org,
                                   "bucket": bucket}
 
-        if config_name == 'vib_sept_oct_gcl_error':
+        if config_name == 'curr_sept_oct_gcl_error':
             ds.name = config_name
             ds.data_file = data_path + 'np_dataset.npy'
             ds.metadata_file = data_path + 'np_metadata.npy'
-            ds.signal = 'vibration'
+            ds.signal = 'current'
             ds.machine = 2
             ds.normalization = 'scale'
             ds.speed_limit = 0
