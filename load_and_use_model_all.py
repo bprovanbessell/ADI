@@ -8,7 +8,7 @@ data_path = '/Volumes/Elements/ADI/data_tm20/'
 
 # Data creation and load
 ds = dataset.Dataset()
-ds_config.DatasetConfiguration().SetConfiguration(ds, data_path, 'All_measurements_sept_oct_test')
+ds_config.DatasetConfiguration().SetConfiguration(ds, data_path, 'All_measurements_nov_test')
 
 # ds_config.DatasetConfiguration().SetConfiguration(ds, data_path,'EXa_1_Curr')
 #
@@ -28,48 +28,48 @@ write_dict = {"url": url,
 
 # ds = ds.data_load(ds.name)
 t0 = time.time()
-# ds.dataset_creation_influx()
+ds.dataset_creation_influx()
 t1 = time.time()
 
 print("Minutes to load data: ", (t1 - t0) / 60)
 
-# ds.data_summary()
+ds.data_summary()
 
 vae = convolutional_vae.ConvolutionalVAE()
-# model_name = "All_measurements_sept_oct_gcl_error0112"
-# vae.load_models(model_name)
+model_name = "All_measurements_sept_oct_gcl_error0112"
+vae.load_models(model_name)
 
 # get the config
-vae.load_models("EXa_1_Curr0127")
-print("model summary")
-print(vae.model.summary())
-
-print("encoder summary")
-print(vae.encoder.summary())
-
-print(vae.decoder.summary())
+# vae.load_models("EXa_1_Curr0127")
+# print("model summary")
+# print(vae.model.summary())
+#
+# print("encoder summary")
+# print(vae.encoder.summary())
+#
+# print(vae.decoder.summary())
 
 
 """ This part allows to plot an analysis without an anomaly
 """
 
-# p = plotter.Plotter()
-# p.name = ds.name
-# p.model = vae
-# p.X_train = np.asarray(ds.X_train)
-# p.X_test = np.asarray(ds.X_test)
-# p.meta_train = ds.metadata_train
-# p.meta_test = ds.metadata_test
-#
-# print("create graphs")
-# # Plot the latent space
-# # p.rpm_time(train=False)
-# # p.latent_space_complete()
-# # p.plot_tsne(anomaly=False, train=False)
-# p.reconstruction_error_time(train=False)
-# p.reconstruction_error(np.linspace(0, 3, 50))
-# p.reconstruction_error_time()
-# p.reconstruction_error_time_moving_avg()
+p = plotter.Plotter()
+p.name = ds.name
+p.model = vae
+p.X_train = np.asarray(ds.X_train)
+p.X_test = np.asarray(ds.X_test)
+p.meta_train = ds.metadata_train
+p.meta_test = ds.metadata_test
+
+print("create graphs")
+# Plot the latent space
+# p.rpm_time(train=False)
+# p.latent_space_complete()
+# p.plot_tsne(anomaly=False, train=False)
+p.reconstruction_error_time(train=False)
+p.reconstruction_error(np.linspace(0, 3, 50))
+p.reconstruction_error_time()
+p.reconstruction_error_time_moving_avg()
 # p.roc()
 # p.reconstruction_error(np.linspace(0, 3, 50))
 # p.pdf(np.linspace(-16, 0, 50))

@@ -26,17 +26,13 @@ if __name__ == "__main__":
     write_threshold = 15000 * batches
 
     # path_to_tm_data = "../../all_data/sample_data/data-31-08-2021/"
-
     # path_to_tm_data = "../../all_data/ADI/data_tm/"
-    path_to_tm_data = "../../all_data/Dec data/data-31-05-2021/"
+    # path_to_tm_data = "../../all_data/Dec data/data-31-05-2021/"
 
     # Machine names
     tm_devices = ["BlockAScrubber", "PU7001", "GeneralCoolingLoop"]
     # tm_devices = ["Grundfoss", "PU-7001", "GeneralCoolingLoop"]
     tm_devices_new = ["Block-A-Scrubber", "PU7001", "General_Cooling_Loop"]
-
-
-    # path_to_ver_data = "data/verdigris/"
 
     # all the data
     path_to_ver_data = "../../all_data/upload/"
@@ -46,13 +42,12 @@ if __name__ == "__main__":
     # The numpy arrays contain many columns, the one of interest start at these indexes
     indexes = [6, 12, 9]
 
-    # path_to_tm_data = "../../all_data/Dec data/31-05-2021/"
+    path_to_tm_data = "../../all_data/otosense/data-31-11-2021/"
     # otosense_influx_write(path_to_tm_data, tm_devices, write_threshold, write_dict)
-
-    # otosense_influx_write_new(path_to_tm_data, tm_devices_new, write_threshold, write_dict)
+    otosense_influx_write_new(path_to_tm_data, tm_devices_new, write_threshold, write_dict)
 
     # path_to_ver_data = "../../all_data/Dec data/verd new/"
-    verdigris_influx_write(path_to_ver_data, ver_devices, indexes, write_threshold, write_dict)
+    # verdigris_influx_write(path_to_ver_data, ver_devices, indexes, write_threshold, write_dict)
 
     t1 = time.time()
 

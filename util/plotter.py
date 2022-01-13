@@ -245,6 +245,10 @@ class Plotter:
 
         return res
 
+    def mean_absolute_vibration(self, X):
+        res = np.mean(X, axis=1)
+
+
     def reconstruction_error_time_influx(self, train, test, model_name, write_dict):
 
         if test:

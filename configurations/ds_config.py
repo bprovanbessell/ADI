@@ -315,7 +315,7 @@ class DatasetConfiguration:
             #                       "token": self.gpu_token,
             #                       "org": org,
             #                       "bucket": bucket}
-        if config_name == 'All_measurements_sept_oct_test':
+        if config_name == 'All_measurements_nov_test':
             ds.name = config_name
             ds.data_file = data_path + 'np_dataset.npy'
             ds.metadata_file = data_path + 'np_metadata.npy'
@@ -325,8 +325,8 @@ class DatasetConfiguration:
             ds.speed_limit = 0
             ds.time_train_start = time.mktime(time.strptime("29.09.2021 00:00:00", "%d.%m.%Y %H:%M:%S"))
             ds.time_train_end = time.mktime(time.strptime("30.09.2021 00:00:00", "%d.%m.%Y %H:%M:%S"))
-            ds.time_test_start = time.mktime(time.strptime("17.10.2021 00:00:00", "%d.%m.%Y %H:%M:%S"))
-            ds.time_test_end = time.mktime(time.strptime("20.10.2021 00:00:00", "%d.%m.%Y %H:%M:%S"))
+            ds.time_test_start = time.mktime(time.strptime("10.11.2021 00:00:00", "%d.%m.%Y %H:%M:%S"))
+            ds.time_test_end = time.mktime(time.strptime("30.11.2021 00:00:00", "%d.%m.%Y %H:%M:%S"))
 
             ds.nr_sample = 15000
             url = "http://localhost:9093"
