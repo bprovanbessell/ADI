@@ -245,8 +245,55 @@ class Plotter:
 
         return res
 
-    def mean_absolute_vibration(self, X):
-        res = np.mean(X, axis=1)
+    def mean_absolute_vibration(self, limit=0, train=True, test=True, anomaly=False):
+
+        fig, ax = plt.subplots()
+        f = self.image_folder + self.name
+        if test:
+            abs = np.absolute(self.X_test)
+            mean_vib = np.transpose(np.mean(abs, axis=1))
+            time_list = self.meta_test[:, 2]
+            plt.scatter([datetime.fromtimestamp(x) for x in self.meta_test[:, 2]],
+                        mean_vib[0], c='limegreen', label="test vibx")
+            plt.scatter([datetime.fromtimestamp(x) for x in self.meta_test[:, 2]],
+                        mean_vib[1], c='forestgreen', label="test vibz")
+        if train:
+            f += "_train"
+            abs = np.absolute(self.X_train)
+            mean_vib = np.transpose(np.mean(abs, axis=1))
+            plt.scatter([datetime.fromtimestamp(x) for x in self.meta_train[:, 2]],
+                        mean_vib[0], c='cornflowerblue', label="train vibx")
+            plt.scatter([datetime.fromtimestamp(x) for x in self.meta_train[:, 2]],
+                        mean_vib[1], c='royalblue', label="train vibz")
+            if test:
+                time_list = np.concatenate([time_list, self.meta_train[:, 2]], 0)
+            else:
+                time_list = self.meta_train[:, 2]
+
+        if anomaly:
+            f += "_anomaly"
+            abs = np.absolute(self.X_anomaly)
+            mean_vib = np.transpose(np.mean(abs, axis=1))
+            plt.scatter([datetime.fromtimestamp(x) for x in self.meta_train[:, 2]],
+                        mean_vib[0], c='lightcoral', label="anomaly vibx")
+            plt.scatter([datetime.fromtimestamp(x) for x in self.meta_train[:, 2]],
+                        mean_vib[1], c='firebrick', label="anomaly vibz")
+            time_list = np.concatenate([time_list, self.meta_anomaly[:, 2]], 0)
+
+        width = np.diff(time_list).min()
+        ax.xaxis_date()
+
+        # Make space for and rotate the x-axis tick labels
+        fig.autofmt_xdate()
+        if limit > 0:
+            f += "_" + str(limit)
+            plt.ylim(0, limit)
+        plt.title("Mean absolute vibration over time " + self.name)
+        plt.xlabel("Sample timestamp")
+        plt.ylabel("Vibration")
+        plt.figure(figsize=(6, 6))
+        plt.savefig(f + "_avg_vibration_time.png", transparent=True)
+        plt.show()
 
 
     def reconstruction_error_time_influx(self, train, test, model_name, write_dict):

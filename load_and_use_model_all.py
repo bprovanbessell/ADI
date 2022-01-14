@@ -8,7 +8,7 @@ data_path = '/Volumes/Elements/ADI/data_tm20/'
 
 # Data creation and load
 ds = dataset.Dataset()
-ds_config.DatasetConfiguration().SetConfiguration(ds, data_path, 'All_measurements_nov_test')
+ds_config.DatasetConfiguration().SetConfiguration(ds, data_path, 'vib_gcl_nov_error')
 
 # ds_config.DatasetConfiguration().SetConfiguration(ds, data_path,'EXa_1_Curr')
 #
@@ -62,14 +62,17 @@ p.meta_train = ds.metadata_train
 p.meta_test = ds.metadata_test
 
 print("create graphs")
+p.mean_absolute_vibration(train=False, test=True)
 # Plot the latent space
 # p.rpm_time(train=False)
 # p.latent_space_complete()
 # p.plot_tsne(anomaly=False, train=False)
-p.reconstruction_error_time(train=False)
-p.reconstruction_error(np.linspace(0, 3, 50))
-p.reconstruction_error_time()
-p.reconstruction_error_time_moving_avg()
+
+# p.reconstruction_error_time(train=False)
+# p.reconstruction_error(np.linspace(0, 3, 50))
+# p.reconstruction_error_time()
+# p.reconstruction_error_time_moving_avg()
+
 # p.roc()
 # p.reconstruction_error(np.linspace(0, 3, 50))
 # p.pdf(np.linspace(-16, 0, 50))
