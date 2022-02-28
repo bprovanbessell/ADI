@@ -1,3 +1,7 @@
+"""https://adi.otosensesms.com/api-reference
+
+"""
+
 import requests
 
 adi_url = ""
