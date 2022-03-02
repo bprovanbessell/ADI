@@ -5,4 +5,4 @@ saved_models
 img
 documentation/detailed_setup.md
 vae_param_experiment
-documentation/*cred*
+api_files/*cred*

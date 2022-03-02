@@ -9,10 +9,112 @@ import numpy as np
 import gzip
 import pandas as pd
 from influxdb_client import Point, InfluxDBClient, WriteOptions
+import influx.otosense_api as otosense_api
 
 """
 Write the compressed files to the influx database
 """
+
+
+def otosense_influx_write_api(devices, write_threshold, write_dict, start_time, end_time):
+    influx_url = write_dict["url"]
+    influx_token = write_dict["token"]
+    influx_org = write_dict["org"]
+    influx_bucket = write_dict["bucket"]
+
+    datasets = ["vibx", "vibz", "flux", "tempe", "tempm", "performance", "conditions", "operations", "vibxFFT",
+                "vibzFFT", "fluxFFT"]
+
+    vibx_dataset = datasets[0]
+    vibz_dataset = datasets[1]
+    flux_dataset = datasets[2]
+    performance_dataset = datasets[5]
+
+    with InfluxDBClient(url=url, token=token, org=org) as client:
+        with client.write_api(write_options=WriteOptions(batch_size=15_000, flush_interval=5000)) as write_api:
+            for j, device in enumerate(devices):
+
+                # Should think about the session, probably just create an object that checks every so often if it is still valid
+                bearer_token = otosense_api.read_bearer_token()
+                # Get the motor id for the device
+                motor_id = otosense_api.get_motor_id(bearer_token, device)
+
+                # Now, from start_time to end_time, get the 3 datasets, vibx, vibz, flux (each should contain up to 120,
+                # so either chunk it manually, or use the continuation tokens...
+                # Synchronize the time between them (not sure what assumptions we can make here)
+                # Should also get the performance dataset, as that contains the rpm
+                # Will also need exceptions in the case that there is no data
+
+                # do iterations through time...
+                # can do up to 8 hours at a time, so iterate by 8 hours
+
+                start = datetime.datetime.fromtimestamp(start_time)
+                end = datetime.datetime.fromtimestamp(end_time)
+
+                list_of_points = []
+                metadata_points = []
+
+                nr_samples = 15000
+                nr_channels = 3
+
+                while start < end:
+                    # next 20 minute interval
+                    # Go from start to newstart
+                    newstart = start + datetime.timedelta(hours=8)
+
+                    # might have to add the utc offset here...
+                    iso_start = start.strftime('%Y-%m-%dT%H:%M:%SZ')
+                    iso_nstart = newstart.strftime('%Y-%m-%dT%H:%M:%SZ')
+
+                    vibx_json = otosense_api.get_data(bearer_token, motor_id, vibx_dataset, iso_start, iso_nstart)
+                    vibz_json = otosense_api.get_data(bearer_token, motor_id, vibz_dataset, iso_start, iso_nstart)
+                    flux_json = otosense_api.get_data(bearer_token, motor_id, flux_dataset, iso_start, iso_nstart)
+                    performance_json = otosense_api.get_data(bearer_token, motor_id, performance_dataset, iso_start, iso_nstart)
+
+                    # Sync timestamps somehow
+                    # For each of the common timestamps
+                    # get the vibx, vibz, flux, rpm
+
+                    rpm_time_data = otosense_api.get_rpm_data(performance_json)
+                    vibx_time_data = otosense_api.get_samples(vibx_json)
+                    vibz_time_data = otosense_api.get_samples(vibz_json)
+                    flux_time_data = otosense_api.get_samples(flux_json)
+
+
+
+                    for k in range(len(rpm_time_data)):
+                        rpm_timestamp = rpm_time_data[k][1]
+                        vibx_timestamp = vibx_time_data[k][1]
+                        vibz_timestamp = vibz_time_data[k][1]
+                        flux_timestamp = flux_time_data[k][1]
+
+                        dataset = np.zeros((nr_channels, nr_samples))
+                        dataset[0, :] = flux_time_data[k][0]
+                        dataset[1, :] = vibx_time_data[k][0]
+                        dataset[2, :] = vibz_time_data[k][0]
+
+                        # timestamps should all be the same... Probably good to make a check in the future
+
+                        dt = datetime.datetime.fromtimestamp(int(rpm_timestamp) // 1000)
+
+                        points = make_tm_points_batch(nr_samples, dt, dataset, j)
+                        list_of_points.extend(points)
+
+                        metadata_point = Point("test_motor_" + str(j) + "_metadata") \
+                            .tag("machine_id", str(j)) \
+                            .field("rpm", float(rpm_time_data[k][0])) \
+                            .time(format_dt_ns(dt, 0, 0))
+
+                        metadata_points.append(metadata_point)
+
+                        if len(list_of_points) >= write_threshold:
+                            write_api.write(bucket=bucket, record=list_of_points)
+                            write_api.write(bucket=bucket, record=metadata_points)
+
+                            list_of_points = []
+                            metadata_points = []
+
+
 
 
 def otosense_influx_write_new(path_to_data, devices, write_threshold, write_dict):

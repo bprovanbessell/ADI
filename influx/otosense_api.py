@@ -1,10 +1,6 @@
-"""https://adi.otosensesms.com/api-reference
+"""
+https://adi.otosensesms.com/api-reference
 
-
-Base64 encode client credentials
-get the bearer token, response should signify how long it is acceptable for
-
-Provide the valid bearer token in the http header
 """
 
 import requests
@@ -61,7 +57,7 @@ def read_bearer_token():
     return res
 
 
-def get_all_motors(bearer_token):
+def write_all_motors(bearer_token):
     # https: // your - api - endpoint.otosensesms.com / motors
     headers={"Authorization": "Bearer " + bearer_token,
              "Accepth-Encoding": "gzip, deflate, br"}
@@ -70,8 +66,8 @@ def get_all_motors(bearer_token):
 
     print(r)
 
-    motors_file = open("documentation")
-    json.dump(r.json())
+    motors_file = open("api_files/motors_cred.json")
+    json.dump(r.json(), motors_file)
 
 
 def get_specific_motor(bearer_token, motor_id):
@@ -85,7 +81,7 @@ def get_specific_motor(bearer_token, motor_id):
     print(r.json())
 
 
-def get_data(bearer_token, motor_id, dataset):
+def get_data(bearer_token, motor_id, dataset, start, end):
     # Seems to be up to 120 sets of records for 1 request
     # But that might be different depending on the dataset
 
@@ -95,7 +91,7 @@ def get_data(bearer_token, motor_id, dataset):
                "Accepth-Encoding": "gzip, deflate, br"}
 
     datasets = ["vibx", "vibz", "flux", "tempe", "tempm", "performance", "conditions", "operations", "vibxFFT", "vibzFFT", "fluxFFT"]
-    url = endpoint + "data/" + motor_id + "/" + datasets[0]
+    url = endpoint + "data/" + motor_id + "/" + dataset
 
     print(url)
 
@@ -111,8 +107,47 @@ def get_data(bearer_token, motor_id, dataset):
 
     print(r)
 
-    res_file = open("documentation/results2.json", "w")
-    json.dump(r.json(), res_file)
+    # res_file = open("documentation/results2.json", "w")
+    # json.dump(r.json(), res_file)
+    return r.json()
+
+
+def get_motor_id(bearer_token, motor_name):
+
+    motors_file = open("api_files/motors_cred.json")
+    d = json.load(motors_file)
+
+    for motor in d["motors"]:
+        motor_id = motor["motorId"]
+        if motor["attributes"]["name"] == motor_name:
+            return motor_id
+
+    raise NameError("motor name not found")
+
+
+def get_rpm_data(performance_json):
+    rpm_time_data = []
+
+    for record in performance_json["records"]:
+        timestamp = record["timestamp"]
+        rpm = record["rpm"]
+
+        rpm_time_data.append((rpm, timestamp))
+
+    return rpm_time_data
+
+
+def get_samples(measurement_json):
+
+    meas_time_data = []
+
+    for record in measurement_json["records"]:
+        timestamp = record["timestamp"]
+        meas_data = record["data"]
+
+        meas_time_data.append((meas_data, timestamp))
+
+    return meas_time_data
 
 
 if __name__ == "__main__":
@@ -131,11 +166,11 @@ if __name__ == "__main__":
     # iterate through the 3 results, just checking to make sure that all the timestamps are the same (or within certain tolerance?)
     # create the influxdb points from it, upload
     # Keep track of the continuation tokens
-    bearer_token = read_bearer_token()
+    # bearer_token = read_bearer_token()
 
-    print(bearer_token)
+    # print(bearer_token)
 
-    get_all_motors(bearer_token)
+    # get_all_motors(bearer_token)
 
     print("---------MOTOR----------")
     # get_specific_motor(bearer_token, motor_id3)
