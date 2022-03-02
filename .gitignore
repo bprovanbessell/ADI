@@ -5,5 +5,4 @@ saved_models
 img
 documentation/detailed_setup.md
 vae_param_experiment
-documentation/credentials.txt
-documentation/otosense_credentials.txt
+documentation/*cred*
