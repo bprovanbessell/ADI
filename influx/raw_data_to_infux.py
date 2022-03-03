@@ -9,7 +9,7 @@ import numpy as np
 import gzip
 import pandas as pd
 from influxdb_client import Point, InfluxDBClient, WriteOptions
-import influx.otosense_api as otosense_api
+import otosense_api
 
 """
 Write the compressed files to the influx database
@@ -32,12 +32,9 @@ def otosense_influx_write_api(devices, write_threshold, write_dict, start_time, 
 
     with InfluxDBClient(url=url, token=token, org=org) as client:
         with client.write_api(write_options=WriteOptions(batch_size=15_000, flush_interval=5000)) as write_api:
-            for j, device in enumerate(devices):
 
-                # Should think about the session, probably just create an object that checks every so often if it is still valid
-                bearer_token = otosense_api.read_bearer_token()
-                # Get the motor id for the device
-                motor_id = otosense_api.get_motor_id(bearer_token, device)
+            oto_api = otosense_api.OtosenseApi()
+            for j, device in enumerate(devices):
 
                 # Now, from start_time to end_time, get the 3 datasets, vibx, vibz, flux (each should contain up to 120,
                 # so either chunk it manually, or use the continuation tokens...
@@ -50,6 +47,8 @@ def otosense_influx_write_api(devices, write_threshold, write_dict, start_time, 
 
                 start = datetime.datetime.fromtimestamp(start_time)
                 end = datetime.datetime.fromtimestamp(end_time)
+
+                motor_id = oto_api.get_motor_id(device)
 
                 list_of_points = []
                 metadata_points = []
@@ -66,22 +65,21 @@ def otosense_influx_write_api(devices, write_threshold, write_dict, start_time, 
                     iso_start = start.strftime('%Y-%m-%dT%H:%M:%SZ')
                     iso_nstart = newstart.strftime('%Y-%m-%dT%H:%M:%SZ')
 
-                    vibx_json = otosense_api.get_data(bearer_token, motor_id, vibx_dataset, iso_start, iso_nstart)
-                    vibz_json = otosense_api.get_data(bearer_token, motor_id, vibz_dataset, iso_start, iso_nstart)
-                    flux_json = otosense_api.get_data(bearer_token, motor_id, flux_dataset, iso_start, iso_nstart)
-                    performance_json = otosense_api.get_data(bearer_token, motor_id, performance_dataset, iso_start, iso_nstart)
+                    # make the api queries
+                    vibx_json = oto_api.get_data(motor_id, vibx_dataset, iso_start, iso_nstart)
+                    vibz_json = oto_api.get_data(motor_id, vibz_dataset, iso_start, iso_nstart)
+                    flux_json = oto_api.get_data(motor_id, flux_dataset, iso_start, iso_nstart)
+                    performance_json = oto_api.get_data(motor_id, performance_dataset, iso_start, iso_nstart)
 
-                    # Sync timestamps somehow
+                    # Sync timestamps somehow - future version
                     # For each of the common timestamps
-                    # get the vibx, vibz, flux, rpm
+                    # get the vibx, vibz, flux, rpm data
+                    rpm_time_data = oto_api.get_rpm_data(performance_json)
+                    vibx_time_data = oto_api.get_samples(vibx_json)
+                    vibz_time_data = oto_api.get_samples(vibz_json)
+                    flux_time_data = oto_api.get_samples(flux_json)
 
-                    rpm_time_data = otosense_api.get_rpm_data(performance_json)
-                    vibx_time_data = otosense_api.get_samples(vibx_json)
-                    vibz_time_data = otosense_api.get_samples(vibz_json)
-                    flux_time_data = otosense_api.get_samples(flux_json)
-
-
-
+                    # Add all samples found to the list of points
                     for k in range(len(rpm_time_data)):
                         rpm_timestamp = rpm_time_data[k][1]
                         vibx_timestamp = vibx_time_data[k][1]
@@ -107,14 +105,16 @@ def otosense_influx_write_api(devices, write_threshold, write_dict, start_time, 
 
                         metadata_points.append(metadata_point)
 
-                        if len(list_of_points) >= write_threshold:
-                            write_api.write(bucket=bucket, record=list_of_points)
-                            write_api.write(bucket=bucket, record=metadata_points)
+                    # write the points to influx
+                    if len(list_of_points) >= write_threshold:
+                        write_api.write(bucket=bucket, record=list_of_points)
+                        write_api.write(bucket=bucket, record=metadata_points)
 
-                            list_of_points = []
-                            metadata_points = []
+                        list_of_points = []
+                        metadata_points = []
 
-
+                    # update the start time, to get the next interval
+                    start = newstart
 
 
 def otosense_influx_write_new(path_to_data, devices, write_threshold, write_dict):

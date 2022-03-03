@@ -6,148 +6,147 @@ https://adi.otosensesms.com/api-reference
 import requests
 import json
 import datetime
+import time
 endpoint = "https://toqg6279fi.execute-api.eu-west-1.amazonaws.com/prod/"
 
 
 # Do we have a specific api endpoint
 
-def get_otosense_credentials():
+class OtosenseApi:
 
-    with open("documentation/otosense_cred.json", 'r') as cred_file:
-        data = json.load(cred_file)
+    def __init__(self):
+        self.start_time = time.time()
 
-        return data["Client ID"], data["Client Secret"]
+        self.bearer_token = self.get_authentication_token()
 
+    def get_otosense_credentials(self):
 
-def get_authentication_token():
+        with open("documentation/otosense_cred.json", 'r') as cred_file:
+            data = json.load(cred_file)
 
-    auth_ending = "oauth/token"
+            return data["Client ID"], data["Client Secret"]
 
-    url = endpoint + auth_ending
+    def check_and_update_bearer_token(self):
+        if time.time() - self.start_time < (self.valid_time - 10):
+            # update the token
+            self.bearer_token = self.get_authentication_token()
 
-    application_json = {
-        "grant_type": "client_credentials"
-    }
+    def get_authentication_token(self):
 
-    # header field shoukd be in the form of
-    # Authorization: Basic {credentials} where credentials is the Base64 encoding of client_id and client_secret joined by a single colon :.
+        auth_ending = "oauth/token"
 
-    client_id, client_secret = get_otosense_credentials()
+        url = endpoint + auth_ending
 
-    r = requests.post(url=url, json=application_json, auth=(client_id, client_secret))
+        application_json = {
+            "grant_type": "client_credentials"
+        }
 
-    print(r)
+        client_id, client_secret = self.get_otosense_credentials()
 
-    # print(r.json())
+        r = requests.post(url=url, json=application_json, auth=(client_id, client_secret))
 
-    res = r.json()
+        print(r)
 
-    # probably good to sort out timing as well, should set it up so we also know when the token is invalid, probably store it in a file aswell, so that it is never committed
+        res = r.json()
 
-    b_file = open("documentation/bearer_credentials.txt", "w")
-    b_file.write(res["access_token"])
-    b_file.close()
+        b_file = open("documentation/bearer_credentials.txt", "w")
+        b_file.write(res["access_token"])
 
-    return res["access_token"]
+        self.valid_time = int(res["expires_in"])
 
+        b_file.close()
 
-def read_bearer_token():
-    b_file = open("documentation/bearer_credentials.txt", "r")
-    res = b_file.read().strip("\n")
-    return res
+        return res["access_token"]
 
+    def read_bearer_token(self):
+        b_file = open("documentation/bearer_credentials.txt", "r")
+        res = b_file.read().strip("\n")
+        return res
 
-def write_all_motors(bearer_token):
-    # https: // your - api - endpoint.otosensesms.com / motors
-    headers={"Authorization": "Bearer " + bearer_token,
-             "Accepth-Encoding": "gzip, deflate, br"}
-    url = endpoint + "motors"
-    r = requests.get(url=url, headers=headers)
+    def write_all_motors(self):
+        # https: // your - api - endpoint.otosensesms.com / motors
+        headers={"Authorization": "Bearer " + self.bearer_token,
+                 "Accepth-Encoding": "gzip, deflate, br"}
+        url = endpoint + "motors"
+        r = requests.get(url=url, headers=headers)
 
-    print(r)
+        print(r)
 
-    motors_file = open("api_files/motors_cred.json")
-    json.dump(r.json(), motors_file)
+        motors_file = open("api_files/motors_cred.json")
+        json.dump(r.json(), motors_file)
 
+    def get_specific_motor(self, motor_id):
+        # https: // your - api - endpoint.otosensesms.com / motors
+        headers={"Authorization": "Bearer " + self.bearer_token,
+                 "Accepth-Encoding": "gzip, deflate, br"}
+        url = endpoint + "motors" + "/" + motor_id
+        r = requests.get(url=url, headers=headers)
 
-def get_specific_motor(bearer_token, motor_id):
-    # https: // your - api - endpoint.otosensesms.com / motors
-    headers={"Authorization": "Bearer " + bearer_token,
-             "Accepth-Encoding": "gzip, deflate, br"}
-    url = endpoint + "motors" + "/" + motor_id
-    r = requests.get(url=url, headers=headers)
+        print(r)
+        print(r.json())
 
-    print(r)
-    print(r.json())
+    def get_data(self, motor_id, dataset, start, end):
 
+        # Make sure the bearer token is still valid
+        self.check_and_update_bearer_token()
+        # Seems to be up to 120 sets of records for 1 request
+        # But that might be different depending on the dataset
 
-def get_data(bearer_token, motor_id, dataset, start, end):
-    # Seems to be up to 120 sets of records for 1 request
-    # But that might be different depending on the dataset
+        headers = {"Authorization": "Bearer " + self.bearer_token,
+                   "Accepth-Encoding": "gzip, deflate, br"}
 
-    # https: // your - api - endpoint.otosensesms.com / data / {motorId} / {dataset}
+        datasets = ["vibx", "vibz", "flux", "tempe", "tempm", "performance", "conditions", "operations", "vibxFFT", "vibzFFT", "fluxFFT"]
+        # https: // your - api - endpoint.otosensesms.com / data / {motorId} / {dataset}
+        url = endpoint + "data/" + motor_id + "/" + dataset
 
-    headers = {"Authorization": "Bearer " + bearer_token,
-               "Accepth-Encoding": "gzip, deflate, br"}
+        # ISO-8601 date and time
+        # '2022-03-01T11:23:19.715Z'
+        # start = "2021-01-01T00:00:00Z"
+        # end = "2022-02-06T13:38:14Z"
+        payload = {'start': start, 'end': end}
 
-    datasets = ["vibx", "vibz", "flux", "tempe", "tempm", "performance", "conditions", "operations", "vibxFFT", "vibzFFT", "fluxFFT"]
-    url = endpoint + "data/" + motor_id + "/" + dataset
+        r = requests.get(url=url, headers=headers, params=payload)
 
-    print(url)
+        print(r)
 
-    con_token = ""
+        # res_file = open("documentation/results2.json", "w")
+        # json.dump(r.json(), res_file)
+        return r.json()
 
-    # ISO-8601 date and time
-    '2022-03-01T11:23:19.715Z'
-    start = "2021-01-01T00:00:00Z"
-    end = "2022-02-06T13:38:14Z"
-    payload = {'start': start, 'end': end}
+    def get_motor_id(self, motor_name):
 
-    r = requests.get(url=url, headers=headers, params=payload)
+        motors_file = open("api_files/motors_cred.json")
+        d = json.load(motors_file)
 
-    print(r)
+        for motor in d["motors"]:
+            motor_id = motor["motorId"]
+            if motor["attributes"]["name"] == motor_name:
+                return motor_id
 
-    # res_file = open("documentation/results2.json", "w")
-    # json.dump(r.json(), res_file)
-    return r.json()
+        raise NameError("motor name not found")
 
+    def get_rpm_data(self, performance_json):
+        rpm_time_data = []
 
-def get_motor_id(bearer_token, motor_name):
+        for record in performance_json["records"]:
+            timestamp = record["timestamp"]
+            rpm = record["rpm"]
 
-    motors_file = open("api_files/motors_cred.json")
-    d = json.load(motors_file)
+            rpm_time_data.append((rpm, timestamp))
 
-    for motor in d["motors"]:
-        motor_id = motor["motorId"]
-        if motor["attributes"]["name"] == motor_name:
-            return motor_id
+        return rpm_time_data
 
-    raise NameError("motor name not found")
+    def get_samples(self, measurement_json):
 
+        meas_time_data = []
 
-def get_rpm_data(performance_json):
-    rpm_time_data = []
+        for record in measurement_json["records"]:
+            timestamp = record["timestamp"]
+            meas_data = record["data"]
 
-    for record in performance_json["records"]:
-        timestamp = record["timestamp"]
-        rpm = record["rpm"]
+            meas_time_data.append((meas_data, timestamp))
 
-        rpm_time_data.append((rpm, timestamp))
-
-    return rpm_time_data
-
-
-def get_samples(measurement_json):
-
-    meas_time_data = []
-
-    for record in measurement_json["records"]:
-        timestamp = record["timestamp"]
-        meas_data = record["data"]
-
-        meas_time_data.append((meas_data, timestamp))
-
-    return meas_time_data
+        return meas_time_data
 
 
 if __name__ == "__main__":
