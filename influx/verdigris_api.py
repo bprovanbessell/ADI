@@ -10,7 +10,7 @@ import datetime
 import time
 import paramiko
 
-# test to get the file JBE10001196.2022-01-172240.gz
+def get_files_from_time_range(machine_ids, start_time, end_time):
 
 
 # seems to be every 20 minutes, but occasionally it will be 1 minute late or so
