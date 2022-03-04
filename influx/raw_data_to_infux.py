@@ -62,6 +62,9 @@ def otosense_influx_write_api(devices, device_id, start_time, end_time, write_th
             while start < end:
                 # next 20 minute interval
                 # Go from start to newstart
+
+                # write new version at some point that uses the continuation tokens,
+                # as the api might change the internals
                 newstart = start + datetime.timedelta(hours=8)
 
                 # might have to add the utc offset here...
@@ -96,6 +99,9 @@ def otosense_influx_write_api(devices, device_id, start_time, end_time, write_th
                     dataset[0, :] = flux_time_data[k][0]
                     dataset[1, :] = vibx_time_data[k][0]
                     dataset[2, :] = vibz_time_data[k][0]
+
+                    print("lengths of datasets")
+                    print(len(flux_time_data[k][0]), len(vibx_time_data[k][0]), len(vibz_time_data[k][0]))
 
                     # timestamps should all be the same... Probably good to make a check in the future
 

@@ -60,7 +60,7 @@ if __name__ == "__main__":
     # General cooling loop is still online
 
     upload_start = time.mktime(time.strptime("01.03.2022 00:00:00", "%d.%m.%Y %H:%M:%S"))
-    upload_end = time.mktime(time.strptime("02.03.2022 00:00:00", "%d.%m.%Y %H:%M:%S"))
+    upload_end = time.mktime(time.strptime("01.03.2022 04:00:00", "%d.%m.%Y %H:%M:%S"))
 
     # print(os.getcwd())
     # print(sys.path)
