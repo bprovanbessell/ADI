@@ -7,7 +7,6 @@ import requests
 import json
 import datetime
 import time
-endpoint = "https://toqg6279fi.execute-api.eu-west-1.amazonaws.com/prod/"
 
 
 # Do we have a specific api endpoint
@@ -16,12 +15,15 @@ class OtosenseApi:
 
     def __init__(self):
         self.start_time = time.time()
+        self.endpoint = "https://toqg6279fi.execute-api.eu-west-1.amazonaws.com/prod/"
+        self.path_base = "../"
 
         self.bearer_token = self.get_authentication_token()
 
+
     def get_otosense_credentials(self):
 
-        with open("documentation/otosense_cred.json", 'r') as cred_file:
+        with open(self.path_base + "api_files/otosense_cred.json", 'r') as cred_file:
             data = json.load(cred_file)
 
             return data["Client ID"], data["Client Secret"]
@@ -29,13 +31,14 @@ class OtosenseApi:
     def check_and_update_bearer_token(self):
         if time.time() - self.start_time < (self.valid_time - 10):
             # update the token
+            print("Token out of date, update the bearer token")
             self.bearer_token = self.get_authentication_token()
 
     def get_authentication_token(self):
 
         auth_ending = "oauth/token"
 
-        url = endpoint + auth_ending
+        url = self.endpoint + auth_ending
 
         application_json = {
             "grant_type": "client_credentials"
@@ -49,7 +52,7 @@ class OtosenseApi:
 
         res = r.json()
 
-        b_file = open("documentation/bearer_credentials.txt", "w")
+        b_file = open(self.path_base + "api_files/bearer_credentials.txt", "w")
         b_file.write(res["access_token"])
 
         self.valid_time = int(res["expires_in"])
@@ -59,7 +62,7 @@ class OtosenseApi:
         return res["access_token"]
 
     def read_bearer_token(self):
-        b_file = open("documentation/bearer_credentials.txt", "r")
+        b_file = open(self.path_base + "api_files/bearer_credentials.txt", "r")
         res = b_file.read().strip("\n")
         return res
 
@@ -67,19 +70,19 @@ class OtosenseApi:
         # https: // your - api - endpoint.otosensesms.com / motors
         headers={"Authorization": "Bearer " + self.bearer_token,
                  "Accepth-Encoding": "gzip, deflate, br"}
-        url = endpoint + "motors"
+        url = self.endpoint + "motors"
         r = requests.get(url=url, headers=headers)
 
         print(r)
 
-        motors_file = open("api_files/motors_cred.json")
+        motors_file = open(self.path_base + "api_files/motors_cred.json", "w")
         json.dump(r.json(), motors_file)
 
     def get_specific_motor(self, motor_id):
         # https: // your - api - endpoint.otosensesms.com / motors
         headers={"Authorization": "Bearer " + self.bearer_token,
                  "Accepth-Encoding": "gzip, deflate, br"}
-        url = endpoint + "motors" + "/" + motor_id
+        url = self.endpoint + "motors" + "/" + motor_id
         r = requests.get(url=url, headers=headers)
 
         print(r)
@@ -95,9 +98,8 @@ class OtosenseApi:
         headers = {"Authorization": "Bearer " + self.bearer_token,
                    "Accepth-Encoding": "gzip, deflate, br"}
 
-        datasets = ["vibx", "vibz", "flux", "tempe", "tempm", "performance", "conditions", "operations", "vibxFFT", "vibzFFT", "fluxFFT"]
         # https: // your - api - endpoint.otosensesms.com / data / {motorId} / {dataset}
-        url = endpoint + "data/" + motor_id + "/" + dataset
+        url = self.endpoint + "data/" + motor_id + "/" + dataset
 
         # ISO-8601 date and time
         # '2022-03-01T11:23:19.715Z'
@@ -108,14 +110,13 @@ class OtosenseApi:
         r = requests.get(url=url, headers=headers, params=payload)
 
         print(r)
-
         # res_file = open("documentation/results2.json", "w")
         # json.dump(r.json(), res_file)
         return r.json()
 
     def get_motor_id(self, motor_name):
 
-        motors_file = open("api_files/motors_cred.json")
+        motors_file = open(self.path_base + "api_files/motors_cred.json")
         d = json.load(motors_file)
 
         for motor in d["motors"]:

@@ -21,5 +21,5 @@
 11. Download models to run graph: ```scp -r <gpu_ip>:/home/bprovan/ADI/saved_models/<model_setup>model.tf ADI/saved_models```
 
 
-####Connecting to Github
-Personal access token: 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
+#### Too many open files
+```ulimit -n 10000```
