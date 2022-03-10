@@ -70,7 +70,7 @@ def get_password():
     return password
 
 
-def download_all_with(includes="2022"):
+def download_all_with(includes=".2022-"):
     host = "107.21.164.35"
     username = "adi"
     password = get_password()

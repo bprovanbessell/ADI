@@ -13,13 +13,13 @@ import time
 
 class OtosenseApi:
 
-    def __init__(self):
+    def __init__(self, verbose=False):
         self.start_time = time.time()
         self.endpoint = "https://toqg6279fi.execute-api.eu-west-1.amazonaws.com/prod/"
         self.path_base = "../"
+        self.verbose = verbose
 
         self.bearer_token = self.get_authentication_token()
-
 
     def get_otosense_credentials(self):
 
@@ -29,12 +29,15 @@ class OtosenseApi:
             return data["Client ID"], data["Client Secret"]
 
     def check_and_update_bearer_token(self):
-        if time.time() - self.start_time < (self.valid_time - 10):
+        if (time.time() - self.start_time) > (self.valid_time - 10):
             # update the token
-            print("Token out of date, update the bearer token")
+            if self.verbose:
+                print("Token out of date, update the bearer token")
             self.bearer_token = self.get_authentication_token()
 
     def get_authentication_token(self):
+        if self.verbose:
+            print("Getting bearer token")
 
         auth_ending = "oauth/token"
 
@@ -89,6 +92,8 @@ class OtosenseApi:
         print(r.json())
 
     def get_data(self, motor_id, dataset, start, end):
+        if self.verbose:
+            print("getting data from: ", start, " to: ", end, " from motor: ", motor_id)
 
         # Make sure the bearer token is still valid
         self.check_and_update_bearer_token()
@@ -112,6 +117,30 @@ class OtosenseApi:
         print(r)
         # res_file = open("documentation/results2.json", "w")
         # json.dump(r.json(), res_file)
+        return r.json()
+
+    def get_data_continuation(self, motor_id, dataset, start, end, cont_token):
+        # Make sure the bearer token is still valid
+        self.check_and_update_bearer_token()
+        # Seems to be up to 120 sets of records for 1 request
+        # But that might be different depending on the dataset
+
+        headers = {"Authorization": "Bearer " + self.bearer_token,
+                   "Accepth-Encoding": "gzip, deflate, br"}
+
+        # https: // your - api - endpoint.otosensesms.com / data / {motorId} / {dataset}
+        url = self.endpoint + "data/" + motor_id + "/" + dataset
+
+        if cont_token == "":
+            payload = {'start': start, 'end': end}
+        else:
+            payload = {'start': start, 'end': end, "continuationToken": cont_token}
+
+        r = requests.get(url=url, headers=headers, params=payload)
+
+        # There should be some error catching here, if there is no data to pull
+        print(r)
+
         return r.json()
 
     def get_motor_id(self, motor_name):
@@ -149,31 +178,49 @@ class OtosenseApi:
 
         return meas_time_data
 
+    def get_cont_token(self, measurement_json):
+        try:
+            cont_token = measurement_json["continuationToken"]
+        except KeyError:
+            cont_token = None
+        return cont_token
+
 
 if __name__ == "__main__":
-    # print(get_otosense_credentials())
+    api = OtosenseApi()
 
-    # Should be valid for an hour
-    # get_authentication_token()
+    start = time.mktime(time.strptime("17.01.2022 00:00:00", "%d.%m.%Y %H:%M:%S"))
+    end = time.mktime(time.strptime("17.01.2022 01:00:00", "%d.%m.%Y %H:%M:%S"))
 
-    # Set up pipeline
-    # From start time to end time, get the 3 different datasets (vibx, vibz, flux), for each 3 different machines
-    # Concatenate it together somehow into points
+    start_dt = datetime.datetime.fromtimestamp(start)
+    end_dt = datetime.datetime.fromtimestamp(end)
 
-    # So, do 3 requests at the same time?, save each of the json results as dictionaries,
-    # (don't even need to bother saving the result as a file, just go straight from the API to influx)
+    iso_start = start_dt.strftime('%Y-%m-%dT%H:%M:%SZ')
+    iso_end = end_dt.strftime('%Y-%m-%dT%H:%M:%SZ')
+    tm_devices_api = ["Block A Scrubber", "PU7001", "General Cooling Loop"]
 
-    # iterate through the 3 results, just checking to make sure that all the timestamps are the same (or within certain tolerance?)
-    # create the influxdb points from it, upload
-    # Keep track of the continuation tokens
-    # bearer_token = read_bearer_token()
+    motor_id0 = api.get_motor_id(tm_devices_api[0])
+    motor_id1 = api.get_motor_id(tm_devices_api[1])
+    motor_id2 = api.get_motor_id(tm_devices_api[2])
 
-    # print(bearer_token)
+    # res = api.get_data(motor_id0, "flux", iso_start, iso_end)
+    # res = api.get_data(motor_id1, "flux", iso_start, iso_end)
+    # print(res)
 
-    # get_all_motors(bearer_token)
+    print("rpm")
 
-    print("---------MOTOR----------")
-    # get_specific_motor(bearer_token, motor_id3)
+    start = time.mktime(time.strptime("17.01.2022 00:00:00", "%d.%m.%Y %H:%M:%S"))
+    end = time.mktime(time.strptime("17.01.2022 00:30:00", "%d.%m.%Y %H:%M:%S"))
 
-    # get_data(bearer_token, motor_id3)
+    start_dt = datetime.datetime.fromtimestamp(start)
+    end_dt = datetime.datetime.fromtimestamp(end)
 
+    iso_start = start_dt.strftime('%Y-%m-%dT%H:%M:%SZ')
+    iso_end = end_dt.strftime('%Y-%m-%dT%H:%M:%SZ')
+    perf = api.get_data(motor_id2, "performance", iso_start, iso_end)
+    res = api.get_data(motor_id2, "flux", iso_start, iso_end)
+
+    print(len(perf["records"]))
+    print(len(res["records"][0]["data"]))
+
+    # length of records is based on size, so flux is capped at 120 records, where performance cap is much higher

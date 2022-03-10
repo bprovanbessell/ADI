@@ -54,17 +54,18 @@ if __name__ == "__main__":
     # otosense_influx_write_new(path_to_tm_data, tm_devices_new, write_threshold, write_dict)
 
     # path_to_ver_data = "../../all_data/Dec data/verd new/"
-    # verdigris_influx_write(path_to_ver_data, ver_devices, indexes, write_threshold, write_dict)
+    path_to_ver_data = "../verdigris_files/2022_files/"
+    verdigris_influx_write(path_to_ver_data, ver_devices, indexes, write_threshold, write_dict)
 
     tm_devices_api = ["Block A Scrubber", "PU7001", "General Cooling Loop"]
     # General cooling loop is still online
 
     upload_start = time.mktime(time.strptime("01.03.2022 00:00:00", "%d.%m.%Y %H:%M:%S"))
-    upload_end = time.mktime(time.strptime("01.03.2022 04:00:00", "%d.%m.%Y %H:%M:%S"))
+    upload_end = time.mktime(time.strptime("01.03.2022 02:00:00", "%d.%m.%Y %H:%M:%S"))
 
     # print(os.getcwd())
     # print(sys.path)
-    otosense_influx_write_api(tm_devices_api, 2, upload_start, upload_end, write_threshold, local_write_dict)
+    # otosense_influx_write_api(tm_devices_api, 2, upload_start, upload_end, write_threshold, local_write_dict)
 
     t1 = time.time()
 
