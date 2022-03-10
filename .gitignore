@@ -4,5 +4,7 @@ saved_models
 */__pycache__/*
 img
 documentation/detailed_setup.md
+documentation/results*
 vae_param_experiment
 api_files/*cred*
+verdigris_files
