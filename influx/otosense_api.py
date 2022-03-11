@@ -5,8 +5,9 @@ https://adi.otosensesms.com/api-reference
 
 import requests
 import json
-import datetime
+from datetime import datetime, timedelta
 import time
+import numpy as np
 
 
 # Do we have a specific api endpoint
@@ -170,13 +171,17 @@ class OtosenseApi:
 
         meas_time_data = []
 
-        for record in measurement_json["records"]:
-            timestamp = record["timestamp"]
-            meas_data = record["data"]
+        try:
+            for record in measurement_json["records"]:
+                timestamp = record["timestamp"]
+                meas_data = record["data"]
 
-            meas_time_data.append((meas_data, timestamp))
+                meas_time_data.append((meas_data, timestamp))
 
-        return meas_time_data
+            return meas_time_data
+        except KeyError:
+            print("No records in this dataset")
+            return None
 
     def get_cont_token(self, measurement_json):
         try:
@@ -185,6 +190,39 @@ class OtosenseApi:
             cont_token = None
         return cont_token
 
+    def get_single_sample(self, dt: datetime, device_id, motor_name):
+        start_dt = dt
+        end_dt = dt + timedelta(minutes=20)
+        iso_start = start_dt.strftime('%Y-%m-%dT%H:%M:%SZ')
+        iso_end = end_dt.strftime('%Y-%m-%dT%H:%M:%SZ')
+
+        nr_channels = 15000
+        nr_samples = 3
+        dataset = np.zeros((nr_channels, nr_samples))
+
+        motor_id = self.get_motor_id(motor_name)
+
+        vibx_json = self.get_data(motor_id, "vibx", iso_start, iso_end)
+        vibz_json = self.get_data(motor_id, "vibz", iso_start, iso_end)
+        flux_json = self.get_data(motor_id, "flux", iso_start, iso_end)
+        performance_json = self.get_data(motor_id, "performance", iso_start, iso_end)
+
+        rpm_time_data = self.get_rpm_data(performance_json)
+        vibx_time_data = self.get_samples(vibx_json)
+        vibz_time_data = self.get_samples(vibz_json)
+        flux_time_data = self.get_samples(flux_json)
+
+        # Should check all of the samples.., although I would assume if one is missing then the rest will be aswell
+        if not all([vibx_time_data, vibz_time_data, flux_time_data]):
+            print("missing some data")
+            return None
+
+        dataset[:, 0] = flux_time_data[0][0]
+        dataset[:, 1] = vibx_time_data[0][0]
+        dataset[:, 2] = vibz_time_data[0][0]
+
+        return dataset
+
 
 if __name__ == "__main__":
     api = OtosenseApi()
@@ -192,8 +230,8 @@ if __name__ == "__main__":
     start = time.mktime(time.strptime("17.01.2022 00:00:00", "%d.%m.%Y %H:%M:%S"))
     end = time.mktime(time.strptime("17.01.2022 01:00:00", "%d.%m.%Y %H:%M:%S"))
 
-    start_dt = datetime.datetime.fromtimestamp(start)
-    end_dt = datetime.datetime.fromtimestamp(end)
+    start_dt = datetime.fromtimestamp(start)
+    end_dt = datetime.fromtimestamp(end)
 
     iso_start = start_dt.strftime('%Y-%m-%dT%H:%M:%SZ')
     iso_end = end_dt.strftime('%Y-%m-%dT%H:%M:%SZ')
@@ -212,8 +250,8 @@ if __name__ == "__main__":
     start = time.mktime(time.strptime("17.01.2022 00:00:00", "%d.%m.%Y %H:%M:%S"))
     end = time.mktime(time.strptime("17.01.2022 00:30:00", "%d.%m.%Y %H:%M:%S"))
 
-    start_dt = datetime.datetime.fromtimestamp(start)
-    end_dt = datetime.datetime.fromtimestamp(end)
+    start_dt = datetime.fromtimestamp(start)
+    end_dt = datetime.fromtimestamp(end)
 
     iso_start = start_dt.strftime('%Y-%m-%dT%H:%M:%SZ')
     iso_end = end_dt.strftime('%Y-%m-%dT%H:%M:%SZ')
