@@ -16,6 +16,7 @@ import time
 from datetime import datetime, timedelta
 import numpy as np
 import tensorflow as tf
+from sklearn.preprocessing import StandardScaler
 
 from models import convolutional_vae, pca
 import verdigris_api
@@ -38,6 +39,7 @@ def get_last_interval_reconstruction_error():
 
 def reconstruction_error_timed_interval_all(start_time: datetime, device_id):
     # check both timestamps are the same, etc...
+    # check that there is no nan or missing values in the datasets, as the error is nan
     later = start_time + timedelta(minutes=20)
 
     # get the last verdigris interval
@@ -50,6 +52,7 @@ def reconstruction_error_timed_interval_all(start_time: datetime, device_id):
 
     print("verdigris shape")
     print(ver_dataset.shape)
+    # print(np.count_nonzero(np.isnan(ver_dataset)))
 
     # get the last otosense interval
     tm_devices_api = ["Block A Scrubber", "PU7001", "General Cooling Loop"]
@@ -60,7 +63,7 @@ def reconstruction_error_timed_interval_all(start_time: datetime, device_id):
 
     print("otosense shape")
     print(oto_dataset.shape)
-    print(oto_dataset)
+    # print(np.count_nonzero(np.isnan(oto_dataset)))
 
     # reshape the intervals into size [1, 15000, 6]
     nr_sample = 15000
@@ -70,6 +73,13 @@ def reconstruction_error_timed_interval_all(start_time: datetime, device_id):
     sample = np.zeros((1, nr_sample, channels))
     sample[0, :, :3] = oto_dataset[0]
     sample[0, :, 3:6] = ver_dataset[0]
+
+    print("normalization")
+    # Normalization
+    scalers = {}
+    for i in range(channels):
+        scalers[i] = StandardScaler()
+        sample[:, :, i] = scalers[i].fit_transform(sample[:, :, i])
 
     print("Sample shape")
     print(sample.shape)
