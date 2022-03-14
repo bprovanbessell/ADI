@@ -58,7 +58,7 @@ def get_file_from_time(machine_id, dt: datetime, temp_file=False):
             file_to_get = fn
 
             if temp_file:
-                file_result = os.popen("mktemp /tmp/" + fn[0:-3] + "-XXXX").read().strip("\n")
+                file_result = os.popen("mktemp /tmp/" + fn[0:-3] + "-XXXX.gz").read().strip("\n")
             else:
                 file_result = "verdigris_files/" + file_to_get
             sftp_client.get(remotepath=file_to_get, localpath=file_result)
@@ -73,7 +73,7 @@ def get_file_from_time(machine_id, dt: datetime, temp_file=False):
 # Work on more secure way to do this later
 def get_password():
     password = ""
-    with open("api_files/credentials.txt", 'r') as cred_file:
+    with open("../api_files/credentials.txt", 'r') as cred_file:
         for line in cred_file:
             password = line.strip("\n")
 
@@ -103,6 +103,10 @@ def download_all_with(includes=".2022-"):
 
 
 def get_verdigris_dataset(file_name, device_id, indexes):
+    verbose = True
+    if verbose:
+        print("Loading from file: ", file_name)
+
     j = device_id
 
     # What should happen when there is no data/missing data
@@ -112,7 +116,7 @@ def get_verdigris_dataset(file_name, device_id, indexes):
     nr_samples = 15000
     nr_channels = 3
 
-    dataset = np.zeros((1, nr_samples, nr_channels))
+    dataset = np.zeros((nr_samples, nr_channels))
 
     with gzip.open(file_name) as f:
         try:
@@ -120,14 +124,14 @@ def get_verdigris_dataset(file_name, device_id, indexes):
             features = features.to_numpy()
             timestamp = features[0, -1] // 1000000000
 
-            features = features[:, indexes[j]:indexes[j] + 3]
+            features = features[:15000, indexes[j]:indexes[j] + 3]
 
-            dataset[0][:][0] = features[0:15000][0]
-            dataset[0][:][1] = features[0:15000][1]
-            dataset[0][:][2] = features[0:15000][2]
+            # dataset[:, 0] = features[0:15000][0]
+            # dataset[:, 1] = features[0:15000][1]
+            # dataset[:, 2] = features[0:15000][2]
 
             f.close()
-            return dataset
+            return features
 
         except Exception as E:
             print(E)

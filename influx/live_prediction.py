@@ -7,13 +7,19 @@ Ideally you wouldn't have to check, but just pull at a certain timeslot...
 
 Schedule would be needed to pull at regular intervals.
 
+
+Method to pull data from the single verdigris file
+Error checking if the file does not exist
 """
 
 import time
 from datetime import datetime, timedelta
 import numpy as np
+import tensorflow as tf
 
 from models import convolutional_vae, pca
+import verdigris_api
+from otosense_api import OtosenseApi
 
 
 def get_last_interval_reconstruction_error():
@@ -30,11 +36,31 @@ def get_last_interval_reconstruction_error():
     error = reconstruction_error_timed_interval_all(twenty_mins_ago)
 
 
-def reconstruction_error_timed_interval_all(start_time: datetime):
-
+def reconstruction_error_timed_interval_all(start_time: datetime, device_id):
+    # check both timestamps are the same, etc...
     later = start_time + timedelta(minutes=20)
-    # get the last otosense interval
+
     # get the last verdigris interval
+    indexes = [6, 12, 9]
+
+    # works fine
+    # ver_fn = verdigris_api.get_file_from_time(device_id, start_time, temp_file=True)
+    ver_fn = "/tmp/JBE10001268.2022-01-150000-XXXX.gz"
+    ver_dataset = verdigris_api.get_verdigris_dataset(ver_fn, device_id, indexes)
+
+    print("verdigris shape")
+    print(ver_dataset.shape)
+
+    # get the last otosense interval
+    tm_devices_api = ["Block A Scrubber", "PU7001", "General Cooling Loop"]
+
+    # seems fine
+    api = OtosenseApi()
+    oto_dataset = api.get_single_sample(start_time, device_id, motor_name=tm_devices_api[device_id])
+
+    print("otosense shape")
+    print(oto_dataset.shape)
+    print(oto_dataset)
 
     # reshape the intervals into size [1, 15000, 6]
     nr_sample = 15000
@@ -42,6 +68,11 @@ def reconstruction_error_timed_interval_all(start_time: datetime):
     channels = 6
 
     sample = np.zeros((1, nr_sample, channels))
+    sample[0, :, :3] = oto_dataset[0]
+    sample[0, :, 3:6] = ver_dataset[0]
+
+    print("Sample shape")
+    print(sample.shape)
 
     # Then run it on an appropriate VAE, and/or PCA model to get the reconstruction error
     vae = convolutional_vae.ConvolutionalVAE()
@@ -65,3 +96,17 @@ def floor_minutes(mins):
     if mins < 20: return 0
     elif mins < 40: return 20
     else: return 40
+
+
+if __name__ == "__main__":
+    start = time.mktime(time.strptime("15.01.2022 00:00:00", "%d.%m.%Y %H:%M:%S"))
+    # This one should be on for otosense
+    # There should be data up to 17-01 for all verdigris
+    device_id = 2
+
+    start_dt = datetime.fromtimestamp(start)
+
+    print("generating error")
+    error = reconstruction_error_timed_interval_all(start_dt, device_id)
+
+    print("error: ", error)

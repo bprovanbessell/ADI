@@ -217,9 +217,13 @@ class OtosenseApi:
             print("missing some data")
             return None
 
-        dataset[:, 0] = flux_time_data[0][0]
-        dataset[:, 1] = vibx_time_data[0][0]
-        dataset[:, 2] = vibz_time_data[0][0]
+        flux_data = [float(x) for x in flux_time_data[0][0]]
+        vibx_data = [float(x) for x in vibx_time_data[0][0]]
+        vibz_data = [float(x) for x in vibz_time_data[0][0]]
+
+        dataset[:, 0] = flux_data
+        dataset[:, 1] = vibx_data
+        dataset[:, 2] = vibz_data
 
         return dataset
 
