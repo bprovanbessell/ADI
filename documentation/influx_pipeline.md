@@ -7,7 +7,7 @@
 * Start writing data to db
 * set up grafana to connect to the GPU DB instance
 
-###Running code on gpu cluster
+###Running code on gpu cluster - OUTDATED AND INSECURE, THIS SHOULD BE RUN USING SBATCH/SRUN ONLY NOT CREATING A SEPERATE TERMINAL
 1. ssh to headnode
 2. Start influxdb server ```./influxdb2-2.1.1-linux-amd64/influxd ```.
 3. ssh to headnode in a new terminal.
