@@ -23,3 +23,7 @@
 
 #### Too many open files
 ```ulimit -n 10000```
+
+Connecting straight to the head node, is it possible just specify the address, so in this case it would be 143.239.81.3:8086
+According to the docs, we still might need the protocol, so 'http://143.239.81.3:8086'
+Something to mess around with at least
