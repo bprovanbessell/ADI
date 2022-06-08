@@ -6,11 +6,13 @@ import talos
 import pickle
 
 data_path = '/Users/andreavisentin/ADI/data_tm/'
-data_path = '/home/avisentin/data/'
 # 3 GPUS available on the cluster, we should use number 1
 os.environ["CUDA_VISIBLE_DEVICES"] = "1"
 # os.environ["CUDA_VISIBLE_DEVICES"] = "-1"
-experiment_name = 'All_measurements_sept_oct_gcl_error'
+# experiment_name = 'All_measurements_sept_oct_gcl_error'
+
+# we want to train models for vibration, current, flux, and then all channels
+experiment_name = "flux_oct_18_gcl_error"
 
 # Data creation and load
 # Make new dataset configuration for all of these tests

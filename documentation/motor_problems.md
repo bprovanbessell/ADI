@@ -6,9 +6,7 @@
 Compare 4 cvae models (all, flux, vib, current) - start with the problem on the 18-20th october
 Compare then with the PCA
 figure out
-- Training data
-- How to run the GPU again
-  - Sort the ssh tunnel with slurm commands? Will have to figure out how to test that somehow
+- Training data - use whatever there was before as a baseline??
 - Run talos training for each of the channels (Vibration, flux, current) (Should have the all measurements one saved at least) (Could possibly use just these models as well for the november error)
 - Train a PCA model aswell for these errors
 

@@ -2,6 +2,6 @@
 
 source /home/bprovan/.bashrc
 
-source /home/bprovan/anaconda3/bin/activate adi
+source /home/bprovan/anaconda3/bin/activate adi_test
 
-python test_influx.py
+python talos_training_all.py

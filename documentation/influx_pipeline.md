@@ -7,23 +7,14 @@
 * Start writing data to db
 * set up grafana to connect to the GPU DB instance
 
-###Running code on gpu cluster - OUTDATED AND INSECURE, THIS SHOULD BE RUN USING SBATCH/SRUN ONLY NOT CREATING A SEPERATE TERMINAL
+###Running code on gpu cluster
 1. ssh to headnode
 2. Start influxdb server ```./influxdb2-2.1.1-linux-amd64/influxd ```.
 3. ssh to headnode in a new terminal.
-4. Create job on gpunode (node001) with ```salloc -p confirm ...```.
-5. Connect to that job: ```srun--jobid=<jobid> --pty bash -i```.
-6. Set up ssh tunnel to headnode ```ssh -L 9090:localhost:8086 <head_node_ip>```. Unfortunately logs back into the headnode.
-7. Re-log on to the job on node001 ```srun--jobid=<jobid> --pty bash -i```.
-8. Check that the tunnel has been set up correctly: ```lsof -i:9090```
-9. Activate conda environment ```conda activate adi_test```
-10. Run training scripts ```python talos_training_<models_etup>.py```
-11. Download models to run graph: ```scp -r <gpu_ip>:/home/bprovan/ADI/saved_models/<model_setup>model.tf ADI/saved_models```
+4. Set up server url in dataset config as ```http://<head_node_ip:port```
+5. Set up experiment in python code, and then run ```sbatch -N1 -n1 --partition confirm --job-name=whatever --output=whateer-out.txt run_training.sh```
+6. Download models to run graph: ```scp -r <gpu_ip>:/home/bprovan/ADI/saved_models/<model_setup>model.tf ADI/saved_models```
 
 
 #### Too many open files
 ```ulimit -n 10000```
-
-Connecting straight to the head node, is it possible just specify the address, so in this case it would be 143.239.81.3:8086
-According to the docs, we still might need the protocol, so 'http://143.239.81.3:8086'
-Something to mess around with at least
