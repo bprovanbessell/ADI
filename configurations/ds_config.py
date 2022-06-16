@@ -440,3 +440,29 @@ class DatasetConfiguration:
                                   "token": self.gpu_token,
                                   "org": org,
                                   "bucket": bucket}
+
+        if config_name == 'vib_oct_18_gcl_error':
+            ds.name = config_name
+            ds.data_file = data_path + 'np_dataset.npy'
+            ds.metadata_file = data_path + 'np_metadata.npy'
+            ds.signal = 'vibration'
+            ds.machine = 2
+            ds.normalization = 'scale'
+            ds.speed_limit = 0
+            # what training period here??
+            # 1 month is probably enough
+            ds.time_train_start = time.mktime(time.strptime("16.09.2021 00:00:00", "%d.%m.%Y %H:%M:%S"))
+            ds.time_train_end = time.mktime(time.strptime("16.10.2021 00:00:00", "%d.%m.%Y %H:%M:%S"))
+            # test just on 17th, 18th, 19th october
+            ds.time_test_start = time.mktime(time.strptime("17.10.2021 00:00:00", "%d.%m.%Y %H:%M:%S"))
+            ds.time_test_end = time.mktime(time.strptime("19.10.2021 00:00:00", "%d.%m.%Y %H:%M:%S"))
+
+            ds.nr_sample = 15000
+            url = "http://143.239.81.3:8086"
+            org = "Insight"
+            bucket = "ADI"
+            # train
+            ds.read_write_dict = {"url": url,
+                                  "token": self.gpu_token,
+                                  "org": org,
+                                  "bucket": bucket}

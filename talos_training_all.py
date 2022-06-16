@@ -12,7 +12,7 @@ os.environ["CUDA_VISIBLE_DEVICES"] = "1"
 # experiment_name = 'All_measurements_sept_oct_gcl_error'
 
 # we want to train models for vibration, current, flux, and then all channels
-experiment_name = "flux_oct_18_gcl_error"
+experiment_name = "vib_oct_18_gcl_error"
 
 # Data creation and load
 # Make new dataset configuration for all of these tests
