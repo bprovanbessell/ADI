@@ -162,7 +162,12 @@ p.meta_test = ds.metadata_test
 
 # Add the same plots that we do for the vae models
 
-p.reconstruction_error_time()
+p.reconstruction_error_time(anomaly=True)
 
-# p.reconstruction_error_time_influx(True, True, model_name, write_dict)
+p.reconstruction_error_time(train=False)
+p.reconstruction_error_time(limit=1.5)
+# p.roc()
+# for some reason only this is working
+p.reconstruction_error(np.linspace(0, 3, 50), anomaly=True)
+p.reconstruction_error_time_moving_avg(anomaly=True)
 
