@@ -67,16 +67,16 @@ vae.load_models(model_name)
 
 """ This part allows to plot an analysis without an anomaly
 """
+#
+# p = plotter.Plotter()
+# p.name = ds.name
+# p.model = vae
+# p.X_train = np.asarray(ds.X_train)
+# p.X_test = np.asarray(ds.X_test)
+# p.meta_train = ds.metadata_train
+# p.meta_test = ds.metadata_test
 
-p = plotter.Plotter()
-p.name = ds.name
-p.model = vae
-p.X_train = np.asarray(ds.X_train)
-p.X_test = np.asarray(ds.X_test)
-p.meta_train = ds.metadata_train
-p.meta_test = ds.metadata_test
-
-print("create graphs")
+# print("create graphs")
 # p.mean_absolute_vibration(train=False, test=True)
 # Plot the latent space
 # p.rpm_time(train=False)
@@ -124,7 +124,6 @@ p.meta_train = ds.metadata_train
 p.meta_test = meta_test
 p.meta_anomaly = meta_anomaly
 
-
 # Plot the latent space
 # p.rpm_time()
 # p.latent_space_complete()
@@ -136,7 +135,7 @@ p.reconstruction_error_time(anomaly=True)
 p.reconstruction_error_time(train=False)
 p.reconstruction_error_time(limit=1.5)
 # p.roc()
-
+# for some reason only this is working
 p.reconstruction_error(np.linspace(0, 3, 50), anomaly=True)
 p.reconstruction_error_time_moving_avg(anomaly=True)
 
@@ -160,6 +159,8 @@ p.X_train = np.asarray(ds.X_train)
 p.X_test = np.asarray(ds.X_test)
 p.meta_train = ds.metadata_train
 p.meta_test = ds.metadata_test
+
+# Add the same plots that we do for the vae models
 
 p.reconstruction_error_time()
 

@@ -78,6 +78,8 @@ class Plotter:
         if self.self.show_plot:
             plt.show()
 
+        plt.close(fig)
+
     def plot_tsne(self, anomaly = True, train = True):
         # display a 2D plot of the digit classes in the latent space
         latent_space_tsne = manifold.TSNE(2, verbose = True, n_iter = 2000)
@@ -108,6 +110,8 @@ class Plotter:
         if self.show_plot:
             plt.show()
 
+        plt.close()
+
     def reconstruction_error(self, bins = np.linspace(0, 2, 50), train = True, anomaly =False):
         fig, ax1 = plt.subplots(1, 1, figsize=(8, 8))
         if train:
@@ -121,6 +125,8 @@ class Plotter:
         plt.savefig(self.image_folder + self.name + "_reconstruction_error.png", transparent=True)
         if self.show_plot:
             plt.show()
+
+        plt.close(fig)
 
     def pdf(self, bins = np.linspace(-16, -4, 50), train = True, anomaly=False):
         kd = KernelDensity()
@@ -145,6 +151,8 @@ class Plotter:
 
         if self.show_plot:
             plt.show()
+
+        plt.close(fig)
 
 
     def roc(self):
@@ -199,7 +207,7 @@ class Plotter:
         plt.title("Reconstruction error over time " + self.name)
         plt.xlabel("Sample timestamp")
         plt.ylabel("Reconstruction error")
-        plt.figure(figsize=(6, 6))
+        # plt.figure(figsize=(6, 6))
         plt.savefig(f + "_reconstruction_error_time.png", transparent=True)
 
         if self.show_plot:
@@ -242,11 +250,13 @@ class Plotter:
         plt.title("Reconstruction error over time moving average" + self.name)
         plt.xlabel("Sample timestamp")
         plt.ylabel("Reconstruction error")
-        plt.figure(figsize=(6, 6))
+        # plt.figure(figsize=(6, 6))
         plt.savefig(f + "_reconstruction_error_time_moving_avg.png", transparent=True)
 
         if self.show_plot:
             plt.show()
+
+        plt.close(fig)
 
     def moving_average(self, X, window_size):
         res = []
