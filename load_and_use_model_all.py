@@ -8,7 +8,11 @@ data_path = '/Volumes/Elements/ADI/data_tm20/'
 
 # Data creation and load
 ds = dataset.Dataset()
-ds_config.DatasetConfiguration().SetConfiguration(ds, data_path, 'vib_gcl_nov_error')
+# ds_config.DatasetConfiguration().SetConfiguration(ds, data_path, 'vib_gcl_nov_error')
+
+experiment_name = "flux_oct_18_gcl_error"
+
+ds_config.DatasetConfiguration().SetConfiguration(ds, data_path, experiment_name)
 
 # ds_config.DatasetConfiguration().SetConfiguration(ds, data_path,'EXa_1_Curr')
 #
@@ -36,7 +40,18 @@ print("Minutes to load data: ", (t1 - t0) / 60)
 ds.data_summary()
 
 vae = convolutional_vae.ConvolutionalVAE()
-model_name = "All_measurements_sept_oct_gcl_error0112"
+# model_name = "All_measurements_sept_oct_gcl_error0112"
+
+# so for all the different models, vibration, flux and current
+# we need the same results on each test set
+# plots of reconstruction error on the test set
+# compare it to PCA too
+
+# we also need the layout/architecture of the model
+# model_name = "curr_oct_18_gcl_error0190"
+# model_name = "vib_oct_18_gcl_error0158"
+model_name = "flux_oct_18_gcl_error0066"
+
 vae.load_models(model_name)
 
 # get the config
@@ -79,32 +94,34 @@ p.mean_absolute_vibration(train=False, test=True)
 
 """Plotting with an anomaly"""
 
-# err_time_start = time.mktime(time.strptime("18.10.2021 00:00:00", "%d.%m.%Y %H:%M:%S"))
-# # err_time_end = time.mktime(time.strptime("20.10.2021 00:00:00", "%d.%m.%Y %H:%M:%S"))
-# # anomaly_rows = np.where(np.logical_and(ds.metadata_test[:, 2] >= err_time_start, ds.metadata_test[:, 2] <= err_time_end))
-# rows = np.where(ds.metadata_test[:,2] <= err_time_start)
-# data = ds.X_test[rows,:,:]
-# data = data.reshape(data.shape[1:])
-# meta_test = ds.metadata_test[rows,:]
-# meta_test = meta_test.reshape(meta_test.shape[1:])
-# rows = np.where(ds.metadata_test[:,2] > err_time_start)
-# data_anomaly = ds.X_test[rows,:,:]
-# data_anomaly = data_anomaly.reshape(data_anomaly.shape[1:])
-# meta_anomaly = ds.metadata_test[rows,:]
-# meta_anomaly = meta_anomaly.reshape(meta_anomaly.shape[1:])
-#
-# print("Model summary")
-# print(vae.model.summary())
-#
-# p = plotter.Plotter()
-# p.name = ds.name
-# p.model = vae
-# p.X_train = ds.X_train
-# p.X_test = data
-# p.X_anomaly = data_anomaly
-# p.meta_train = ds.metadata_train
-# p.meta_test = meta_test
-# p.meta_anomaly = meta_anomaly
+# When exactly did the anomaly start?? Around 930 10 am on the 18th
+
+err_time_start = time.mktime(time.strptime("18.10.2021 09:40:00", "%d.%m.%Y %H:%M:%S"))
+# err_time_end = time.mktime(time.strptime("20.10.2021 00:00:00", "%d.%m.%Y %H:%M:%S"))
+# anomaly_rows = np.where(np.logical_and(ds.metadata_test[:, 2] >= err_time_start, ds.metadata_test[:, 2] <= err_time_end))
+rows = np.where(ds.metadata_test[:,2] <= err_time_start)
+data = ds.X_test[rows,:,:]
+data = data.reshape(data.shape[1:])
+meta_test = ds.metadata_test[rows,:]
+meta_test = meta_test.reshape(meta_test.shape[1:])
+rows = np.where(ds.metadata_test[:,2] > err_time_start)
+data_anomaly = ds.X_test[rows,:,:]
+data_anomaly = data_anomaly.reshape(data_anomaly.shape[1:])
+meta_anomaly = ds.metadata_test[rows,:]
+meta_anomaly = meta_anomaly.reshape(meta_anomaly.shape[1:])
+
+print("Model summary")
+print(vae.model.summary())
+
+p = plotter.Plotter()
+p.name = ds.name
+p.model = vae
+p.X_train = ds.X_train
+p.X_test = data
+p.X_anomaly = data_anomaly
+p.meta_train = ds.metadata_train
+p.meta_test = meta_test
+p.meta_anomaly = meta_anomaly
 
 
 # Plot the latent space
@@ -113,36 +130,37 @@ p.mean_absolute_vibration(train=False, test=True)
 # p.plot_tsne(anomaly=True, train=False)
 # p.plot_tsne(anomaly=True, train=True)
 
-# p.reconstruction_error_time(anomaly=True)
+p.reconstruction_error_time(anomaly=True)
 
-# p.reconstruction_error_time(train=False)
-# p.reconstruction_error_time(limit=1.5)
+p.reconstruction_error_time(train=False)
+p.reconstruction_error_time(limit=1.5)
 # p.roc()
 
-# p.reconstruction_error(np.linspace(0, 3, 50), anomaly=True)
-# p.reconstruction_error_time_moving_avg(anomaly=True)
+p.reconstruction_error(np.linspace(0, 3, 50), anomaly=True)
+p.reconstruction_error_time_moving_avg(anomaly=True)
 
 # p.pdf(np.linspace(-16, 0, 50))
 
 # print("upload reconstruction error to influx")
 # p.reconstruction_error_time_influx(True, True, model_name, write_dict)
 
-# print("train pca model")
-# pca = pca.PCAModel()
-# pca.training(ds.X_train, None, None, None, None)
-#
-# model_name = "All_measurements_sept_oct_pca_gcl"
-#
-#
-# p = plotter.Plotter()
-# p.name = ds.name
-# p.model = pca
-# p.X_train = np.asarray(ds.X_train)
-# p.X_test = np.asarray(ds.X_test)
-# p.meta_train = ds.metadata_train
-# p.meta_test = ds.metadata_test
-#
-# p.reconstruction_error_time()
+# look into code of PCA to make sure it all runs smoothly
+print("train pca model")
+pca = pca.PCAModel()
+pca.training(ds.X_train, None, None, None, None)
+
+model_name = "All_measurements_sept_oct_pca_gcl"
+
+
+p = plotter.Plotter()
+p.name = ds.name
+p.model = pca
+p.X_train = np.asarray(ds.X_train)
+p.X_test = np.asarray(ds.X_test)
+p.meta_train = ds.metadata_train
+p.meta_test = ds.metadata_test
+
+p.reconstruction_error_time()
 
 # p.reconstruction_error_time_influx(True, True, model_name, write_dict)
 
