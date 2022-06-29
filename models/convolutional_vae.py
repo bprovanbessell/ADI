@@ -9,7 +9,7 @@ from keras import backend as K
 from util import custom_keras
 
 class ConvolutionalVAE:
-    def __init__(self):
+    def __init__(self, model_path='../saved_models/'):
         self.name = "ConvVAE"
         self.model = None
         self.encoder = None
@@ -21,7 +21,7 @@ class ConvolutionalVAE:
         self.input_shape = None
         self.latent_dim = 2
         self.count_save = 0
-        self.model_path = '../saved_models/'
+        self.model_path = model_path
         self.parameter_list = {'first_conv_layer_dim': [64, 128, 256, 512],
                            'first_window_size': [1, 3, 5, 7, 9],
                            'first_stride': [1, 3],
