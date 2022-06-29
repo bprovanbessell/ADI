@@ -8,7 +8,7 @@ from datetime import datetime
 from influx import results_to_influx
 
 class Plotter:
-    def __init__(self):
+    def __init__(self, show_plot=False):
         self.name = "Experiment"
         self.model = None
         self.encoder = None
@@ -23,6 +23,7 @@ class Plotter:
         self.input_shape = None
         self.latent_dim = 2
         self.image_folder = "img/"
+        self.show_plot = show_plot
 
 
     # def plot_latent_space(self, index_x=0, index_y=1):
@@ -74,7 +75,8 @@ class Plotter:
             ax.label_outer()
         fig.suptitle("Projection in the latent space " + self.name, fontsize=20)
         plt.savefig(self.image_folder + self.name + "_latent_space.png", transparent=True)
-        plt.show()
+        if self.self.show_plot:
+            plt.show()
 
     def plot_tsne(self, anomaly = True, train = True):
         # display a 2D plot of the digit classes in the latent space
@@ -103,7 +105,8 @@ class Plotter:
             f += "_train"
         plt.savefig(f + "_tsne.png", transparent=True)
 
-        plt.show()
+        if self.show_plot:
+            plt.show()
 
     def reconstruction_error(self, bins = np.linspace(0, 2, 50), train = True, anomaly =False):
         fig, ax1 = plt.subplots(1, 1, figsize=(8, 8))
@@ -116,7 +119,8 @@ class Plotter:
         ax1.set_xlabel('Reconstruction Error')
         plt.title("Reconstruction Error " + self.name)
         plt.savefig(self.image_folder + self.name + "_reconstruction_error.png", transparent=True)
-        plt.show()
+        if self.show_plot:
+            plt.show()
 
     def pdf(self, bins = np.linspace(-16, -4, 50), train = True, anomaly=False):
         kd = KernelDensity()
@@ -139,7 +143,8 @@ class Plotter:
         print('Test data score', np.mean(test_score))
         plt.savefig(self.image_folder + self.name + "_pdf.png", transparent=True)
 
-        plt.show()
+        if self.show_plot:
+            plt.show()
 
 
     def roc(self):
@@ -158,7 +163,9 @@ class Plotter:
         ax1.legend()
         plt.title("ROC Curve " + self.name)
         plt.savefig(self.image_folder + self.name + "_roc.png", transparent=True)
-        plt.show()
+
+        if self.show_plot:
+            plt.show()
 
     def reconstruction_error_time(self, limit = 0, train = True, test = True, anomaly = False):
         fig, ax = plt.subplots()
@@ -194,7 +201,9 @@ class Plotter:
         plt.ylabel("Reconstruction error")
         plt.figure(figsize=(6, 6))
         plt.savefig(f + "_reconstruction_error_time.png", transparent=True)
-        plt.show()
+
+        if self.show_plot:
+            plt.show()
 
     def reconstruction_error_time_moving_avg(self, limit=0, train=True, test=True, anomaly=False, window_size=6):
         fig, ax = plt.subplots()
@@ -235,7 +244,9 @@ class Plotter:
         plt.ylabel("Reconstruction error")
         plt.figure(figsize=(6, 6))
         plt.savefig(f + "_reconstruction_error_time_moving_avg.png", transparent=True)
-        plt.show()
+
+        if self.show_plot:
+            plt.show()
 
     def moving_average(self, X, window_size):
         res = []
@@ -293,7 +304,9 @@ class Plotter:
         plt.ylabel("Vibration")
         plt.figure(figsize=(6, 6))
         plt.savefig(f + "_avg_vibration_time.png", transparent=True)
-        plt.show()
+
+        if self.show_plot:
+            plt.show()
 
 
     def reconstruction_error_time_influx(self, train, test, model_name, write_dict):
@@ -338,7 +351,9 @@ class Plotter:
         plt.ylabel("RPM")
         plt.figure(figsize=(6, 6))
         plt.savefig(f + "_rpm_time.png", transparent=True)
-        plt.show()
+
+        if self.show_plot:
+            plt.show()
 
 def reconstruction_comparison(solvers, X, limit, input_shape):
     err_solvers = np.zeros((len(solvers)))

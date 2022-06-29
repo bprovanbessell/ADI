@@ -77,7 +77,7 @@ p.meta_train = ds.metadata_train
 p.meta_test = ds.metadata_test
 
 print("create graphs")
-p.mean_absolute_vibration(train=False, test=True)
+# p.mean_absolute_vibration(train=False, test=True)
 # Plot the latent space
 # p.rpm_time(train=False)
 # p.latent_space_complete()
@@ -114,7 +114,8 @@ print("Model summary")
 print(vae.model.summary())
 
 p = plotter.Plotter()
-p.name = ds.name
+# TODO fix name for display
+p.name = ds.name + "Vae"
 p.model = vae
 p.X_train = ds.X_train
 p.X_test = data
@@ -153,7 +154,7 @@ model_name = "All_measurements_sept_oct_pca_gcl"
 
 
 p = plotter.Plotter()
-p.name = ds.name
+p.name = ds.name + "pca"
 p.model = pca
 p.X_train = np.asarray(ds.X_train)
 p.X_test = np.asarray(ds.X_test)
