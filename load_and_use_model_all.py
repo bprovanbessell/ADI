@@ -39,9 +39,11 @@ print("Minutes to load data: ", (t1 - t0) / 60)
 
 ds.data_summary()
 
+model_path = "saved_models/"
+model_path = "curr_final_model/"
+model_path = "vib_final_model/"
 model_path = "flux_final_model/"
 vae = convolutional_vae.ConvolutionalVAE(model_path=model_path)
-# model_name = "All_measurements_sept_oct_gcl_error0112"
 
 # so for all the different models, vibration, flux and current
 # we need the same results on each test set
@@ -49,10 +51,11 @@ vae = convolutional_vae.ConvolutionalVAE(model_path=model_path)
 # compare it to PCA too
 
 # we also need the layout/architecture of the model
-# model_name = "curr_oct_18_gcl_error0190"
-# model_name = "vib_oct_18_gcl_error0158"
-# model_name = "flux_oct_18_gcl_error0066"
+model_name = "All_measurements_sept_oct_gcl_error0112"
+model_name = "curr_oct_18_gcl_error0029"
+model_name = "vib_oct_18_gcl_error0012"
 model_name = 'flux_oct_18_gcl_error0042'
+
 vae.load_models(model_name)
 
 # get the config
@@ -117,7 +120,7 @@ data_anomaly = data_anomaly.reshape(data_anomaly.shape[1:])
 meta_anomaly = ds.metadata_test[rows,:]
 meta_anomaly = meta_anomaly.reshape(meta_anomaly.shape[1:])
 # test set after anomaly
-rows = np.where(ds.metadata_test[:,2] >= err_time_start)
+rows = np.where(ds.metadata_test[:,2] >= err_time_end)
 data_after = ds.X_test[rows,:,:]
 data_after = data_after.reshape(data_after.shape[1:])
 meta_after = ds.metadata_test[rows,:]
