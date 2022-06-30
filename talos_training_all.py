@@ -13,7 +13,7 @@ os.environ["CUDA_VISIBLE_DEVICES"] = "1"
 # experiment_name = 'All_measurements_sept_oct_gcl_error'
 
 # we want to train models for vibration, current, flux, and then all channels
-experiment_name = "flux_oct_18_gcl_error"
+experiment_name = "vib_oct_18_gcl_error"
 
 # Data creation and load
 # Make new dataset configuration for all of these tests
@@ -23,8 +23,9 @@ ds_config.DatasetConfiguration().SetConfiguration(ds, data_path, experiment_name
 ds.dataset_creation_influx()
 ds.data_summary()
 
-# model_path = "saved_models"
-model_path = "flux_final_model/"
+# model_path = "saved_models/"
+# model_path = "flux_final_model/"
+model_path = "vib_final_model/"
 
 if not os.path.exists(model_path):
     os.mkdir(model_path)
@@ -39,7 +40,7 @@ t = talos.Scan(x=ds.X_train,
                model=model.training,
                experiment_name="vae_param_experiment",
                # params=model.parameter_list,
-               params=best_model_params.flux,
+               params=best_model_params.vib,
                # round_limit=100,
                print_params=True)
 
