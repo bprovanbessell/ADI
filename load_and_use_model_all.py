@@ -97,19 +97,31 @@ vae.load_models(model_name)
 
 # When exactly did the anomaly start? Around 930 10 am on the 18th
 
+# And how do we define when it ended?
+
 err_time_start = time.mktime(time.strptime("18.10.2021 09:40:00", "%d.%m.%Y %H:%M:%S"))
-# err_time_end = time.mktime(time.strptime("20.10.2021 00:00:00", "%d.%m.%Y %H:%M:%S"))
-# anomaly_rows = np.where(np.logical_and(ds.metadata_test[:, 2] >= err_time_start, ds.metadata_test[:, 2] <= err_time_end))
+err_time_end = time.mktime(time.strptime("20.10.2021 00:00:00", "%d.%m.%Y %H:%M:%S"))
+anomaly_rows = np.where(np.logical_and(ds.metadata_test[:, 2] >= err_time_start, ds.metadata_test[:, 2] <= err_time_end))
+# test set before anomaly
 rows = np.where(ds.metadata_test[:,2] <= err_time_start)
 data = ds.X_test[rows,:,:]
 data = data.reshape(data.shape[1:])
 meta_test = ds.metadata_test[rows,:]
 meta_test = meta_test.reshape(meta_test.shape[1:])
-rows = np.where(ds.metadata_test[:,2] > err_time_start)
+# test set at anomaly
+rows = np.where((ds.metadata_test[:,2] > err_time_start) & ds.metadata_test[:, 2] <= err_time_end)
 data_anomaly = ds.X_test[rows,:,:]
 data_anomaly = data_anomaly.reshape(data_anomaly.shape[1:])
 meta_anomaly = ds.metadata_test[rows,:]
 meta_anomaly = meta_anomaly.reshape(meta_anomaly.shape[1:])
+# test set after anomaly
+rows = np.where(ds.metadata_test[:,2] <= err_time_start)
+data_after = ds.X_test[rows,:,:]
+data_after = data_after.reshape(data_after.shape[1:])
+meta_after = ds.metadata_test[rows,:]
+meta_after = meta_after.reshape(meta_after.shape[1:])
+
+# The data after the anomaly should be integrated into all the plotting functions
 
 print("Model summary")
 print(vae.model.summary())
@@ -121,19 +133,23 @@ p.model = vae
 p.X_train = ds.X_train
 p.X_test = data
 p.X_anomaly = data_anomaly
+p.X_after = data_after
 p.meta_train = ds.metadata_train
 p.meta_test = meta_test
 p.meta_anomaly = meta_anomaly
+p.meta_after = meta_after
 
 # Plot the latent space
 # p.rpm_time()
-p.latent_space_complete()
+p.latent_space_complete(anomaly=True)
+p.latent_space_complete(anomaly=False)
 p.plot_tsne(anomaly=True, train=False)
-p.plot_tsne(anomaly=True, train=True)
+p.plot_tsne(anomaly=True, train=True, after_anomaly=True)
 
 p.reconstruction_error_time(anomaly=True)
 
 p.reconstruction_error_time(train=False)
+p.reconstruction_error_time(anomaly=True, train=False, after_anomaly=True)
 p.reconstruction_error_time(limit=1.5)
 # p.roc()
 # for some reason only this is working

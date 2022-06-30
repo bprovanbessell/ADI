@@ -16,9 +16,11 @@ class Plotter:
         self.X_train = None
         self.X_test = None
         self.X_anomaly = None
+        self.X_after = None
         self.meta_train = None
         self.meta_test = None
         self.meta_anomaly = None
+        self.meta_after = None
         self.best_val_loss = np.Inf
         self.input_shape = None
         self.latent_dim = 2
@@ -80,7 +82,7 @@ class Plotter:
 
         plt.close(fig)
 
-    def plot_tsne(self, anomaly = True, train = True):
+    def plot_tsne(self, anomaly = True, train = True, after_anomaly=True):
         # display a 2D plot of the digit classes in the latent space
         latent_space_tsne = manifold.TSNE(2, verbose = True, n_iter = 2000)
         z = self.model.encode(self.X_test)
@@ -95,6 +97,11 @@ class Plotter:
             z_train = self.model.encode(self.X_train)
             z = np.concatenate([z, z_train], 0)
             color = np.concatenate([color, ['b'] * z_train.shape[0]], 0)
+        if after_anomaly:
+            z_after_anom = self.model.encode(self.X_after)
+            z = np.concatenate([z, z_after_anom], 0)
+            color = np.concatenate([color, ['orange'] * z_after_anom.shape[0]], 0)
+
 
         xa_tsne = latent_space_tsne.fit_transform(z)
         plt.scatter(xa_tsne[:, 0], xa_tsne[:, 1],
@@ -112,13 +119,15 @@ class Plotter:
 
         plt.close()
 
-    def reconstruction_error(self, bins = np.linspace(0, 2, 50), train = True, anomaly =False):
+    def reconstruction_error(self, bins = np.linspace(0, 2, 50), train = True, anomaly =False, after_anomaly=False):
         fig, ax1 = plt.subplots(1, 1, figsize=(8, 8))
         if train:
             ax1.hist(self.model_mse(self.X_train), bins=bins, range=[0, 2.5],density=True, label='Training Sample', alpha=1.0)
         ax1.hist(self.model_mse(self.X_test), bins=bins, density=True, label='Testing Sample', alpha=0.5)
         if anomaly:
             ax1.hist(self.model_mse(self.X_anomaly), bins=bins, density=True, label='Anomaly Sample', alpha=0.5)
+        if after_anomaly:
+            ax1.hist(self.model_mse(self.X_after), bins=bins, density=True, label='After Anomaly Sample', alpha=0.5)
         ax1.legend()
         ax1.set_xlabel('Reconstruction Error')
         plt.title("Reconstruction Error " + self.name)
@@ -175,7 +184,7 @@ class Plotter:
         if self.show_plot:
             plt.show()
 
-    def reconstruction_error_time(self, limit = 0, train = True, test = True, anomaly = False):
+    def reconstruction_error_time(self, limit = 0, train = True, test = True, anomaly = False, after_anomaly=False):
         fig, ax = plt.subplots()
         f = self.image_folder + self.name
         if test:
@@ -195,6 +204,12 @@ class Plotter:
             plt.scatter([datetime.fromtimestamp(x) for x in self.meta_anomaly[:, 2]],
                         self.model_mse(self.X_anomaly), c='r')
             time_list = np.concatenate([time_list, self.meta_anomaly[:, 2]], 0)
+
+        if after_anomaly:
+            f += "_after"
+            plt.scatter([datetime.fromtimestamp(x) for x in self.meta_after[:, 2]],
+                        self.model_mse(self.X_after), c='orange')
+            time_list = np.concatenate([time_list, self.meta_after[:, 2]], 0)
 
         width = np.diff(time_list).min()
         ax.xaxis_date()
