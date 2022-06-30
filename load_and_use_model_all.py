@@ -39,7 +39,8 @@ print("Minutes to load data: ", (t1 - t0) / 60)
 
 ds.data_summary()
 
-vae = convolutional_vae.ConvolutionalVAE()
+model_path = "flux_final_model/"
+vae = convolutional_vae.ConvolutionalVAE(model_path=model_path)
 # model_name = "All_measurements_sept_oct_gcl_error0112"
 
 # so for all the different models, vibration, flux and current
@@ -50,8 +51,8 @@ vae = convolutional_vae.ConvolutionalVAE()
 # we also need the layout/architecture of the model
 # model_name = "curr_oct_18_gcl_error0190"
 # model_name = "vib_oct_18_gcl_error0158"
-model_name = "flux_oct_18_gcl_error0066"
-
+# model_name = "flux_oct_18_gcl_error0066"
+model_name = 'flux_oct_18_gcl_error0042'
 vae.load_models(model_name)
 
 # get the config
@@ -94,7 +95,7 @@ vae.load_models(model_name)
 
 """Plotting with an anomaly"""
 
-# When exactly did the anomaly start?? Around 930 10 am on the 18th
+# When exactly did the anomaly start? Around 930 10 am on the 18th
 
 err_time_start = time.mktime(time.strptime("18.10.2021 09:40:00", "%d.%m.%Y %H:%M:%S"))
 # err_time_end = time.mktime(time.strptime("20.10.2021 00:00:00", "%d.%m.%Y %H:%M:%S"))
