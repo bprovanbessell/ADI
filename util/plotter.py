@@ -75,7 +75,7 @@ class Plotter:
             ax.label_outer()
         fig.suptitle("Projection in the latent space " + self.name, fontsize=20)
         plt.savefig(self.image_folder + self.name + "_latent_space.png", transparent=True)
-        if self.self.show_plot:
+        if self.show_plot:
             plt.show()
 
         plt.close(fig)
