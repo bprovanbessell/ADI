@@ -7,7 +7,7 @@ flux = {'batch_size': [20], 'conv_activation': ['relu'], 'conv_additional_layer_
 
 
 def convert_to_talos_dict(d1: dict):
-    params = [[x] for x in d1.values]
+    params = [[x] for x in d1.values()]
 
     return dict(zip(d1.keys(), params))
 
