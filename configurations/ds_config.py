@@ -425,7 +425,7 @@ class DatasetConfiguration:
             ds.speed_limit = 0
             # Month of September to train
             ds.time_train_start = time.mktime(time.strptime("01.09.2021 00:00:00", "%d.%m.%Y %H:%M:%S"))
-            ds.time_train_end = time.mktime(time.strptime("01.10.2021 00:00:00", "%d.%m.%Y %H:%M:%S"))
+            ds.time_train_end = time.mktime(time.strptime("05.10.2021 00:00:00", "%d.%m.%Y %H:%M:%S"))
             # Anomaly occurred on 18/10, around 09:40
             # for testing purposes this dataset should be the whole month, but that is un-needed for training
             ds.time_test_start = time.mktime(time.strptime("16.10.2021 00:00:00", "%d.%m.%Y %H:%M:%S"))

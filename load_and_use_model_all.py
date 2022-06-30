@@ -126,9 +126,9 @@ p.meta_anomaly = meta_anomaly
 
 # Plot the latent space
 # p.rpm_time()
-# p.latent_space_complete()
-# p.plot_tsne(anomaly=True, train=False)
-# p.plot_tsne(anomaly=True, train=True)
+p.latent_space_complete()
+p.plot_tsne(anomaly=True, train=False)
+p.plot_tsne(anomaly=True, train=True)
 
 p.reconstruction_error_time(anomaly=True)
 
