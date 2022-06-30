@@ -37,7 +37,7 @@ t = talos.Scan(x=ds.X_train,
                experiment_name="vae_param_experiment",
                params=model.parameter_list,
                # params=best_model_params.flux,
-               round_limit=100,
+               # round_limit=100,
                print_params=True)
 
 if not os.path.exists("talos_results/"):
