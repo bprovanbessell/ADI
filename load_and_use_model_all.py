@@ -101,7 +101,6 @@ vae.load_models(model_name)
 
 err_time_start = time.mktime(time.strptime("18.10.2021 09:40:00", "%d.%m.%Y %H:%M:%S"))
 err_time_end = time.mktime(time.strptime("20.10.2021 00:00:00", "%d.%m.%Y %H:%M:%S"))
-anomaly_rows = np.where(np.logical_and(ds.metadata_test[:, 2] >= err_time_start, ds.metadata_test[:, 2] <= err_time_end))
 # test set before anomaly
 rows = np.where(ds.metadata_test[:,2] <= err_time_start)
 data = ds.X_test[rows,:,:]
@@ -109,7 +108,10 @@ data = data.reshape(data.shape[1:])
 meta_test = ds.metadata_test[rows,:]
 meta_test = meta_test.reshape(meta_test.shape[1:])
 # test set at anomaly
-rows = np.where((ds.metadata_test[:,2] > err_time_start) & ds.metadata_test[:, 2] <= err_time_end)
+# could try this as well
+anomaly_rows = np.where(np.logical_and(ds.metadata_test[:, 2] >= err_time_start, ds.metadata_test[:, 2] <= err_time_end))
+
+rows = np.where((ds.metadata_test[:,2] > err_time_start) & (ds.metadata_test[:, 2] <= err_time_end))
 data_anomaly = ds.X_test[rows,:,:]
 data_anomaly = data_anomaly.reshape(data_anomaly.shape[1:])
 meta_anomaly = ds.metadata_test[rows,:]
