@@ -45,3 +45,32 @@ if not os.path.exists("talos_results/"):
 
 filehandler = open("talos_results/" + ds.name + ".obj", 'wb')
 pickle.dump(t.data, filehandler)
+
+
+"""(14999, 1)
+2027
+Final dataset shape:  (2027, 15000, 1)
+Test size  (2027, 15000, 1)
+Data normalization
+Training (2096, 15000, 1) Testing (2027, 15000, 1)
+Traceback (most recent call last):
+  File "talos_training_all.py", line 34, in <module>
+    t = talos.Scan(x=ds.X_train,
+  File "/home/bprovan/anaconda3/envs/adi_test/lib/python3.8/site-packages/talos/scan/Scan.py", line 196, in __init__
+    scan_run(self)
+  File "/home/bprovan/anaconda3/envs/adi_test/lib/python3.8/site-packages/talos/scan/scan_run.py", line 9, in scan_run
+    self = scan_prepare(self)
+  File "/home/bprovan/anaconda3/envs/adi_test/lib/python3.8/site-packages/talos/scan/scan_prepare.py", line 24, in scan_prepare
+    self.param_object = ParamSpace(params=self.params,
+  File "/home/bprovan/anaconda3/envs/adi_test/lib/python3.8/site-packages/talos/parameters/ParamSpace.py", line 41, in __init__
+    self.param_index = self._param_apply_limits()
+  File "/home/bprovan/anaconda3/envs/adi_test/lib/python3.8/site-packages/talos/parameters/ParamSpace.py", line 97, in _param_apply_limits
+    return sample_reducer(self.round_limit,
+  File "/home/bprovan/anaconda3/envs/adi_test/lib/python3.8/site-packages/talos/reducers/sample_reducer.py", line 55, in sample_reducer
+    out = r.uniform_mersenne()
+  File "/home/bprovan/anaconda3/envs/adi_test/lib/python3.8/site-packages/chances/methods.py", line 31, in uniform_mersenne
+    return random.sample(range(self.len), k=self.n)
+  File "/home/bprovan/anaconda3/envs/adi_test/lib/python3.8/random.py", line 363, in sample
+    raise ValueError("Sample larger than population or is negative")
+ValueError: Sample larger than population or is negative
+                                                        """
