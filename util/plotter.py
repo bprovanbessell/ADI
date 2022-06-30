@@ -47,7 +47,7 @@ class Plotter:
     def model_mse(self, x):
         return np.mean(tf.keras.losses.mean_squared_error(x, self.model.predict(x)), axis=1)
 
-    def latent_space_complete(self, anomaly = False):
+    def latent_space_complete(self, anomaly=False):
         print(self.X_train.shape)
         z_train = self.model.encode(self.X_train)
         z_test = self.model.encode(self.X_test)
@@ -72,21 +72,24 @@ class Plotter:
                              np.concatenate([z_train[:, j], z_test[:, j]], 0),
                              c=(['b'] * z_train.shape[0]) + ['g'] * z_test.shape[0] ,
                              alpha=0.5)
+        f = self.image_folder + self.name
+        if anomaly:
+            f += "_anomaly"
 
         for ax in fig.get_axes():
             ax.label_outer()
         fig.suptitle("Projection in the latent space " + self.name, fontsize=20)
-        plt.savefig(self.image_folder + self.name + "_latent_space.png", transparent=True)
+        plt.savefig(f + "_latent_space.png", transparent=True)
         if self.show_plot:
             plt.show()
 
         plt.close(fig)
 
-    def plot_tsne(self, anomaly = True, train = True, after_anomaly=True):
+    def plot_tsne(self, anomaly=True, train=True, after_anomaly=True):
         # display a 2D plot of the digit classes in the latent space
-        latent_space_tsne = manifold.TSNE(2, verbose = True, n_iter = 2000)
+        latent_space_tsne = manifold.TSNE(2, verbose=True, n_iter=2000)
         z = self.model.encode(self.X_test)
-        color =  ['g'] * z.shape[0]
+        color = ['g'] * z.shape[0]
         z_test = self.model.encode(self.X_test)
         plt.figure(figsize=(6, 6))
         if anomaly:
@@ -112,6 +115,8 @@ class Plotter:
             f += "_anomaly"
         if train:
             f += "_train"
+        if after_anomaly:
+            f += "_after"
         plt.savefig(f + "_tsne.png", transparent=True)
 
         if self.show_plot:

@@ -109,7 +109,7 @@ meta_test = ds.metadata_test[rows,:]
 meta_test = meta_test.reshape(meta_test.shape[1:])
 # test set at anomaly
 # could try this as well
-anomaly_rows = np.where(np.logical_and(ds.metadata_test[:, 2] >= err_time_start, ds.metadata_test[:, 2] <= err_time_end))
+# anomaly_rows = np.where(np.logical_and(ds.metadata_test[:, 2] >= err_time_start, ds.metadata_test[:, 2] <= err_time_end))
 
 rows = np.where((ds.metadata_test[:,2] > err_time_start) & (ds.metadata_test[:, 2] <= err_time_end))
 data_anomaly = ds.X_test[rows,:,:]
@@ -117,7 +117,7 @@ data_anomaly = data_anomaly.reshape(data_anomaly.shape[1:])
 meta_anomaly = ds.metadata_test[rows,:]
 meta_anomaly = meta_anomaly.reshape(meta_anomaly.shape[1:])
 # test set after anomaly
-rows = np.where(ds.metadata_test[:,2] <= err_time_start)
+rows = np.where(ds.metadata_test[:,2] >= err_time_start)
 data_after = ds.X_test[rows,:,:]
 data_after = data_after.reshape(data_after.shape[1:])
 meta_after = ds.metadata_test[rows,:]
