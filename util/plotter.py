@@ -103,7 +103,7 @@ class Plotter:
         if after_anomaly:
             z_after_anom = self.model.encode(self.X_after)
             z = np.concatenate([z, z_after_anom], 0)
-            color = np.concatenate([color, ['orange'] * z_after_anom.shape[0]], 0)
+            color = np.concatenate([color, ['g'] * z_after_anom.shape[0]], 0)
 
 
         xa_tsne = latent_space_tsne.fit_transform(z)
@@ -213,7 +213,7 @@ class Plotter:
         if after_anomaly:
             f += "_after"
             plt.scatter([datetime.fromtimestamp(x) for x in self.meta_after[:, 2]],
-                        self.model_mse(self.X_after), c='orange')
+                        self.model_mse(self.X_after), c='g')
             time_list = np.concatenate([time_list, self.meta_after[:, 2]], 0)
 
         width = np.diff(time_list).min()

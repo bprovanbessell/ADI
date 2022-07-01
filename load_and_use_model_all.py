@@ -10,7 +10,7 @@ data_path = '/Volumes/Elements/ADI/data_tm20/'
 ds = dataset.Dataset()
 # ds_config.DatasetConfiguration().SetConfiguration(ds, data_path, 'vib_gcl_nov_error')
 
-experiment_name = "flux_oct_18_gcl_error"
+experiment_name = "flux_oct_18_gcl_error_zoom"
 
 ds_config.DatasetConfiguration().SetConfiguration(ds, data_path, experiment_name)
 
@@ -60,13 +60,13 @@ vae.load_models(model_name)
 
 # get the config
 # vae.load_models("EXa_1_Curr0127")
-# print("model summary")
-# print(vae.model.summary())
-#
-# print("encoder summary")
-# print(vae.encoder.summary())
-#
-# print(vae.decoder.summary())
+print("model summary")
+print(vae.model.summary())
+
+print("encoder summary")
+print(vae.encoder.summary())
+
+print(vae.decoder.summary())
 
 
 """ This part allows to plot an analysis without an anomaly
@@ -120,7 +120,7 @@ data_anomaly = data_anomaly.reshape(data_anomaly.shape[1:])
 meta_anomaly = ds.metadata_test[rows,:]
 meta_anomaly = meta_anomaly.reshape(meta_anomaly.shape[1:])
 # test set after anomaly
-rows = np.where(ds.metadata_test[:,2] >= err_time_end)
+rows = np.where(ds.metadata_test[:,2] > err_time_end)
 data_after = ds.X_test[rows,:,:]
 data_after = data_after.reshape(data_after.shape[1:])
 meta_after = ds.metadata_test[rows,:]
@@ -128,8 +128,8 @@ meta_after = meta_after.reshape(meta_after.shape[1:])
 
 # The data after the anomaly should be integrated into all the plotting functions
 
-print("Model summary")
-print(vae.model.summary())
+# print("Model summary")
+# print(vae.model.summary())
 
 p = plotter.Plotter()
 # TODO fix name for display
@@ -148,18 +148,21 @@ p.meta_after = meta_after
 # p.rpm_time()
 p.latent_space_complete(anomaly=True)
 p.latent_space_complete(anomaly=False)
-p.plot_tsne(anomaly=True, train=False)
+p.plot_tsne(anomaly=True, train=False, after_anomaly=True)
 p.plot_tsne(anomaly=True, train=True, after_anomaly=True)
 
-p.reconstruction_error_time(anomaly=True)
+# p.reconstruction_error_time(anomaly=True)
 
-p.reconstruction_error_time(train=False)
+# p.reconstruction_error_time(train=False)
 p.reconstruction_error_time(anomaly=True, train=False, after_anomaly=True)
+p.reconstruction_error_time(anomaly=True, train=True, after_anomaly=True)
 p.reconstruction_error_time(limit=1.5)
 # p.roc()
 # for some reason only this is working
-p.reconstruction_error(np.linspace(0, 3, 50), anomaly=True)
-p.reconstruction_error_time_moving_avg(anomaly=True)
+p.reconstruction_error(np.linspace(0, 3, 50), anomaly=True, train=True, after_anomaly=True)
+p.reconstruction_error(np.linspace(0, 3, 50), anomaly=True, train=False, after_anomaly=True)
+
+# p.reconstruction_error_time_moving_avg(anomaly=True)
 
 # p.pdf(np.linspace(-16, 0, 50))
 
@@ -184,12 +187,11 @@ p.model = pca
 
 # Add the same plots that we do for the vae models
 
-p.reconstruction_error_time(anomaly=True)
-
-p.reconstruction_error_time(train=False)
+p.reconstruction_error_time(anomaly=True, train=False, after_anomaly=True)
+p.reconstruction_error_time(anomaly=True, train=True, after_anomaly=True)
 # p.reconstruction_error_time(limit=1.5)
 # p.roc()
 # for some reason only this is working
 p.reconstruction_error(np.linspace(0, 3, 50), anomaly=True)
-p.reconstruction_error_time_moving_avg(anomaly=True)
+# p.reconstruction_error_time_moving_avg(anomaly=True)
 
