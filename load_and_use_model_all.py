@@ -102,8 +102,8 @@ print(vae.decoder.summary())
 
 # And how do we define when it ended?
 
-err_time_start = time.mktime(time.strptime("18.10.2021 09:40:00", "%d.%m.%Y %H:%M:%S"))
-err_time_end = time.mktime(time.strptime("20.10.2021 00:00:00", "%d.%m.%Y %H:%M:%S"))
+err_time_start = time.mktime(time.strptime("18.10.2021 09:20:00", "%d.%m.%Y %H:%M:%S"))
+err_time_end = time.mktime(time.strptime("20.10.2021 21:00:00", "%d.%m.%Y %H:%M:%S"))
 # test set before anomaly
 rows = np.where(ds.metadata_test[:,2] <= err_time_start)
 data = ds.X_test[rows,:,:]

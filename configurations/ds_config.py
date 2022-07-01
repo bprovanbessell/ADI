@@ -529,8 +529,8 @@ class DatasetConfiguration:
             ds.time_train_start = time.mktime(time.strptime("01.09.2021 00:00:00", "%d.%m.%Y %H:%M:%S"))
             ds.time_train_end = time.mktime(time.strptime("02.09.2021 00:00:00", "%d.%m.%Y %H:%M:%S"))
             # Anomaly occurred on 18/10, around 09:40
-            ds.time_test_start = time.mktime(time.strptime("17.10.2021 00:00:00", "%d.%m.%Y %H:%M:%S"))
-            ds.time_test_end = time.mktime(time.strptime("25.10.2021 00:00:00", "%d.%m.%Y %H:%M:%S"))
+            ds.time_test_start = time.mktime(time.strptime("18.10.2021 00:00:00", "%d.%m.%Y %H:%M:%S"))
+            ds.time_test_end = time.mktime(time.strptime("23.10.2021 00:00:00", "%d.%m.%Y %H:%M:%S"))
 
             ds.nr_sample = 15000
             url = "http://143.239.81.3:8086"
