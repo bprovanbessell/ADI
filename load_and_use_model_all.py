@@ -3,6 +3,7 @@ from configurations import ds_config
 from util import dataset, plotter
 import time
 import numpy as np
+import tensorflow as tf
 
 data_path = '/Volumes/Elements/ADI/data_tm20/'
 
@@ -10,7 +11,7 @@ data_path = '/Volumes/Elements/ADI/data_tm20/'
 ds = dataset.Dataset()
 # ds_config.DatasetConfiguration().SetConfiguration(ds, data_path, 'vib_gcl_nov_error')
 
-experiment_name = "flux_oct_18_gcl_error_zoom"
+experiment_name = "all_oct_18_gcl_error"
 
 ds_config.DatasetConfiguration().SetConfiguration(ds, data_path, experiment_name)
 
@@ -43,6 +44,7 @@ model_path = "saved_models/"
 model_path = "curr_final_model/"
 model_path = "vib_final_model/"
 model_path = "flux_final_model/"
+model_path = "all_final_model/"
 vae = convolutional_vae.ConvolutionalVAE(model_path=model_path)
 
 # so for all the different models, vibration, flux and current
@@ -55,6 +57,7 @@ model_name = "All_measurements_sept_oct_gcl_error0112"
 model_name = "curr_oct_18_gcl_error0029"
 model_name = "vib_oct_18_gcl_error0012"
 model_name = 'flux_oct_18_gcl_error0042'
+model_name = 'all_oct_18_gcl_error0042'
 
 vae.load_models(model_name)
 
@@ -161,6 +164,25 @@ p.reconstruction_error_time(limit=1.5)
 # for some reason only this is working
 p.reconstruction_error(np.linspace(0, 3, 50), anomaly=True, train=True, after_anomaly=True)
 p.reconstruction_error(np.linspace(0, 3, 50), anomaly=True, train=False, after_anomaly=True)
+
+# Compute the time to infer a number of points
+
+tinfer0 = time.time()
+np.mean(tf.keras.losses.mean_squared_error(ds.X_test, vae.model.predict(ds.X_test)), axis=1)
+
+tinfer1 = time.time()
+
+print("time to infer test points: ", tinfer1 - tinfer0)
+
+print(ds.X_train.shape)
+print("time to infer a single point (avg)", (tinfer1 - tinfer0)/ds.X_train.shape[0])
+
+tinfer2 = time.time()
+np.mean(tf.keras.losses.mean_squared_error(ds.X_test[0], vae.model.predict(ds.X_test[0])), axis=1)
+
+tinfer3 = time.time()
+
+print("time to infer a single point", tinfer3 - tinfer2)
 
 # p.reconstruction_error_time_moving_avg(anomaly=True)
 

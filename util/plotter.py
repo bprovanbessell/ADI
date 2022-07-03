@@ -139,7 +139,7 @@ class Plotter:
         ax1.legend()
         ax1.set_xlabel('Reconstruction Error')
         plt.title("Reconstruction Error " + self.name)
-        plt.savefig(f + "_reconstruction_error.png", transparent=True)
+        plt.savefig(f + "_reconstruction_error.png", transparent=True, dpi=300)
         if self.show_plot:
             plt.show()
 
@@ -231,7 +231,7 @@ class Plotter:
         plt.xlabel("Sample timestamp")
         plt.ylabel("Reconstruction error")
         # plt.figure(figsize=(6, 6))
-        plt.savefig(f + "_reconstruction_error_time.png", transparent=True)
+        plt.savefig(f + "_reconstruction_error_time.png", transparent=True, dpi=300)
 
         if self.show_plot:
             plt.show()

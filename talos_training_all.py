@@ -14,7 +14,7 @@ os.environ["CUDA_VISIBLE_DEVICES"] = "1"
 # experiment_name = 'All_measurements_sept_oct_gcl_error'
 
 # we want to train models for vibration, current, flux, and then all channels
-experiment_name = "all_oct_18_gcl_error"
+experiment_name = "all_july_test_sep_nov_PU7001"
 
 # Data creation and load
 # Make new dataset configuration for all of these tests
@@ -29,6 +29,7 @@ ds.data_summary()
 # model_path = "vib_final_model/"
 # model_path = "curr_final_model/"
 model_path = "all_final_model/"
+model_path = "all_model_PU7001/"
 
 if not os.path.exists(model_path):
     os.mkdir(model_path)
@@ -44,9 +45,9 @@ t = talos.Scan(x=ds.X_train,
                y=ds.X_train,
                model=model.training,
                experiment_name="vae_param_experiment",
-               # params=model.parameter_list, should cover this later
-               params=best_model_params.all,
-               # round_limit=100,
+               params=model.parameter_list,
+               # params=best_model_params.all,
+               round_limit=100,
                print_params=True)
 
 if not os.path.exists("talos_results/"):
