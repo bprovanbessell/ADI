@@ -497,7 +497,7 @@ class DatasetConfiguration:
             ds.data_file = data_path + 'np_dataset.npy'
             ds.metadata_file = data_path + 'np_metadata.npy'
             ds.signal = 'all'
-            ds.machine = 1
+            ds.machine = 2
             ds.normalization = 'scale'
             ds.speed_limit = 0
             # Month of September to train
