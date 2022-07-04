@@ -288,33 +288,6 @@ class DatasetConfiguration:
                                   "org": org,
                                   "bucket": bucket}
 
-        if config_name == 'vib_gcl_nov_error':
-            ds.name = config_name
-            ds.data_file = data_path + 'np_dataset.npy'
-            ds.metadata_file = data_path + 'np_metadata.npy'
-            ds.signal = 'vibration'
-            ds.machine = 2
-            ds.normalization = 'scale'
-            ds.speed_limit = 0
-            ds.time_train_start = time.mktime(time.strptime("30.09.2021 00:00:00", "%d.%m.%Y %H:%M:%S"))
-            ds.time_train_end = time.mktime(time.strptime("30.09.2021 01:00:00", "%d.%m.%Y %H:%M:%S"))
-            ds.time_test_start = time.mktime(time.strptime("20.11.2021 00:00:00", "%d.%m.%Y %H:%M:%S"))
-            ds.time_test_end = time.mktime(time.strptime("30.11.2021 00:00:00", "%d.%m.%Y %H:%M:%S"))
-
-            ds.nr_sample = 15000
-            url = "http://localhost:9093"
-            org = "Insight"
-            bucket = "ADI"
-            # train
-            ds.read_write_dict = {"url": self.remote_url,
-                                  "token": self.gpu_token,
-                                  "org": org,
-                                  "bucket": bucket}
-            # local test
-            # ds.read_write_dict = {"url": url,
-            #                       "token": self.gpu_token,
-            #                       "org": org,
-            #                       "bucket": bucket}
         if config_name == 'All_measurements_nov_test':
             ds.name = config_name
             ds.data_file = data_path + 'np_dataset.npy'
@@ -336,6 +309,9 @@ class DatasetConfiguration:
                                   "token": self.gpu_token,
                                   "org": org,
                                   "bucket": bucket}
+
+        # just test this dataset on the models we have trained for GCL already
+        # or maybe we have to retrain on the period before...
         if config_name == 'curr_nov_gcl_error':
             ds.name = config_name
             ds.data_file = data_path + 'np_dataset.npy'
@@ -344,38 +320,14 @@ class DatasetConfiguration:
             ds.machine = 2
             ds.normalization = 'scale'
             ds.speed_limit = 0
+            # ds.time_train_start = time.mktime(time.strptime("15.10.2021 00:00:00", "%d.%m.%Y %H:%M:%S"))
+            # ds.time_train_end = time.mktime(time.strptime("15.11.2021 00:00:00", "%d.%m.%Y %H:%M:%S"))
+            # dummy values for now, using the pre trained models on the month of september
             ds.time_train_start = time.mktime(time.strptime("15.10.2021 00:00:00", "%d.%m.%Y %H:%M:%S"))
             ds.time_train_end = time.mktime(time.strptime("15.11.2021 00:00:00", "%d.%m.%Y %H:%M:%S"))
+            # error occurred around 12 o' clock, it was a complete shutdown, So it should be visible in all of the measurements
             ds.time_test_start = time.mktime(time.strptime("15.11.2021 00:00:00", "%d.%m.%Y %H:%M:%S"))
             ds.time_test_end = time.mktime(time.strptime("30.11.2021 00:00:00", "%d.%m.%Y %H:%M:%S"))
-
-            ds.nr_sample = 15000
-            url = "http://localhost:9093"
-            org = "Insight"
-            bucket = "ADI"
-            # train
-            ds.read_write_dict = {"url": self.remote_url,
-                                  "token": self.gpu_token,
-                                  "org": org,
-                                  "bucket": bucket}
-            # local test
-            # ds.read_write_dict = {"url": url,
-            #                       "token": self.gpu_token,
-            #                       "org": org,
-            #                       "bucket": bucket}
-
-        if config_name == 'test_routing_config':
-            ds.name = config_name
-            ds.data_file = data_path + 'np_dataset.npy'
-            ds.metadata_file = data_path + 'np_metadata.npy'
-            ds.signal = 'current'
-            ds.machine = 2
-            ds.normalization = 'scale'
-            ds.speed_limit = 0
-            ds.time_train_start = time.mktime(time.strptime("15.10.2021 00:00:00", "%d.%m.%Y %H:%M:%S"))
-            ds.time_train_end = time.mktime(time.strptime("16.10.2021 00:00:00", "%d.%m.%Y %H:%M:%S"))
-            ds.time_test_start = time.mktime(time.strptime("15.11.2021 00:00:00", "%d.%m.%Y %H:%M:%S"))
-            ds.time_test_end = time.mktime(time.strptime("16.11.2021 00:00:00", "%d.%m.%Y %H:%M:%S"))
 
             ds.nr_sample = 15000
             url = "http://143.239.81.3:8086"
@@ -386,6 +338,53 @@ class DatasetConfiguration:
                                   "token": self.gpu_token,
                                   "org": org,
                                   "bucket": bucket}
+
+        if config_name == 'vib_gcl_nov_error':
+            ds.name = config_name
+            ds.data_file = data_path + 'np_dataset.npy'
+            ds.metadata_file = data_path + 'np_metadata.npy'
+            ds.signal = 'vibration'
+            ds.machine = 2
+            ds.normalization = 'scale'
+            ds.speed_limit = 0
+            ds.time_train_start = time.mktime(time.strptime("30.09.2021 00:00:00", "%d.%m.%Y %H:%M:%S"))
+            ds.time_train_end = time.mktime(time.strptime("30.09.2021 01:00:00", "%d.%m.%Y %H:%M:%S"))
+            ds.time_test_start = time.mktime(time.strptime("15.11.2021 00:00:00", "%d.%m.%Y %H:%M:%S"))
+            ds.time_test_end = time.mktime(time.strptime("30.11.2021 00:00:00", "%d.%m.%Y %H:%M:%S"))
+
+            ds.nr_sample = 15000
+            url = "http://143.239.81.3:8086"
+            org = "Insight"
+            bucket = "ADI"
+            # train
+            ds.read_write_dict = {"url": url,
+                                  "token": self.gpu_token,
+                                  "org": org,
+                                  "bucket": bucket}
+
+        if config_name == 'all_gcl_nov_error':
+            ds.name = config_name
+            ds.data_file = data_path + 'np_dataset.npy'
+            ds.metadata_file = data_path + 'np_metadata.npy'
+            ds.signal = 'all'
+            ds.machine = 2
+            ds.normalization = 'scale'
+            ds.speed_limit = 0
+            ds.time_train_start = time.mktime(time.strptime("30.09.2021 00:00:00", "%d.%m.%Y %H:%M:%S"))
+            ds.time_train_end = time.mktime(time.strptime("30.09.2021 01:00:00", "%d.%m.%Y %H:%M:%S"))
+            ds.time_test_start = time.mktime(time.strptime("15.11.2021 00:00:00", "%d.%m.%Y %H:%M:%S"))
+            ds.time_test_end = time.mktime(time.strptime("30.11.2021 00:00:00", "%d.%m.%Y %H:%M:%S"))
+
+            ds.nr_sample = 15000
+            url = "http://143.239.81.3:8086"
+            org = "Insight"
+            bucket = "ADI"
+            # train
+            ds.read_write_dict = {"url": url,
+                                  "token": self.gpu_token,
+                                  "org": org,
+                                  "bucket": bucket}
+
 
         # datasets for oct 18th error, train on just the month before
 

@@ -11,7 +11,7 @@ data_path = '/Volumes/Elements/ADI/data_tm20/'
 ds = dataset.Dataset()
 # ds_config.DatasetConfiguration().SetConfiguration(ds, data_path, 'vib_gcl_nov_error')
 
-experiment_name = "all_oct_18_gcl_error"
+experiment_name = "curr_nov_gcl_error"
 
 ds_config.DatasetConfiguration().SetConfiguration(ds, data_path, experiment_name)
 
@@ -42,9 +42,9 @@ ds.data_summary()
 
 model_path = "saved_models/"
 model_path = "curr_final_model/"
-model_path = "vib_final_model/"
-model_path = "flux_final_model/"
-model_path = "all_final_model/"
+# model_path = "vib_final_model/"
+# model_path = "flux_final_model/"
+# model_path = "all_final_model/"
 vae = convolutional_vae.ConvolutionalVAE(model_path=model_path)
 
 # so for all the different models, vibration, flux and current
@@ -55,9 +55,9 @@ vae = convolutional_vae.ConvolutionalVAE(model_path=model_path)
 # we also need the layout/architecture of the model
 model_name = "All_measurements_sept_oct_gcl_error0112"
 model_name = "curr_oct_18_gcl_error0029"
-model_name = "vib_oct_18_gcl_error0012"
-model_name = 'flux_oct_18_gcl_error0042'
-model_name = 'all_oct_18_gcl_error0042'
+# model_name = "vib_oct_18_gcl_error0012"
+# model_name = 'flux_oct_18_gcl_error0042'
+# model_name = 'all_oct_18_gcl_error0042'
 
 vae.load_models(model_name)
 
