@@ -177,12 +177,6 @@ print("time to infer test points: ", tinfer1 - tinfer0)
 print(ds.X_train.shape)
 print("time to infer a single point (avg)", (tinfer1 - tinfer0)/ds.X_train.shape[0])
 
-tinfer2 = time.time()
-np.mean(tf.keras.losses.mean_squared_error(ds.X_test[0], vae.model.predict(ds.X_test[0])), axis=1)
-
-tinfer3 = time.time()
-
-print("time to infer a single point", tinfer3 - tinfer2)
 
 # p.reconstruction_error_time_moving_avg(anomaly=True)
 

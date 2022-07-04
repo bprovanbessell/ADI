@@ -14,7 +14,8 @@ os.environ["CUDA_VISIBLE_DEVICES"] = "1"
 # experiment_name = 'All_measurements_sept_oct_gcl_error'
 
 # we want to train models for vibration, current, flux, and then all channels
-experiment_name = "all_july_test_sep_nov_PU7001"
+# experiment_name = "all_july_test_sep_nov_PU7001"
+experiment_name = "all_oct_18_gcl_error"
 
 # Data creation and load
 # Make new dataset configuration for all of these tests
@@ -28,8 +29,8 @@ ds.data_summary()
 # model_path = "flux_final_model/"
 # model_path = "vib_final_model/"
 # model_path = "curr_final_model/"
-model_path = "all_final_model/"
-model_path = "all_model_PU7001/"
+model_path = "all_model_params/"
+# model_path = "all_model_PU7001/"
 
 if not os.path.exists(model_path):
     os.mkdir(model_path)

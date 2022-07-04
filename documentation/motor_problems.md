@@ -30,5 +30,6 @@ test on long consecutive period (with no problems) to make sure error does not c
  - Could do sep, oct, november for Grundfoss/PU7001 (there are unfortunate, so no straight periods > 3 months of undisturbed data)
 
 inference time
-- how long does it take to classify a point of data (do for 1000 points, see the total time, divide) without loading data/model, just inference time
+- how long does it take to classify a point of data (do for 1000 points, see the total time, divide) 
+without loading data/model, just inference time - time to infer a single point (avg) 0.15915201322373668
 - how long it takes to train a model - after hyperparameterisation (on one month of data) - 48 minutes?
