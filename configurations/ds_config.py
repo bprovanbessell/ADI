@@ -310,8 +310,8 @@ class DatasetConfiguration:
                                   "org": org,
                                   "bucket": bucket}
 
-        # just test this dataset on the models we have trained for GCL already
-        # or maybe we have to retrain on the period before...
+        # just test this dataset on the models we have trained for GCL already, we don't need new models
+        # training for these models was actually september
         if config_name == 'curr_nov_gcl_error':
             ds.name = config_name
             ds.data_file = data_path + 'np_dataset.npy'
@@ -323,8 +323,8 @@ class DatasetConfiguration:
             # ds.time_train_start = time.mktime(time.strptime("15.10.2021 00:00:00", "%d.%m.%Y %H:%M:%S"))
             # ds.time_train_end = time.mktime(time.strptime("15.11.2021 00:00:00", "%d.%m.%Y %H:%M:%S"))
             # dummy values for now, using the pre trained models on the month of september
-            ds.time_train_start = time.mktime(time.strptime("15.10.2021 00:00:00", "%d.%m.%Y %H:%M:%S"))
-            ds.time_train_end = time.mktime(time.strptime("15.11.2021 00:00:00", "%d.%m.%Y %H:%M:%S"))
+            ds.time_train_start = time.mktime(time.strptime("01.09.2021 00:00:00", "%d.%m.%Y %H:%M:%S"))
+            ds.time_train_end = time.mktime(time.strptime("01.10.2021 00:00:00", "%d.%m.%Y %H:%M:%S"))
             # error occurred around 12 o' clock, it was a complete shutdown, So it should be visible in all of the measurements
             ds.time_test_start = time.mktime(time.strptime("15.11.2021 00:00:00", "%d.%m.%Y %H:%M:%S"))
             ds.time_test_end = time.mktime(time.strptime("30.11.2021 00:00:00", "%d.%m.%Y %H:%M:%S"))
@@ -347,8 +347,31 @@ class DatasetConfiguration:
             ds.machine = 2
             ds.normalization = 'scale'
             ds.speed_limit = 0
-            ds.time_train_start = time.mktime(time.strptime("30.09.2021 00:00:00", "%d.%m.%Y %H:%M:%S"))
-            ds.time_train_end = time.mktime(time.strptime("30.09.2021 01:00:00", "%d.%m.%Y %H:%M:%S"))
+            ds.time_train_start = time.mktime(time.strptime("01.09.2021 00:00:00", "%d.%m.%Y %H:%M:%S"))
+            ds.time_train_end = time.mktime(time.strptime("01.10.2021 01:00:00", "%d.%m.%Y %H:%M:%S"))
+            ds.time_test_start = time.mktime(time.strptime("15.11.2021 00:00:00", "%d.%m.%Y %H:%M:%S"))
+            ds.time_test_end = time.mktime(time.strptime("30.11.2021 00:00:00", "%d.%m.%Y %H:%M:%S"))
+
+            ds.nr_sample = 15000
+            url = "http://143.239.81.3:8086"
+            org = "Insight"
+            bucket = "ADI"
+            # train
+            ds.read_write_dict = {"url": url,
+                                  "token": self.gpu_token,
+                                  "org": org,
+                                  "bucket": bucket}
+
+        if config_name == 'flux_gcl_nov_error':
+            ds.name = config_name
+            ds.data_file = data_path + 'np_dataset.npy'
+            ds.metadata_file = data_path + 'np_metadata.npy'
+            ds.signal = 'flux'
+            ds.machine = 2
+            ds.normalization = 'scale'
+            ds.speed_limit = 0
+            ds.time_train_start = time.mktime(time.strptime("01.09.2021 00:00:00", "%d.%m.%Y %H:%M:%S"))
+            ds.time_train_end = time.mktime(time.strptime("01.10.2021 01:00:00", "%d.%m.%Y %H:%M:%S"))
             ds.time_test_start = time.mktime(time.strptime("15.11.2021 00:00:00", "%d.%m.%Y %H:%M:%S"))
             ds.time_test_end = time.mktime(time.strptime("30.11.2021 00:00:00", "%d.%m.%Y %H:%M:%S"))
 
@@ -555,6 +578,29 @@ class DatasetConfiguration:
             # Anomaly occurred on 18/10, around 09:40
             ds.time_test_start = time.mktime(time.strptime("01.09.2021 00:00:00", "%d.%m.%Y %H:%M:%S"))
             ds.time_test_end = time.mktime(time.strptime("01.12.2021 00:00:00", "%d.%m.%Y %H:%M:%S"))
+
+            ds.nr_sample = 15000
+            url = "http://143.239.81.3:8086"
+            org = "Insight"
+            bucket = "ADI"
+            # train
+            ds.read_write_dict = {"url": url,
+                                  "token": self.gpu_token,
+                                  "org": org,
+                                  "bucket": bucket}
+
+        if config_name == 'vib_flux_grundfoss_9_feb':
+            ds.name = config_name
+            ds.data_file = data_path + 'np_dataset.npy'
+            ds.metadata_file = data_path + 'np_metadata.npy'
+            ds.signal = 'vib_flux'
+            ds.machine = 0
+            ds.normalization = 'scale'
+            ds.speed_limit = 0
+            ds.time_train_start = time.mktime(time.strptime("01.01.2021 00:00:00", "%d.%m.%Y %H:%M:%S"))
+            ds.time_train_end = time.mktime(time.strptime("01.02.2021 00:00:00", "%d.%m.%Y %H:%M:%S"))
+            ds.time_test_start = time.mktime(time.strptime("01.02.2021 00:00:00", "%d.%m.%Y %H:%M:%S"))
+            ds.time_test_end = time.mktime(time.strptime("01.03.2021 00:00:00", "%d.%m.%Y %H:%M:%S"))
 
             ds.nr_sample = 15000
             url = "http://143.239.81.3:8086"
