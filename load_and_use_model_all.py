@@ -113,7 +113,8 @@ meta_after = meta_after.reshape(meta_after.shape[1:])
 
 p = plotter.Plotter()
 # TODO fix name for display
-p.name = ds.name + "Vae"
+# p.name = ds.name + "Vae"
+p.name = "- VAE - Current"
 p.model = vae
 p.X_train = ds.X_train
 p.X_test = data
@@ -171,7 +172,8 @@ model_name = "All_measurements_sept_oct_pca_gcl"
 # p = plotter.Plotter()
 
 # Switch the model to PCA
-p.name = ds.name + "pca"
+# p.name = ds.name + "pca"
+p.name = "- PCA - Current"
 p.model = pca
 # p.X_train = np.asarray(ds.X_train)
 # p.X_test = np.asarray(ds.X_test)
