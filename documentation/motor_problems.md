@@ -16,8 +16,9 @@ That combining signals will improve the ability to detect anomalies.
 We also will want to compare models to PCA with normal test samples that have no error (do we??)
 
 9th of february has limited measurements (only flux and vibration, no current) - 
-So, we can compare 2 models here, but again they should be already trained
-
+- So, we can compare 2 models here, but again they should be already trained
+- Train combined model of flux and vib (test the new script) - train full hyperparameterisation
+- Get these trained models
 
 tsne, reconstruction error, latent space with and without training set
 
@@ -28,8 +29,16 @@ train the final all measurements model
 
 test on long consecutive period (with no problems) to make sure error does not change drastically
  - Could do sep, oct, november for Grundfoss/PU7001 (there are unfortunate, so no straight periods > 3 months of undisturbed data)
+ - Train PU model on all measurements on july, test september - december (will need full hyperparameterisation)
 
 inference time
 - how long does it take to classify a point of data (do for 1000 points, see the total time, divide) 
 without loading data/model, just inference time - time to infer a single point (avg) 0.15915201322373668
 - how long it takes to train a model - after hyperparameterisation (on one month of data) - 48 minutes?
+
+###Results to display
+- feb anomaly
+- october anomaly
+- Don't bother with shutdown on 25th (can mention it probably, but it's obviously going to show up)
+- Long test period for PU7001
+

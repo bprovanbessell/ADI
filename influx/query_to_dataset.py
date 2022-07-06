@@ -47,6 +47,10 @@ def query_to_dataset(start, end, signal, nr_sample, machine, speed_limit, write_
         columns = (["flux", "vibx", "vibz"], ["current0", "current1", "current2"])
         channels = 6
 
+    if signal == "flux_vib":
+        columns = ["flux", "vibx", "vibz"]
+        channels = 3
+
     # set np array of zeros
     # upper limit on what it will be, reshaping later will be necessary
     np_dataset = np.zeros((upper_intervals, nr_sample, channels))
@@ -67,7 +71,7 @@ def query_to_dataset(start, end, signal, nr_sample, machine, speed_limit, write_
     # current is verdigris, flux and vibration are test_motor
     if signal == "current":
         machine_name = "verdigris_" + str(machine)
-    elif signal == "flux" or signal == "vibration":
+    elif signal == "flux" or signal == "vibration" or signal == "flux_vib":
         machine_name = "test_motor_" + str(machine)
     else:
         machine_name = ["test_motor_" + str(machine), "verdigris_" + str(machine)]

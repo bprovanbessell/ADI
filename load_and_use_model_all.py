@@ -12,6 +12,7 @@ ds = dataset.Dataset()
 # ds_config.DatasetConfiguration().SetConfiguration(ds, data_path, 'vib_gcl_nov_error')
 
 experiment_name = "curr_nov_gcl_error"
+experiment_name = "curr_oct_18_gcl_error"
 
 ds_config.DatasetConfiguration().SetConfiguration(ds, data_path, experiment_name)
 
@@ -71,49 +72,17 @@ print(vae.encoder.summary())
 
 print(vae.decoder.summary())
 
-
-""" This part allows to plot an analysis without an anomaly
-"""
-#
-# p = plotter.Plotter()
-# p.name = ds.name
-# p.model = vae
-# p.X_train = np.asarray(ds.X_train)
-# p.X_test = np.asarray(ds.X_test)
-# p.meta_train = ds.metadata_train
-# p.meta_test = ds.metadata_test
-
-# print("create graphs")
-# p.mean_absolute_vibration(train=False, test=True)
-# Plot the latent space
-# p.rpm_time(train=False)
-# p.latent_space_complete()
-# p.plot_tsne(anomaly=False, train=False)
-
-# p.reconstruction_error_time(train=False)
-# p.reconstruction_error(np.linspace(0, 3, 50))
-# p.reconstruction_error_time()
-# p.reconstruction_error_time_moving_avg()
-
-# p.roc()
-# p.reconstruction_error(np.linspace(0, 3, 50))
-# p.pdf(np.linspace(-16, 0, 50))
-
 """Plotting with an anomaly"""
-
-# When exactly did the anomaly start? Around 930 10 am on the 18th
-
-# And how do we define when it ended?
 
 # 18th october error
 err_time_start = time.mktime(time.strptime("18.10.2021 09:20:00", "%d.%m.%Y %H:%M:%S"))
 err_time_end = time.mktime(time.strptime("20.10.2021 21:00:00", "%d.%m.%Y %H:%M:%S"))
 
 # 25th november error
-err_time_start = time.mktime(time.strptime("25.11.2021 12:20:00", "%d.%m.%Y %H:%M:%S"))
+# err_time_start = time.mktime(time.strptime("25.11.2021 13:40:00", "%d.%m.%Y %H:%M:%S"))
 # might need to change this, still not sure exactly when this ended,
 # we may want to just remove the after anomaly segment,as it my not go back to normal for the data we have
-err_time_end = time.mktime(time.strptime("30.11.2021 00:00:00", "%d.%m.%Y %H:%M:%S"))
+# err_time_end = time.mktime(time.strptime("30.11.2021 00:00:00", "%d.%m.%Y %H:%M:%S"))
 
 # test set before anomaly
 rows = np.where(ds.metadata_test[:,2] <= err_time_start)

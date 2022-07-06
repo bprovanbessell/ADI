@@ -79,7 +79,7 @@ class Plotter:
         for ax in fig.get_axes():
             ax.label_outer()
         fig.suptitle("Projection in the latent space " + self.name, fontsize=20)
-        plt.savefig(f + "_latent_space.png", transparent=True)
+        plt.savefig(f + "_latent_space.png", transparent=True, bbox_inches='tight', dpi=300)
         if self.show_plot:
             plt.show()
 
@@ -117,7 +117,7 @@ class Plotter:
             f += "_train"
         if after_anomaly:
             f += "_after"
-        plt.savefig(f + "_tsne.png", transparent=True)
+        plt.savefig(f + "_tsne.png", transparent=True, bbox_inches='tight', dpi=300)
 
         if self.show_plot:
             plt.show()
@@ -139,7 +139,7 @@ class Plotter:
         ax1.legend()
         ax1.set_xlabel('Reconstruction Error')
         plt.title("Reconstruction Error " + self.name)
-        plt.savefig(f + "_reconstruction_error.png", transparent=True, dpi=300)
+        plt.savefig(f + "_reconstruction_error.png", transparent=True, dpi=300, bbox_inches='tight')
         if self.show_plot:
             plt.show()
 
@@ -164,7 +164,7 @@ class Plotter:
         plt.title("PDF " + self.name)
 
         print('Test data score', np.mean(test_score))
-        plt.savefig(self.image_folder + self.name + "_pdf.png", transparent=True)
+        plt.savefig(self.image_folder + self.name + "_pdf.png", transparent=True, bbox_inches='tight', dpi=300)
 
         if self.show_plot:
             plt.show()
@@ -187,7 +187,7 @@ class Plotter:
         ax1.plot(fpr, fpr, 'k-', label='Random Guessing')
         ax1.legend()
         plt.title("ROC Curve " + self.name)
-        plt.savefig(self.image_folder + self.name + "_roc.png", transparent=True)
+        plt.savefig(self.image_folder + self.name + "_roc.png", transparent=True, bbox_inches='tight', dpi=300)
 
         if self.show_plot:
             plt.show()
@@ -231,7 +231,7 @@ class Plotter:
         plt.xlabel("Sample timestamp")
         plt.ylabel("Reconstruction error")
         # plt.figure(figsize=(6, 6))
-        plt.savefig(f + "_reconstruction_error_time.png", transparent=True, dpi=300)
+        plt.savefig(f + "_reconstruction_error_time.png", transparent=True, dpi=300, bbox_inches='tight')
 
         if self.show_plot:
             plt.show()
