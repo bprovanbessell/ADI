@@ -128,19 +128,19 @@ p.meta_after = meta_after
 # p.rpm_time()
 p.latent_space_complete(anomaly=True)
 p.latent_space_complete(anomaly=False)
-p.plot_tsne(anomaly=True, train=False, after_anomaly=False)
-p.plot_tsne(anomaly=True, train=True, after_anomaly=False)
+p.plot_tsne(anomaly=True, train=False, after_anomaly=True)
+p.plot_tsne(anomaly=True, train=True, after_anomaly=True)
 
 # p.reconstruction_error_time(anomaly=True)
 
 # p.reconstruction_error_time(train=False)
-p.reconstruction_error_time(anomaly=True, train=False, after_anomaly=False)
-p.reconstruction_error_time(anomaly=True, train=True, after_anomaly=False)
+p.reconstruction_error_time(anomaly=True, train=False, after_anomaly=True)
+p.reconstruction_error_time(anomaly=True, train=True, after_anomaly=True)
 p.reconstruction_error_time(limit=1.5)
 # p.roc()
 # for some reason only this is working
-p.reconstruction_error(np.linspace(0, 3, 50), anomaly=True, train=True, after_anomaly=False)
-p.reconstruction_error(np.linspace(0, 3, 50), anomaly=True, train=False, after_anomaly=False)
+p.reconstruction_error(np.linspace(0, 3, 50), anomaly=True, train=True, after_anomaly=True)
+p.reconstruction_error(np.linspace(0, 3, 50), anomaly=True, train=False, after_anomaly=True)
 
 # Compute the time to infer a number of points
 
@@ -180,11 +180,13 @@ p.model = pca
 
 # Add the same plots that we do for the vae models
 
-p.reconstruction_error_time(anomaly=True, train=False, after_anomaly=False)
-p.reconstruction_error_time(anomaly=True, train=True, after_anomaly=False)
+p.reconstruction_error_time(anomaly=True, train=False, after_anomaly=True)
+p.reconstruction_error_time(anomaly=True, train=True, after_anomaly=True)
 # p.reconstruction_error_time(limit=1.5)
 # p.roc()
 # for some reason only this is working
-p.reconstruction_error(np.linspace(0, 3, 50), anomaly=True)
+# p.reconstruction_error(np.linspace(0, 3, 50), anomaly=True)
+p.reconstruction_error(np.linspace(0, 3, 50), anomaly=True, train=True, after_anomaly=True)
+p.reconstruction_error(np.linspace(0, 3, 50), anomaly=True, train=False, after_anomaly=True)
 # p.reconstruction_error_time_moving_avg(anomaly=True)
 
