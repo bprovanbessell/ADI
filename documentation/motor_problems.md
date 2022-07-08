@@ -1,6 +1,6 @@
 25th november general cooling loop (shutdown)
 18-20 october general cooling loop - Train on September, test for October
-9th february grundfoss
+9th february grundfoss 
 
 
 Compare 4 cvae models (all, flux, vib, current) - start with the problem on the 18-20th october
@@ -18,22 +18,22 @@ We also will want to compare models to PCA with normal test samples that have no
 9th of february has limited measurements (only flux and vibration, no current) - 
 - So, we can compare 2 models here, but again they should be already trained
 - Train combined model of flux and vib (test the new script) - train full hyperparameterisation
-- Get these trained models
+- Get these trained models - Flux_Grundfoss 0057, and Vib_Grundfoss0114 in saved models
+- Do same zooming in on dataset as before
 
 tsne, reconstruction error, latent space with and without training set
 
 train, test, anomaly, after
 convert points after anomaly to green
 
-train the final all measurements model
-
 test on long consecutive period (with no problems) to make sure error does not change drastically
  - Could do sep, oct, november for Grundfoss/PU7001 (there are unfortunate, so no straight periods > 3 months of undisturbed data)
  - Train PU model on all measurements on july, test september - december (will need full hyperparameterisation)
+ - Then just run it on the months of september, october, november
 
 inference time
 - how long does it take to classify a point of data (do for 1000 points, see the total time, divide) 
-without loading data/model, just inference time - time to infer a single point (avg) 0.15915201322373668
+without loading data/model, just inference time - time to infer a single point (avg)  0.021574195387751557
 - how long it takes to train a model - after hyperparameterisation (on one month of data) - 48 minutes?
 
 ###Results to display
