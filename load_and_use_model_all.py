@@ -115,7 +115,7 @@ meta_after = meta_after.reshape(meta_after.shape[1:])
 
 p = plotter.Plotter()
 # p.name = ds.name + "Vae"
-p.name = "- VAE - FLux"
+p.name = "- VAE - All Measurements"
 p.model = vae
 p.X_train = ds.X_train
 p.X_test = data
@@ -172,7 +172,7 @@ pca.training(ds.X_train, None, None, None, None)
 # p = plotter.Plotter()
 
 # p.name = ds.name + "pca"
-p.name = "- PCA - Flux"
+p.name = "- PCA - All Measurements"
 p.model = pca
 # p.X_train = np.asarray(ds.X_train)
 # p.X_test = np.asarray(ds.X_test)
