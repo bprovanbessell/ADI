@@ -41,7 +41,7 @@ curr = {'batch_size': [20], 'conv_activation': ['relu'], 'conv_additional_layer_
 #         'optimizer': 'adam', 'patience': 30, 'window_size_2': 9, 'window_size_5': 9}
 
 
-all = {'first_conv_layer_dim': [512],
+all_old = {'first_conv_layer_dim': [512],
                            'first_window_size': [7],
                            'first_stride': [1],
                            'conv_hidden_layers_5': [3],
@@ -66,5 +66,7 @@ all = {'first_conv_layer_dim': [512],
                            'conv_kernel_init': ['glorot_uniform'],
                            'dense_kernel_init': ['glorot_uniform']
                            }
+
+all = {}
 
 
