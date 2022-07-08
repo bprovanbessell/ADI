@@ -143,7 +143,7 @@ def get_and_set_intervals(np_dataset, np_meta_data, start, end, machine_name, co
                     interval = get_ver_interval(client, startstr, interval_endstr, machine_name, columns, columns_str, bucket)
                     rpm = -1
                 else:
-                    # flux or vib
+                    # flux or vib, or both
                     interval, rpm = get_tm_interval(client, startstr, interval_endstr, machine_name, columns, columns_str, speed_limit, bucket)
 
                 if interval is not None:
