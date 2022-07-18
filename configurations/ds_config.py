@@ -621,11 +621,11 @@ class DatasetConfiguration:
                                   "org": org,
                                   "bucket": bucket}
 
-        if config_name == 'vib_flux_grundfoss_9_feb':
+        if config_name == 'flux_vib_grundfoss_9_feb':
             ds.name = config_name
             ds.data_file = data_path + 'np_dataset.npy'
             ds.metadata_file = data_path + 'np_metadata.npy'
-            ds.signal = 'vib_flux'
+            ds.signal = 'flux_vib'
             ds.machine = 0
             ds.normalization = 'scale'
             ds.speed_limit = 0
