@@ -17,7 +17,7 @@ ds = dataset.Dataset()
 # For 9th of february
 experiment_name = "Vib_Grundfoss"
 # and
-experiment_name = "Flux_Grundfoss"
+# experiment_name = "Flux_Grundfoss"
 
 # experiment_name = "all_july_test_sep_nov_PU7001"
 
@@ -73,7 +73,7 @@ vae = convolutional_vae.ConvolutionalVAE(model_path=model_path)
 # model_name = 'all_oct_18_gcl_error0121'
 
 model_name = "Vib_Grundfoss0114"
-model_name = "Flux_Grundfoss0057"
+# model_name = "Flux_Grundfoss0057"
 # model_name = "all_july_test_sep_nov_PU70010473"
 
 vae.load_models(model_name)
@@ -160,7 +160,7 @@ meta_after = meta_after.reshape(meta_after.shape[1:])
 
 p = plotter.Plotter()
 # p.name = ds.name + "Vae"
-p.name = "- VAE - Flux"
+p.name = "- VAE - Vibration"
 p.model = vae
 p.X_train = ds.X_train
 p.X_test = data
@@ -217,7 +217,7 @@ pca.training(ds.X_train, None, None, None, None)
 # p = plotter.Plotter()
 
 # p.name = ds.name + "pca"
-p.name = "- PCA - Flux"
+p.name = "- PCA - Vibration"
 p.model = pca
 # p.X_train = np.asarray(ds.X_train)
 # p.X_test = np.asarray(ds.X_test)
