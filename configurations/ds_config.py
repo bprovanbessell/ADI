@@ -63,6 +63,17 @@ class DatasetConfiguration:
             ds.time_train_end = time.mktime(time.strptime("01.02.2021 00:00:00", "%d.%m.%Y %H:%M:%S"))
             ds.time_test_start = time.mktime(time.strptime("01.02.2021 00:00:00", "%d.%m.%Y %H:%M:%S"))
             ds.time_test_end = time.mktime(time.strptime("01.03.2021 00:00:00", "%d.%m.%Y %H:%M:%S"))
+
+            ds.nr_sample = 15000
+            url = "http://143.239.81.3:8086"
+            org = "Insight"
+            bucket = "ADI"
+            # train
+            ds.read_write_dict = {"url": url,
+                                  "token": self.gpu_token,
+                                  "org": org,
+                                  "bucket": bucket}
+
         if config_name == 'Curr_Grundfoss':
             ds.name = config_name
             ds.data_file = data_path + 'np_dataset_ver.npy'
@@ -75,6 +86,16 @@ class DatasetConfiguration:
             ds.time_train_end = time.mktime(time.strptime("01.04.2021 00:00:00", "%d.%m.%Y %H:%M:%S"))
             ds.time_test_start = time.mktime(time.strptime("01.04.2021 00:00:00", "%d.%m.%Y %H:%M:%S"))
             ds.time_test_end = time.mktime(time.strptime("01.05.2021 00:00:00", "%d.%m.%Y %H:%M:%S"))
+
+            ds.nr_sample = 15000
+            url = "http://143.239.81.3:8086"
+            org = "Insight"
+            bucket = "ADI"
+            # train
+            ds.read_write_dict = {"url": url,
+                                  "token": self.gpu_token,
+                                  "org": org,
+                                  "bucket": bucket}
         if config_name == 'EXa_1_Curr':
             ds.name = config_name
             ds.data_file = data_path + 'np_dataset_ver.npy'

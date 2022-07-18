@@ -137,7 +137,7 @@ meta_after = meta_after.reshape(meta_after.shape[1:])
 
 p = plotter.Plotter()
 # p.name = ds.name + "Vae"
-p.name = "- VAE - All Measurements"
+p.name = "- VAE - Flux"
 p.model = vae
 p.X_train = ds.X_train
 p.X_test = data
@@ -168,15 +168,15 @@ p.reconstruction_error(np.linspace(0, 3, 50), anomaly=True, train=False, after_a
 
 # Compute the time to infer a number of points
 
-tinfer0 = time.time()
-np.mean(tf.keras.losses.mean_squared_error(ds.X_test, vae.model.predict(ds.X_test)), axis=1)
-
-tinfer1 = time.time()
-
-print("time to infer test points: ", tinfer1 - tinfer0)
-
-print(ds.X_train.shape)
-print("time to infer a single point (avg)", (tinfer1 - tinfer0)/ds.X_train.shape[0])
+# tinfer0 = time.time()
+# np.mean(tf.keras.losses.mean_squared_error(ds.X_test, vae.model.predict(ds.X_test)), axis=1)
+#
+# tinfer1 = time.time()
+#
+# print("time to infer test points: ", tinfer1 - tinfer0)
+#
+# print(ds.X_train.shape)
+# print("time to infer a single point (avg)", (tinfer1 - tinfer0)/ds.X_train.shape[0])
 
 
 # p.reconstruction_error_time_moving_avg(anomaly=True)
@@ -194,7 +194,7 @@ pca.training(ds.X_train, None, None, None, None)
 # p = plotter.Plotter()
 
 # p.name = ds.name + "pca"
-p.name = "- PCA - All Measurements"
+p.name = "- PCA - Flux"
 p.model = pca
 # p.X_train = np.asarray(ds.X_train)
 # p.X_test = np.asarray(ds.X_test)
