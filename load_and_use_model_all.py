@@ -19,7 +19,7 @@ experiment_name = "Vib_Grundfoss"
 # and
 experiment_name = "Flux_Grundfoss"
 
-experiment_name = "all_july_test_sep_nov_PU7001"
+# experiment_name = "all_july_test_sep_nov_PU7001"
 
 ds_config.DatasetConfiguration().SetConfiguration(ds, data_path, experiment_name)
 
@@ -57,7 +57,7 @@ ds.data_summary()
 # model_path = "all_model_params/"
 
 model_path = "9feb_models/"
-model_path = "all_model_PU7001/"
+# model_path = "all_model_PU7001/"
 vae = convolutional_vae.ConvolutionalVAE(model_path=model_path)
 
 # so for all the different models, vibration, flux and current
@@ -74,7 +74,7 @@ vae = convolutional_vae.ConvolutionalVAE(model_path=model_path)
 
 model_name = "Vib_Grundfoss0114"
 model_name = "Flux_Grundfoss0057"
-model_name = "all_july_test_sep_nov_PU70010473"
+# model_name = "all_july_test_sep_nov_PU70010473"
 
 vae.load_models(model_name)
 
@@ -89,7 +89,7 @@ print(vae.encoder.summary())
 print(vae.decoder.summary())
 
 """Plot without an anomaly"""
-
+'''
 p = plotter.Plotter()
 p.name = "VAE - All Measurements"
 p.model = vae
@@ -104,10 +104,10 @@ p.reconstruction_error_time(anomaly=False, train=True, after_anomaly=False)
 p.reconstruction_error_time(anomaly=False, train=False, after_anomaly=False)
 
 p.reconstruction_error(np.linspace(0, 3, 50), anomaly=False, train=True, after_anomaly=False)
-
+'''
 """Plotting with an anomaly"""
 
-'''
+
 # 18th october error
 err_time_start = time.mktime(time.strptime("18.10.2021 09:20:00", "%d.%m.%Y %H:%M:%S"))
 err_time_end = time.mktime(time.strptime("20.10.2021 21:00:00", "%d.%m.%Y %H:%M:%S"))
@@ -234,4 +234,4 @@ p.reconstruction_error_time(anomaly=True, train=True, after_anomaly=True)
 # p.reconstruction_error(np.linspace(0, 3, 50), anomaly=True)
 p.reconstruction_error(np.linspace(0, 3, 50), anomaly=True, train=True, after_anomaly=True)
 p.reconstruction_error(np.linspace(0, 3, 50), anomaly=True, train=False, after_anomaly=True)
-# p.reconstruction_error_time_moving_avg(anomaly=True)'''
+# p.reconstruction_error_time_moving_avg(anomaly=True)
