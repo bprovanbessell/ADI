@@ -335,7 +335,7 @@ class Plotter:
         plt.title("Mean absolute vibration over time " + self.name)
         plt.xlabel("Sample timestamp")
         plt.ylabel("Vibration")
-        plt.figure(figsize=(6, 6))
+        # plt.figure(figsize=(6, 6))
         plt.savefig(f + "_avg_vibration_time.png", transparent=True, dpi=300, bbox_inches='tight')
 
         if self.show_plot:
