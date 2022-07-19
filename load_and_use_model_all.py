@@ -107,6 +107,7 @@ p.meta_test = ds.metadata_test
 
 # absolute vibration
 p.mean_absolute_vibration(train=True, test=True, anomaly=False)
+p.mean_absolute_vibration(train=False, test=True)
 '''
 """Plotting with an anomaly"""
 

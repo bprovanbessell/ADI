@@ -336,11 +336,12 @@ class Plotter:
         plt.xlabel("Sample timestamp")
         plt.ylabel("Vibration")
         plt.figure(figsize=(6, 6))
-        plt.savefig(f + "_avg_vibration_time.png", transparent=True)
+        plt.savefig(f + "_avg_vibration_time.png", transparent=True, dpi=300, bbox_inches='tight')
 
         if self.show_plot:
             plt.show()
 
+        plt.close(fig)
 
     def reconstruction_error_time_influx(self, train, test, model_name, write_dict):
 
