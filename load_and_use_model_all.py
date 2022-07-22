@@ -21,6 +21,8 @@ experiment_name = "Flux_Grundfoss"
 
 experiment_name = "all_july_test_sep_nov_PU7001"
 
+experiment_name = "flux_vib_grundfoss_9_feb"
+
 ds_config.DatasetConfiguration().SetConfiguration(ds, data_path, experiment_name)
 
 # ds_config.DatasetConfiguration().SetConfiguration(ds, data_path,'EXa_1_Curr')
@@ -58,6 +60,7 @@ ds.data_summary()
 
 model_path = "9feb_models/"
 model_path = "all_model_PU7001/"
+model_path = "flux_vib_model/"
 vae = convolutional_vae.ConvolutionalVAE(model_path=model_path)
 
 # so for all the different models, vibration, flux and current
@@ -75,6 +78,7 @@ vae = convolutional_vae.ConvolutionalVAE(model_path=model_path)
 model_name = "Vib_Grundfoss0114"
 model_name = "Flux_Grundfoss0057"
 model_name = "all_july_test_sep_nov_PU70010473"
+model_name = "flux_vib_modelflux_vib_grundfoss_9_feb0226"
 
 vae.load_models(model_name)
 
@@ -89,7 +93,7 @@ print(vae.encoder.summary())
 print(vae.decoder.summary())
 
 """Plot without an anomaly"""
-
+'''
 p = plotter.Plotter()
 p.name = "VAE - All Measurements"
 p.model = vae
@@ -106,8 +110,8 @@ p.meta_test = ds.metadata_test
 # p.reconstruction_error(np.linspace(0, 3, 50), anomaly=False, train=True, after_anomaly=False)
 
 # absolute vibration
-p.mean_absolute_vibration(train=True, test=True, anomaly=False)
-p.mean_absolute_vibration(train=False, test=True)
+# p.mean_absolute_vibration(train=True, test=True, anomaly=False)
+# p.mean_absolute_vibration(train=False, test=True)
 '''
 """Plotting with an anomaly"""
 
@@ -164,7 +168,7 @@ meta_after = meta_after.reshape(meta_after.shape[1:])
 
 p = plotter.Plotter()
 # p.name = ds.name + "Vae"
-p.name = "- VAE - Flux"
+p.name = "- VAE - Flux and Vibration"
 p.model = vae
 p.X_train = ds.X_train
 p.X_test = data
@@ -221,7 +225,7 @@ pca.training(ds.X_train, None, None, None, None)
 # p = plotter.Plotter()
 
 # p.name = ds.name + "pca"
-p.name = "- PCA - Flux"
+p.name = "- PCA - Flux and Vibration"
 p.model = pca
 # p.X_train = np.asarray(ds.X_train)
 # p.X_test = np.asarray(ds.X_test)
