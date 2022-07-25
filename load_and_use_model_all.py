@@ -61,6 +61,7 @@ ds.data_summary()
 model_path = "9feb_models/"
 model_path = "all_model_PU7001/"
 model_path = "flux_vib_model/"
+model_path = "all_model_grundfoss/"
 vae = convolutional_vae.ConvolutionalVAE(model_path=model_path)
 
 # so for all the different models, vibration, flux and current
@@ -79,6 +80,7 @@ model_name = "Vib_Grundfoss0114"
 model_name = "Flux_Grundfoss0057"
 model_name = "all_july_test_sep_nov_PU70010473"
 model_name = "flux_vib_modelflux_vib_grundfoss_9_feb0226"
+model_name = "all_july_test_sep_nov_grundfoss0492"
 
 vae.load_models(model_name)
 
@@ -93,7 +95,7 @@ print(vae.encoder.summary())
 print(vae.decoder.summary())
 
 """Plot without an anomaly"""
-'''
+
 p = plotter.Plotter()
 p.name = "VAE - All Measurements"
 p.model = vae
@@ -102,16 +104,16 @@ p.X_test = np.asarray(ds.X_test)
 p.meta_train = ds.metadata_train
 p.meta_test = ds.metadata_test
 
-# p.latent_space_complete(anomaly=False)
-# p.plot_tsne(anomaly=False, train=True, after_anomaly=False)
-# p.reconstruction_error_time(anomaly=False, train=True, after_anomaly=False)
-# p.reconstruction_error_time(anomaly=False, train=False, after_anomaly=False)
+p.latent_space_complete(anomaly=False)
+p.plot_tsne(anomaly=False, train=True, after_anomaly=False)
+p.reconstruction_error_time(anomaly=False, train=True, after_anomaly=False)
+p.reconstruction_error_time(anomaly=False, train=False, after_anomaly=False)
 
-# p.reconstruction_error(np.linspace(0, 3, 50), anomaly=False, train=True, after_anomaly=False)
+p.reconstruction_error(np.linspace(0, 3, 50), anomaly=False, train=True, after_anomaly=False)
 
 # absolute vibration
-# p.mean_absolute_vibration(train=True, test=True, anomaly=False)
-# p.mean_absolute_vibration(train=False, test=True)
+p.mean_absolute_vibration(train=True, test=True, anomaly=False)
+p.mean_absolute_vibration(train=False, test=True)
 '''
 """Plotting with an anomaly"""
 
