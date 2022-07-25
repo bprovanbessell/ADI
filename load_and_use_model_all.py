@@ -23,6 +23,8 @@ experiment_name = "all_july_test_sep_nov_PU7001"
 
 experiment_name = "flux_vib_grundfoss_9_feb"
 
+experiment_name = "all_july_test_sep_nov_grundfoss"
+
 ds_config.DatasetConfiguration().SetConfiguration(ds, data_path, experiment_name)
 
 # ds_config.DatasetConfiguration().SetConfiguration(ds, data_path,'EXa_1_Curr')
