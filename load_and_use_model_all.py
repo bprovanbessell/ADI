@@ -25,6 +25,9 @@ experiment_name = "flux_vib_grundfoss_9_feb_zoom"
 
 # experiment_name = "all_july_test_sep_nov_grundfoss"
 
+# 25th november testing
+experiment_name = "all_gcl_nov_error"
+
 ds_config.DatasetConfiguration().SetConfiguration(ds, data_path, experiment_name)
 
 # ds_config.DatasetConfiguration().SetConfiguration(ds, data_path,'EXa_1_Curr')
@@ -58,11 +61,11 @@ ds.data_summary()
 # model_path = "curr_final_model/"
 # model_path = "vib_final_model/"
 # model_path = "flux_final_model/"
-# model_path = "all_model_params/"
+model_path = "all_model_params/"
 
-model_path = "9feb_models/"
-model_path = "all_model_PU7001/"
-model_path = "flux_vib_model/"
+# model_path = "9feb_models/"
+# model_path = "all_model_PU7001/"
+# model_path = "flux_vib_model/"
 # model_path = "all_model_grundfoss/"
 vae = convolutional_vae.ConvolutionalVAE(model_path=model_path)
 
@@ -76,12 +79,12 @@ vae = convolutional_vae.ConvolutionalVAE(model_path=model_path)
 # model_name = "curr_oct_18_gcl_error0029"
 # model_name = "vib_oct_18_gcl_error0012"
 # model_name = 'flux_oct_18_gcl_error0042'
-# model_name = 'all_oct_18_gcl_error0121'
+model_name = 'all_oct_18_gcl_error0121'
 
-model_name = "Vib_Grundfoss0114"
-model_name = "Flux_Grundfoss0057"
-model_name = "all_july_test_sep_nov_PU70010473"
-model_name = "flux_vib_modelflux_vib_grundfoss_9_feb0226"
+# model_name = "Vib_Grundfoss0114"
+# model_name = "Flux_Grundfoss0057"
+# model_name = "all_july_test_sep_nov_PU70010473"
+# model_name = "flux_vib_modelflux_vib_grundfoss_9_feb0226"
 # model_name = "all_july_test_sep_nov_grundfoss0492"
 
 vae.load_models(model_name)
@@ -121,14 +124,14 @@ p.mean_absolute_vibration(train=False, test=True)
 
 
 # 18th october error
-err_time_start = time.mktime(time.strptime("18.10.2021 09:20:00", "%d.%m.%Y %H:%M:%S"))
-err_time_end = time.mktime(time.strptime("20.10.2021 21:00:00", "%d.%m.%Y %H:%M:%S"))
+# err_time_start = time.mktime(time.strptime("18.10.2021 09:20:00", "%d.%m.%Y %H:%M:%S"))
+# err_time_end = time.mktime(time.strptime("20.10.2021 21:00:00", "%d.%m.%Y %H:%M:%S"))
 
 # 25th november error
-# err_time_start = time.mktime(time.strptime("25.11.2021 13:40:00", "%d.%m.%Y %H:%M:%S"))
+err_time_start = time.mktime(time.strptime("25.11.2021 13:40:00", "%d.%m.%Y %H:%M:%S"))
 # might need to change this, still not sure exactly when this ended,
 # we may want to just remove the after anomaly segment,as it my not go back to normal for the data we have
-# err_time_end = time.mktime(time.strptime("30.11.2021 00:00:00", "%d.%m.%Y %H:%M:%S"))
+err_time_end = time.mktime(time.strptime("10.12.2021 00:00:00", "%d.%m.%Y %H:%M:%S"))
 
 # 9th february error, ADI says its at 13:25, but reconstruction error can pinpoint it to 12:20
 # So we want to reproduce the graphs
@@ -138,8 +141,8 @@ err_time_end = time.mktime(time.strptime("20.10.2021 21:00:00", "%d.%m.%Y %H:%M:
 # 4 compare tsne again
 
 # Not really cleare when the error ended, as the motor followed a different pattern of operation.
-err_time_start = time.mktime(time.strptime("09.02.2021 12:00:00", "%d.%m.%Y %H:%M:%S"))
-err_time_end = time.mktime(time.strptime("09.02.2021 16:00:00", "%d.%m.%Y %H:%M:%S"))
+# err_time_start = time.mktime(time.strptime("09.02.2021 12:00:00", "%d.%m.%Y %H:%M:%S"))
+# err_time_end = time.mktime(time.strptime("09.02.2021 16:00:00", "%d.%m.%Y %H:%M:%S"))
 
 
 
@@ -172,7 +175,7 @@ meta_after = meta_after.reshape(meta_after.shape[1:])
 
 p = plotter.Plotter()
 # p.name = ds.name + "Vae"
-p.name = "- VAE - Flux and Vibration"
+p.name = "- VAE - All Measurements"
 p.model = vae
 p.X_train = ds.X_train
 p.X_test = data
@@ -183,23 +186,25 @@ p.meta_test = meta_test
 p.meta_anomaly = meta_anomaly
 p.meta_after = meta_after
 
+after_anom = False
+
 # Plot the latent space
 # p.rpm_time()
 p.latent_space_complete(anomaly=True)
 p.latent_space_complete(anomaly=False)
-p.plot_tsne(anomaly=True, train=False, after_anomaly=True)
-p.plot_tsne(anomaly=True, train=True, after_anomaly=True)
+p.plot_tsne(anomaly=True, train=False, after_anomaly=after_anom)
+p.plot_tsne(anomaly=True, train=True, after_anomaly=after_anom)
 
 # p.reconstruction_error_time(anomaly=True)
 
 # p.reconstruction_error_time(train=False)
-p.reconstruction_error_time(anomaly=True, train=False, after_anomaly=True)
-p.reconstruction_error_time(anomaly=True, train=True, after_anomaly=True)
+p.reconstruction_error_time(anomaly=True, train=False, after_anomaly=after_anom)
+p.reconstruction_error_time(anomaly=True, train=True, after_anomaly=after_anom)
 p.reconstruction_error_time(limit=1.5)
 # p.roc()
 # for some reason only this is working
-p.reconstruction_error(np.linspace(0, 3, 50), anomaly=True, train=True, after_anomaly=True)
-p.reconstruction_error(np.linspace(0, 3, 50), anomaly=True, train=False, after_anomaly=True)
+p.reconstruction_error(np.linspace(0, 3, 50), anomaly=True, train=True, after_anomaly=after_anom)
+p.reconstruction_error(np.linspace(0, 3, 50), anomaly=True, train=False, after_anomaly=after_anom)
 
 # Compute the time to infer a number of points
 
@@ -229,7 +234,7 @@ pca.training(ds.X_train, None, None, None, None)
 # p = plotter.Plotter()
 
 # p.name = ds.name + "pca"
-p.name = "- PCA - Flux and Vibration"
+p.name = "- PCA - All Measurements"
 p.model = pca
 # p.X_train = np.asarray(ds.X_train)
 # p.X_test = np.asarray(ds.X_test)
@@ -238,12 +243,15 @@ p.model = pca
 
 # Add the same plots that we do for the vae models
 
-p.reconstruction_error_time(anomaly=True, train=False, after_anomaly=True)
-p.reconstruction_error_time(anomaly=True, train=True, after_anomaly=True)
+p.reconstruction_error_time(anomaly=True, train=False, after_anomaly=after_anom)
+p.reconstruction_error_time(anomaly=True, train=True, after_anomaly=after_anom)
 # p.reconstruction_error_time(limit=1.5)
 # p.roc()
 # for some reason only this is working
 # p.reconstruction_error(np.linspace(0, 3, 50), anomaly=True)
-p.reconstruction_error(np.linspace(0, 3, 50), anomaly=True, train=True, after_anomaly=True)
-p.reconstruction_error(np.linspace(0, 3, 50), anomaly=True, train=False, after_anomaly=True)
+p.reconstruction_error(np.linspace(0, 3, 50), anomaly=True, train=True, after_anomaly=after_anom)
+p.reconstruction_error(np.linspace(0, 3, 50), anomaly=True, train=False, after_anomaly=after_anom)
 # p.reconstruction_error_time_moving_avg(anomaly=True)'''
+
+p.mean_absolute_vibration(train=True, test=True, anomaly=True)
+# p.mean_absolute_vibration(train=False, test=True, anomaly=False)

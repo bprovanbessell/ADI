@@ -357,7 +357,7 @@ class DatasetConfiguration:
             ds.time_train_start = time.mktime(time.strptime("01.09.2021 00:00:00", "%d.%m.%Y %H:%M:%S"))
             ds.time_train_end = time.mktime(time.strptime("01.10.2021 00:00:00", "%d.%m.%Y %H:%M:%S"))
             # error occurred around 12 o' clock, it was a complete shutdown, So it should be visible in all of the measurements
-            ds.time_test_start = time.mktime(time.strptime("15.11.2021 00:00:00", "%d.%m.%Y %H:%M:%S"))
+            ds.time_test_start = time.mktime(time.strptime("10.11.2021 00:00:00", "%d.%m.%Y %H:%M:%S"))
             ds.time_test_end = time.mktime(time.strptime("10.12.2021 00:00:00", "%d.%m.%Y %H:%M:%S"))
 
             ds.nr_sample = 15000
@@ -380,7 +380,7 @@ class DatasetConfiguration:
             ds.speed_limit = 0
             ds.time_train_start = time.mktime(time.strptime("01.09.2021 00:00:00", "%d.%m.%Y %H:%M:%S"))
             ds.time_train_end = time.mktime(time.strptime("01.10.2021 01:00:00", "%d.%m.%Y %H:%M:%S"))
-            ds.time_test_start = time.mktime(time.strptime("15.11.2021 00:00:00", "%d.%m.%Y %H:%M:%S"))
+            ds.time_test_start = time.mktime(time.strptime("10.11.2021 00:00:00", "%d.%m.%Y %H:%M:%S"))
             ds.time_test_end = time.mktime(time.strptime("10.12.2021 00:00:00", "%d.%m.%Y %H:%M:%S"))
 
             ds.nr_sample = 15000
@@ -403,7 +403,7 @@ class DatasetConfiguration:
             ds.speed_limit = 0
             ds.time_train_start = time.mktime(time.strptime("01.09.2021 00:00:00", "%d.%m.%Y %H:%M:%S"))
             ds.time_train_end = time.mktime(time.strptime("01.10.2021 01:00:00", "%d.%m.%Y %H:%M:%S"))
-            ds.time_test_start = time.mktime(time.strptime("15.11.2021 00:00:00", "%d.%m.%Y %H:%M:%S"))
+            ds.time_test_start = time.mktime(time.strptime("10.11.2021 00:00:00", "%d.%m.%Y %H:%M:%S"))
             ds.time_test_end = time.mktime(time.strptime("10.12.2021 00:00:00", "%d.%m.%Y %H:%M:%S"))
 
             ds.nr_sample = 15000
@@ -424,9 +424,9 @@ class DatasetConfiguration:
             ds.machine = 2
             ds.normalization = 'scale'
             ds.speed_limit = 0
-            ds.time_train_start = time.mktime(time.strptime("30.09.2021 00:00:00", "%d.%m.%Y %H:%M:%S"))
-            ds.time_train_end = time.mktime(time.strptime("30.09.2021 01:00:00", "%d.%m.%Y %H:%M:%S"))
-            ds.time_test_start = time.mktime(time.strptime("15.11.2021 00:00:00", "%d.%m.%Y %H:%M:%S"))
+            ds.time_train_start = time.mktime(time.strptime("01.09.2021 00:00:00", "%d.%m.%Y %H:%M:%S"))
+            ds.time_train_end = time.mktime(time.strptime("01.10.2021 01:00:00", "%d.%m.%Y %H:%M:%S"))
+            ds.time_test_start = time.mktime(time.strptime("10.11.2021 00:00:00", "%d.%m.%Y %H:%M:%S"))
             ds.time_test_end = time.mktime(time.strptime("10.12.2021 00:00:00", "%d.%m.%Y %H:%M:%S"))
 
             ds.nr_sample = 15000
