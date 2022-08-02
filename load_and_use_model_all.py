@@ -139,7 +139,7 @@ err_time_end = time.mktime(time.strptime("20.10.2021 21:00:00", "%d.%m.%Y %H:%M:
 
 # Not really cleare when the error ended, as the motor followed a different pattern of operation.
 err_time_start = time.mktime(time.strptime("09.02.2021 12:00:00", "%d.%m.%Y %H:%M:%S"))
-err_time_end = time.mktime(time.strptime("09.02.2021 16:20:00", "%d.%m.%Y %H:%M:%S"))
+err_time_end = time.mktime(time.strptime("09.02.2021 16:00:00", "%d.%m.%Y %H:%M:%S"))
 
 
 
