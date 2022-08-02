@@ -289,7 +289,7 @@ class Plotter:
 
         return res
 
-    def mean_absolute_vibration(self, limit=0, train=True, test=True, anomaly=False):
+    def mean_absolute_vibration(self, limit=0, train=True, test=True, anomaly=False, after_anomaly=False):
 
         fig, ax = plt.subplots()
         f = self.image_folder + self.name
@@ -318,11 +318,21 @@ class Plotter:
             f += "_anomaly"
             abs = np.absolute(self.X_anomaly)
             mean_vib = np.transpose(np.mean(abs, axis=1))
-            plt.scatter([datetime.fromtimestamp(x) for x in self.meta_train[:, 2]],
+            plt.scatter([datetime.fromtimestamp(x) for x in self.meta_anomaly[:, 2]],
                         mean_vib[0], c='lightcoral', label="anomaly vibx")
-            plt.scatter([datetime.fromtimestamp(x) for x in self.meta_train[:, 2]],
+            plt.scatter([datetime.fromtimestamp(x) for x in self.meta_anomaly[:, 2]],
                         mean_vib[1], c='firebrick', label="anomaly vibz")
             time_list = np.concatenate([time_list, self.meta_anomaly[:, 2]], 0)
+
+        if after_anomaly:
+            abs = np.absolute(self.X_after)
+            mean_vib = np.transpose(np.mean(abs, axis=1))
+            plt.scatter([datetime.fromtimestamp(x) for x in self.meta_after[:, 2]],
+                        mean_vib[0], c='limegreen', label="test vibx")
+            plt.scatter([datetime.fromtimestamp(x) for x in self.meta_after[:, 2]],
+                        mean_vib[1], c='forestgreen', label="test vibz")
+            time_list = np.concatenate([time_list, self.meta_anomaly[:, 2]], 0)
+
 
         width = np.diff(time_list).min()
         ax.xaxis_date()

@@ -187,7 +187,7 @@ p.meta_anomaly = meta_anomaly
 p.meta_after = meta_after
 
 after_anom = False
-
+'''
 # Plot the latent space
 # p.rpm_time()
 p.latent_space_complete(anomaly=True)
@@ -253,5 +253,5 @@ p.reconstruction_error(np.linspace(0, 3, 50), anomaly=True, train=True, after_an
 p.reconstruction_error(np.linspace(0, 3, 50), anomaly=True, train=False, after_anomaly=after_anom)
 # p.reconstruction_error_time_moving_avg(anomaly=True)'''
 
-p.mean_absolute_vibration(train=True, test=True, anomaly=True)
-# p.mean_absolute_vibration(train=False, test=True, anomaly=False)
+p.mean_absolute_vibration(train=True, test=True, anomaly=True, after_anomaly=after_anom)
+p.mean_absolute_vibration(train=False, test=True, anomaly=True, after_anomaly=after_anom)
