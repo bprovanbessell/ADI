@@ -342,7 +342,7 @@ class Plotter:
         if limit > 0:
             f += "_" + str(limit)
             plt.ylim(0, limit)
-        plt.title("Mean absolute vibration over time " + self.name)
+        plt.title("Mean absolute vibration over time")
         plt.xlabel("Sample timestamp")
         plt.ylabel("Vibration")
         # plt.figure(figsize=(6, 6))
