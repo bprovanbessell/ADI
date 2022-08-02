@@ -21,9 +21,9 @@ experiment_name = "Flux_Grundfoss"
 
 experiment_name = "all_july_test_sep_nov_PU7001"
 
-experiment_name = "flux_vib_grundfoss_9_feb"
+experiment_name = "flux_vib_grundfoss_9_feb_zoom"
 
-experiment_name = "all_july_test_sep_nov_grundfoss"
+# experiment_name = "all_july_test_sep_nov_grundfoss"
 
 ds_config.DatasetConfiguration().SetConfiguration(ds, data_path, experiment_name)
 
@@ -63,7 +63,7 @@ ds.data_summary()
 model_path = "9feb_models/"
 model_path = "all_model_PU7001/"
 model_path = "flux_vib_model/"
-model_path = "all_model_grundfoss/"
+# model_path = "all_model_grundfoss/"
 vae = convolutional_vae.ConvolutionalVAE(model_path=model_path)
 
 # so for all the different models, vibration, flux and current
@@ -82,7 +82,7 @@ model_name = "Vib_Grundfoss0114"
 model_name = "Flux_Grundfoss0057"
 model_name = "all_july_test_sep_nov_PU70010473"
 model_name = "flux_vib_modelflux_vib_grundfoss_9_feb0226"
-model_name = "all_july_test_sep_nov_grundfoss0492"
+# model_name = "all_july_test_sep_nov_grundfoss0492"
 
 vae.load_models(model_name)
 
@@ -97,7 +97,7 @@ print(vae.encoder.summary())
 print(vae.decoder.summary())
 
 """Plot without an anomaly"""
-
+'''
 p = plotter.Plotter()
 p.name = "VAE - All Measurements"
 p.model = vae

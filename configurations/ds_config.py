@@ -667,3 +667,26 @@ class DatasetConfiguration:
                                   "token": self.gpu_token,
                                   "org": org,
                                   "bucket": bucket}
+
+        if config_name == 'flux_vib_grundfoss_9_feb_zoom':
+            ds.name = config_name
+            ds.data_file = data_path + 'np_dataset.npy'
+            ds.metadata_file = data_path + 'np_metadata.npy'
+            ds.signal = 'flux_vib'
+            ds.machine = 0
+            ds.normalization = 'scale'
+            ds.speed_limit = 0
+            ds.time_train_start = time.mktime(time.strptime("01.01.2021 00:00:00", "%d.%m.%Y %H:%M:%S"))
+            ds.time_train_end = time.mktime(time.strptime("01.02.2021 00:00:00", "%d.%m.%Y %H:%M:%S"))
+            ds.time_test_start = time.mktime(time.strptime("09.02.2021 10:00:00", "%d.%m.%Y %H:%M:%S"))
+            ds.time_test_end = time.mktime(time.strptime("09.02.2021 22:00:00", "%d.%m.%Y %H:%M:%S"))
+
+            ds.nr_sample = 15000
+            url = "http://143.239.81.3:8086"
+            org = "Insight"
+            bucket = "ADI"
+            # train
+            ds.read_write_dict = {"url": url,
+                                  "token": self.gpu_token,
+                                  "org": org,
+                                  "bucket": bucket}
