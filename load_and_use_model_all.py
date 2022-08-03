@@ -26,7 +26,7 @@ experiment_name = "flux_vib_grundfoss_9_feb_zoom"
 # experiment_name = "all_july_test_sep_nov_grundfoss"
 
 # 25th november testing
-experiment_name = "vib_gcl_nov_error"
+experiment_name = "curr_gcl_nov_error"
 
 ds_config.DatasetConfiguration().SetConfiguration(ds, data_path, experiment_name)
 
@@ -58,8 +58,8 @@ ds.data_summary()
 # regen the results for curr (In prog), vib, flux, and all model (When done training)
 
 # model_path = "saved_models/"
-# model_path = "curr_final_model/"
-model_path = "vib_final_model/"
+model_path = "curr_final_model/"
+# model_path = "vib_final_model/"
 # model_path = "flux_final_model/"
 # model_path = "all_model_params/"
 
@@ -76,8 +76,8 @@ vae = convolutional_vae.ConvolutionalVAE(model_path=model_path)
 
 # we also need the layout/architecture of the model
 # model_name = "All_measurements_sept_oct_gcl_error0112"
-# model_name = "curr_oct_18_gcl_error0029"
-model_name = "vib_oct_18_gcl_error0012"
+model_name = "curr_oct_18_gcl_error0029"
+# model_name = "vib_oct_18_gcl_error0012"
 # model_name = 'flux_oct_18_gcl_error0042'
 # model_name = 'all_oct_18_gcl_error0121'
 
@@ -174,7 +174,7 @@ meta_after = meta_after.reshape(meta_after.shape[1:])
 # print(vae.model.summary())
 
 p = plotter.Plotter()
-p.name = "- VAE - Vibration"
+p.name = "- VAE - Current"
 p.model = vae
 p.X_train = ds.X_train
 p.X_test = data
@@ -223,7 +223,7 @@ pca.training(ds.X_train, None, None, None, None)
 
 # p = plotter.Plotter()
 
-p.name = "- PCA - Vibration"
+p.name = "- PCA - Current"
 p.model = pca
 # p.X_train = np.asarray(ds.X_train)
 # p.X_test = np.asarray(ds.X_test)
