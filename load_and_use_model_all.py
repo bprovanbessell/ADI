@@ -174,7 +174,6 @@ meta_after = meta_after.reshape(meta_after.shape[1:])
 # print(vae.model.summary())
 
 p = plotter.Plotter()
-# p.name = ds.name + "Vae"
 p.name = "- VAE - All Measurements"
 p.model = vae
 p.X_train = ds.X_train
@@ -186,25 +185,22 @@ p.meta_test = meta_test
 p.meta_anomaly = meta_anomaly
 p.meta_after = meta_after
 
-after_anom = False
+after_anom = True
 
 # Plot the latent space
-# p.rpm_time()
-p.latent_space_complete(anomaly=True)
-p.latent_space_complete(anomaly=False)
-p.plot_tsne(anomaly=True, train=False, after_anomaly=after_anom)
-p.plot_tsne(anomaly=True, train=True, after_anomaly=after_anom)
+# p.latent_space_complete(anomaly=True)
+# p.latent_space_complete(anomaly=False)
+# p.plot_tsne(anomaly=True, train=False, after_anomaly=after_anom)
+# p.plot_tsne(anomaly=True, train=True, after_anomaly=after_anom)
 
-# p.reconstruction_error_time(anomaly=True)
-
-# p.reconstruction_error_time(train=False)
+# reconstruction error over time
 p.reconstruction_error_time(anomaly=True, train=False, after_anomaly=after_anom)
 p.reconstruction_error_time(anomaly=True, train=True, after_anomaly=after_anom)
 p.reconstruction_error_time(limit=1.5)
-# p.roc()
-# for some reason only this is working
-p.reconstruction_error(np.linspace(0, 3, 50), anomaly=True, train=True, after_anomaly=after_anom)
-p.reconstruction_error(np.linspace(0, 3, 50), anomaly=True, train=False, after_anomaly=after_anom)
+
+# Reconstruction error bar chart
+# p.reconstruction_error(np.linspace(0, 3, 50), anomaly=True, train=True, after_anomaly=after_anom)
+# p.reconstruction_error(np.linspace(0, 3, 50), anomaly=True, train=False, after_anomaly=after_anom)
 
 # Compute the time to infer a number of points
 
@@ -218,22 +214,15 @@ p.reconstruction_error(np.linspace(0, 3, 50), anomaly=True, train=False, after_a
 # print(ds.X_train.shape)
 # print("time to infer a single point (avg)", (tinfer1 - tinfer0)/ds.X_train.shape[0])
 
-
-# p.reconstruction_error_time_moving_avg(anomaly=True)
-
-# p.pdf(np.linspace(-16, 0, 50))
-
 # print("upload reconstruction error to influx")
 # p.reconstruction_error_time_influx(True, True, model_name, write_dict)
 
-# look into code of PCA to make sure it all runs smoothly
 print("train pca model")
 pca = pca.PCAModel()
 pca.training(ds.X_train, None, None, None, None)
 
 # p = plotter.Plotter()
 
-# p.name = ds.name + "pca"
 p.name = "- PCA - All Measurements"
 p.model = pca
 # p.X_train = np.asarray(ds.X_train)
@@ -245,14 +234,12 @@ p.model = pca
 
 p.reconstruction_error_time(anomaly=True, train=False, after_anomaly=after_anom)
 p.reconstruction_error_time(anomaly=True, train=True, after_anomaly=after_anom)
-# p.reconstruction_error_time(limit=1.5)
-# p.roc()
-# for some reason only this is working
-# p.reconstruction_error(np.linspace(0, 3, 50), anomaly=True)
-p.reconstruction_error(np.linspace(0, 3, 50), anomaly=True, train=True, after_anomaly=after_anom)
-p.reconstruction_error(np.linspace(0, 3, 50), anomaly=True, train=False, after_anomaly=after_anom)
-# p.reconstruction_error_time_moving_avg(anomaly=True)'''
+
+# p.reconstruction_error(np.linspace(0, 3, 50), anomaly=True, train=True, after_anomaly=after_anom)
+# p.reconstruction_error(np.linspace(0, 3, 50), anomaly=True, train=False, after_anomaly=after_anom)
+# '''
 
 # mean absolute vibration
+# Still not working totally correctly with
 p.mean_absolute_vibration(train=True, test=True, anomaly=True, after_anomaly=after_anom)
 p.mean_absolute_vibration(train=False, test=True, anomaly=True, after_anomaly=after_anom)
