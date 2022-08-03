@@ -188,10 +188,10 @@ p.meta_after = meta_after
 after_anom = True
 
 # Plot the latent space
-# p.latent_space_complete(anomaly=True)
-# p.latent_space_complete(anomaly=False)
-# p.plot_tsne(anomaly=True, train=False, after_anomaly=after_anom)
-# p.plot_tsne(anomaly=True, train=True, after_anomaly=after_anom)
+p.latent_space_complete(anomaly=True)
+p.latent_space_complete(anomaly=False)
+p.plot_tsne(anomaly=True, train=False, after_anomaly=after_anom)
+p.plot_tsne(anomaly=True, train=True, after_anomaly=after_anom)
 
 # reconstruction error over time
 p.reconstruction_error_time(anomaly=True, train=False, after_anomaly=after_anom)
@@ -199,8 +199,8 @@ p.reconstruction_error_time(anomaly=True, train=True, after_anomaly=after_anom)
 p.reconstruction_error_time(limit=1.5)
 
 # Reconstruction error bar chart
-# p.reconstruction_error(np.linspace(0, 3, 50), anomaly=True, train=True, after_anomaly=after_anom)
-# p.reconstruction_error(np.linspace(0, 3, 50), anomaly=True, train=False, after_anomaly=after_anom)
+p.reconstruction_error(np.linspace(0, 3, 50), anomaly=True, train=True, after_anomaly=after_anom)
+p.reconstruction_error(np.linspace(0, 3, 50), anomaly=True, train=False, after_anomaly=after_anom)
 
 # Compute the time to infer a number of points
 
@@ -235,8 +235,8 @@ p.model = pca
 p.reconstruction_error_time(anomaly=True, train=False, after_anomaly=after_anom)
 p.reconstruction_error_time(anomaly=True, train=True, after_anomaly=after_anom)
 
-# p.reconstruction_error(np.linspace(0, 3, 50), anomaly=True, train=True, after_anomaly=after_anom)
-# p.reconstruction_error(np.linspace(0, 3, 50), anomaly=True, train=False, after_anomaly=after_anom)
+p.reconstruction_error(np.linspace(0, 3, 50), anomaly=True, train=True, after_anomaly=after_anom)
+p.reconstruction_error(np.linspace(0, 3, 50), anomaly=True, train=False, after_anomaly=after_anom)
 # '''
 
 # mean absolute vibration
