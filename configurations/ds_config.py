@@ -426,8 +426,8 @@ class DatasetConfiguration:
             ds.speed_limit = 0
             ds.time_train_start = time.mktime(time.strptime("01.09.2021 00:00:00", "%d.%m.%Y %H:%M:%S"))
             ds.time_train_end = time.mktime(time.strptime("01.10.2021 01:00:00", "%d.%m.%Y %H:%M:%S"))
-            ds.time_test_start = time.mktime(time.strptime("10.11.2021 00:00:00", "%d.%m.%Y %H:%M:%S"))
-            ds.time_test_end = time.mktime(time.strptime("10.12.2021 00:00:00", "%d.%m.%Y %H:%M:%S"))
+            ds.time_test_start = time.mktime(time.strptime("24.11.2021 00:00:00", "%d.%m.%Y %H:%M:%S"))
+            ds.time_test_end = time.mktime(time.strptime("02.12.2021 00:00:00", "%d.%m.%Y %H:%M:%S"))
 
             ds.nr_sample = 15000
             url = "http://143.239.81.3:8086"
