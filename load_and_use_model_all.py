@@ -131,7 +131,7 @@ p.mean_absolute_vibration(train=False, test=True)
 err_time_start = time.mktime(time.strptime("25.11.2021 13:40:00", "%d.%m.%Y %H:%M:%S"))
 # might need to change this, still not sure exactly when this ended,
 # we may want to just remove the after anomaly segment,as it my not go back to normal for the data we have
-err_time_end = time.mktime(time.strptime("30.11.2021 13:40:00", "%d.%m.%Y %H:%M:%S"))
+err_time_end = time.mktime(time.strptime("30.11.2021 10:00:00", "%d.%m.%Y %H:%M:%S"))
 
 # 9th february error, ADI says its at 13:25, but reconstruction error can pinpoint it to 12:20
 # So we want to reproduce the graphs
