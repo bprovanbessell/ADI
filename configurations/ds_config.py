@@ -343,7 +343,7 @@ class DatasetConfiguration:
 
         # just test this dataset on the models we have trained for GCL already, we don't need new models
         # training for these models was actually september
-        if config_name == 'curr_nov_gcl_error':
+        if config_name == 'curr_gcl_nov_error':
             ds.name = config_name
             ds.data_file = data_path + 'np_dataset.npy'
             ds.metadata_file = data_path + 'np_metadata.npy'
