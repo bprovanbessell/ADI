@@ -132,7 +132,7 @@ class Plotter:
         ax1.hist(self.model_mse(self.X_test), bins=bins, density=True, label='Testing Sample', alpha=0.5, hatch='\\', edgecolor='k', fill=True)
         if anomaly:
             f += "_anomaly"
-            ax1.hist(self.model_mse(self.X_anomaly), bins=bins, density=True, label='Anomaly Sample', alpha=0.5, hatch='+', edgecolor='k', fill=True)
+            ax1.hist(self.model_mse(self.X_anomaly), bins=bins, density=True, label='Anomaly Sample', alpha=0.5, hatch='-', edgecolor='k', fill=True)
         if after_anomaly:
             f += "_after_anomaly"
             ax1.hist(self.model_mse(self.X_after), bins=bins, density=True, label='After Anomaly Sample', alpha=0.5, hatch='/', edgecolor='k', fill=True)
