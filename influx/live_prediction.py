@@ -24,9 +24,6 @@ from otosense_api import OtosenseApi
 
 
 def get_last_interval_reconstruction_error():
-    """
-
-    """
     now = datetime.fromtimestamp(time.time())
     # should be rounded
     twenty_mins_ago = now - timedelta(minutes=20)

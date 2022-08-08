@@ -44,7 +44,7 @@ model = convolutional_vae.ConvolutionalVAE(model_path=model_path)
 model.name = experiment_name
 
 # when training the best model (with only one set of possible parameters),
-# remember to set the round limit to 1, r remove it, otherwise it will throw an error
+# remember to set the round limit to 1, or remove it, otherwise it will throw an error
 t = talos.Scan(x=ds.X_train,
                y=ds.X_train,
                model=model.training,

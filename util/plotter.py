@@ -128,14 +128,14 @@ class Plotter:
         fig, ax1 = plt.subplots(1, 1, figsize=(8, 8))
         f = self.image_folder + self.name
         if train:
-            ax1.hist(self.model_mse(self.X_train), bins=bins, range=[0, 2.5],density=True, label='Training Sample', alpha=1.0)
-        ax1.hist(self.model_mse(self.X_test), bins=bins, density=True, label='Testing Sample', alpha=0.5)
+            ax1.hist(self.model_mse(self.X_train), bins=bins, range=[0, 2.5],density=True, label='Training Sample', alpha=1.0, hatch='/', fill=True)
+        ax1.hist(self.model_mse(self.X_test), bins=bins, density=True, label='Testing Sample', alpha=0.5, hatch='\\', fill=True)
         if anomaly:
             f += "_anomaly"
-            ax1.hist(self.model_mse(self.X_anomaly), bins=bins, density=True, label='Anomaly Sample', alpha=0.5)
+            ax1.hist(self.model_mse(self.X_anomaly), bins=bins, density=True, label='Anomaly Sample', alpha=0.5, hatch='+', fill=True)
         if after_anomaly:
             f += "_after_anomaly"
-            ax1.hist(self.model_mse(self.X_after), bins=bins, density=True, label='After Anomaly Sample', alpha=0.5)
+            ax1.hist(self.model_mse(self.X_after), bins=bins, density=True, label='After Anomaly Sample', alpha=0.5, hatch='\\', fill=True)
         ax1.legend()
         ax1.set_xlabel('Reconstruction Error')
         plt.title("Reconstruction Error " + self.name)

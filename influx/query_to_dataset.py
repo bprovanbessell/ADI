@@ -61,7 +61,7 @@ def query_to_dataset(start, end, signal, nr_sample, machine, speed_limit, write_
 
     print("init shape: ", np_dataset.shape)
 #     query to get the 20 minute interval
-#     writer it to the dataset
+#     write it to the dataset
     if signal == "all":
         columns_str = (get_columns_str(columns[0]), get_columns_str(columns[1]))
 
