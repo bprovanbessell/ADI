@@ -129,7 +129,7 @@ class Plotter:
         f = self.image_folder + self.name
         if train:
             ax1.hist(self.model_mse(self.X_train), bins=bins, range=[0, 2.5],density=True, label='Training Sample', alpha=1.0, hatch='/', edgecolor='k', fill=True)
-        ax1.hist(self.model_mse(self.X_test), bins=bins, density=True, label='Testing Sample', alpha=0.5, hatch='\\', edgecolour='k', fill=True)
+        ax1.hist(self.model_mse(self.X_test), bins=bins, density=True, label='Testing Sample', alpha=0.5, hatch='\\', edgecolor='k', fill=True)
         if anomaly:
             f += "_anomaly"
             ax1.hist(self.model_mse(self.X_anomaly), bins=bins, density=True, label='Anomaly Sample', alpha=0.5, hatch='+', edgecolor='k', fill=True)
