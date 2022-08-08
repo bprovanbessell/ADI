@@ -11,13 +11,13 @@ data_path = '/Volumes/Elements/ADI/data_tm20/'
 ds = dataset.Dataset()
 
 # 18th of october error
-experiment_name = "all_oct_18_gcl_error"
+# experiment_name = "all_oct_18_gcl_error"
 
 # For 9th of february
 # experiment_name = "Flux_Grundfoss"
 
 # 25th november testing
-# experiment_name = "curr_gcl_nov_error"
+experiment_name = "all_gcl_nov_error"
 
 ds_config.DatasetConfiguration().SetConfiguration(ds, data_path, experiment_name)
 
@@ -110,14 +110,14 @@ p.mean_absolute_vibration(train=False, test=True)
 """Plotting with an anomaly"""
 
 # 18th october error
-err_time_start = time.mktime(time.strptime("18.10.2021 09:20:00", "%d.%m.%Y %H:%M:%S"))
-err_time_end = time.mktime(time.strptime("20.10.2021 21:00:00", "%d.%m.%Y %H:%M:%S"))
+# err_time_start = time.mktime(time.strptime("18.10.2021 09:20:00", "%d.%m.%Y %H:%M:%S"))
+# err_time_end = time.mktime(time.strptime("20.10.2021 21:00:00", "%d.%m.%Y %H:%M:%S"))
 
 # 25th november error
-# err_time_start = time.mktime(time.strptime("25.11.2021 13:40:00", "%d.%m.%Y %H:%M:%S"))
+err_time_start = time.mktime(time.strptime("25.11.2021 13:40:00", "%d.%m.%Y %H:%M:%S"))
 # might need to change this, still not sure exactly when this ended,
 # we may want to just remove the after anomaly segment,as it my not go back to normal for the data we have
-# err_time_end = time.mktime(time.strptime("30.11.2021 09:00:00", "%d.%m.%Y %H:%M:%S"))
+err_time_end = time.mktime(time.strptime("30.11.2021 09:00:00", "%d.%m.%Y %H:%M:%S"))
 
 # 9th february error, ADI says its at 13:25, but reconstruction error can pinpoint it to 12:20
 # err_time_start = time.mktime(time.strptime("09.02.2021 12:00:00", "%d.%m.%Y %H:%M:%S"))
