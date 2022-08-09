@@ -11,11 +11,15 @@ data_path = '/Volumes/Elements/ADI/data_tm20/'
 ds = dataset.Dataset()
 
 # 18th of october error
-# experiment_name = "all_oct_18_gcl_error"
+experiment_name = "all_oct_18_gcl_error"
+experiment_name = "flux_oct_18_gcl_error"
+experiment_name = "vib_oct_18_gcl_error"
+experiment_name = "current_oct_18_gcl_error"
+
 
 # For 9th of february
 # experiment_name = "Flux_Grundfoss"
-experiment_name = 'flux_vib_grundfoss_9_feb'
+# experiment_name = 'flux_vib_grundfoss_9_feb'
 
 # 25th november testing
 # experiment_name = "all_gcl_nov_error"
@@ -45,15 +49,17 @@ ds.data_summary()
 
 # 18th october
 # model_path = "saved_models/"
-# model_path = "curr_final_model/"
-# model_path = "vib_final_model/"
-# model_path = "flux_final_model/"
-# model_path = "saved_models/all_model_params/"
+model_path = "saved_models/all_model_params/"
+# model_path = "saved_models/flux_final_model/"
+# model_path = "saved_models/vib_final_model/"
+# model_path = "saved_models/curr_final_model/"
+
+
 
 # 9th feb
 # model_path = "9feb_models/"
 # model_path = "all_model_PU7001/"
-model_path = "flux_vib_model/"
+# model_path = "flux_vib_model/"
 # model_path = "all_model_grundfoss/"
 vae = convolutional_vae.ConvolutionalVAE(model_path=model_path)
 
@@ -64,16 +70,17 @@ vae = convolutional_vae.ConvolutionalVAE(model_path=model_path)
 
 # we also need the layout/architecture of the model
 # model_name = "All_measurements_sept_oct_gcl_error0112"
-# model_name = "curr_oct_18_gcl_error0029"
-# model_name = "vib_oct_18_gcl_error0012"
+model_name = 'all_oct_18_gcl_error0121'
 # model_name = 'flux_oct_18_gcl_error0042'
-# model_name = 'all_oct_18_gcl_error0121'
+# model_name = "vib_oct_18_gcl_error0012"
+# model_name = "curr_oct_18_gcl_error0029"
+
 
 
 # model_name = "Vib_Grundfoss0114"
 # model_name = "Flux_Grundfoss0057"
 # model_name = "all_july_test_sep_nov_PU70010473"
-model_name = "flux_vib_modelflux_vib_grundfoss_9_feb0226"
+# model_name = "flux_vib_modelflux_vib_grundfoss_9_feb0226"
 # model_name = "all_july_test_sep_nov_grundfoss0492"
 
 vae.load_models(model_name)
@@ -111,8 +118,8 @@ p.mean_absolute_vibration(train=False, test=True)
 """Plotting with an anomaly"""
 
 # 18th october error
-# err_time_start = time.mktime(time.strptime("18.10.2021 09:20:00", "%d.%m.%Y %H:%M:%S"))
-# err_time_end = time.mktime(time.strptime("20.10.2021 21:00:00", "%d.%m.%Y %H:%M:%S"))
+err_time_start = time.mktime(time.strptime("18.10.2021 09:20:00", "%d.%m.%Y %H:%M:%S"))
+err_time_end = time.mktime(time.strptime("20.10.2021 21:00:00", "%d.%m.%Y %H:%M:%S"))
 
 # 25th november error
 # err_time_start = time.mktime(time.strptime("25.11.2021 13:40:00", "%d.%m.%Y %H:%M:%S"))
@@ -121,8 +128,8 @@ p.mean_absolute_vibration(train=False, test=True)
 # err_time_end = time.mktime(time.strptime("30.11.2021 09:00:00", "%d.%m.%Y %H:%M:%S"))
 
 # 9th february error, ADI says its at 13:25, but reconstruction error can pinpoint it to 12:20
-err_time_start = time.mktime(time.strptime("09.02.2021 12:00:00", "%d.%m.%Y %H:%M:%S"))
-err_time_end = time.mktime(time.strptime("09.02.2021 16:00:00", "%d.%m.%Y %H:%M:%S"))
+# err_time_start = time.mktime(time.strptime("09.02.2021 12:00:00", "%d.%m.%Y %H:%M:%S"))
+# err_time_end = time.mktime(time.strptime("09.02.2021 16:00:00", "%d.%m.%Y %H:%M:%S"))
 
 
 
@@ -147,7 +154,7 @@ meta_after = ds.metadata_test[rows,:]
 meta_after = meta_after.reshape(meta_after.shape[1:])
 
 p = plotter.Plotter()
-p.name = "- VAE - Flux and Vibration"
+p.name = "- VAE - All Measurements"
 p.model = vae
 p.X_train = ds.X_train
 p.X_test = data
@@ -163,8 +170,8 @@ after_anom = True
 # Plot the latent space
 # p.latent_space_complete(anomaly=True)
 # p.latent_space_complete(anomaly=False)
-# p.plot_tsne(anomaly=True, train=False, after_anomaly=after_anom)
-# p.plot_tsne(anomaly=True, train=True, after_anomaly=after_anom)
+p.plot_tsne(anomaly=True, train=False, after_anomaly=after_anom)
+p.plot_tsne(anomaly=True, train=True, after_anomaly=after_anom)
 
 # reconstruction error over time
 p.reconstruction_error_time(anomaly=True, train=False, after_anomaly=after_anom)
@@ -172,8 +179,8 @@ p.reconstruction_error_time(anomaly=True, train=True, after_anomaly=after_anom)
 p.reconstruction_error_time(limit=1.5)
 
 # Reconstruction error bar chart
-# p.reconstruction_error(np.linspace(0, 3, 50), anomaly=True, train=True, after_anomaly=after_anom)
-# p.reconstruction_error(np.linspace(0, 3, 50), anomaly=True, train=False, after_anomaly=after_anom)
+p.reconstruction_error(np.linspace(0, 3, 50), anomaly=True, train=True, after_anomaly=after_anom)
+p.reconstruction_error(np.linspace(0, 3, 50), anomaly=True, train=False, after_anomaly=after_anom)
 
 # Compute the time to infer a number of points
 
@@ -196,7 +203,7 @@ pca.training(ds.X_train, None, None, None, None)
 
 # p = plotter.Plotter()
 
-p.name = "- PCA - FLux and Vibration"
+p.name = "- PCA - All Measurements"
 p.model = pca
 
 # Add the same plots that we do for the vae models
@@ -204,8 +211,8 @@ p.model = pca
 p.reconstruction_error_time(anomaly=True, train=False, after_anomaly=after_anom)
 p.reconstruction_error_time(anomaly=True, train=True, after_anomaly=after_anom)
 
-# p.reconstruction_error(np.linspace(0, 3, 50), anomaly=True, train=True, after_anomaly=after_anom)
-# p.reconstruction_error(np.linspace(0, 3, 50), anomaly=True, train=False, after_anomaly=after_anom)
+p.reconstruction_error(np.linspace(0, 3, 50), anomaly=True, train=True, after_anomaly=after_anom)
+p.reconstruction_error(np.linspace(0, 3, 50), anomaly=True, train=False, after_anomaly=after_anom)
 # '''
 
 # mean absolute vibration (use with all measurements dataset)
