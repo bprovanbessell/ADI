@@ -12,9 +12,9 @@ ds = dataset.Dataset()
 
 # 18th of october error
 experiment_name = "all_oct_18_gcl_error"
-experiment_name = "flux_oct_18_gcl_error"
-experiment_name = "vib_oct_18_gcl_error"
-experiment_name = "current_oct_18_gcl_error"
+# experiment_name = "flux_oct_18_gcl_error"
+# experiment_name = "vib_oct_18_gcl_error"
+# experiment_name = "curr_oct_18_gcl_error"
 
 
 # For 9th of february
