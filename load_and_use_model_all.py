@@ -12,8 +12,8 @@ ds = dataset.Dataset()
 
 # 18th of october error
 # experiment_name = "all_oct_18_gcl_error"
-experiment_name = "flux_oct_18_gcl_error"
-# experiment_name = "vib_oct_18_gcl_error"
+# experiment_name = "flux_oct_18_gcl_error"
+experiment_name = "vib_oct_18_gcl_error"
 # experiment_name = "curr_oct_18_gcl_error"
 
 
@@ -50,8 +50,8 @@ ds.data_summary()
 # 18th october
 # model_path = "saved_models/"
 # model_path = "saved_models/all_model_params/"
-model_path = "saved_models/flux_final_model/"
-# model_path = "saved_models/vib_final_model/"
+# model_path = "saved_models/flux_final_model/"
+model_path = "saved_models/vib_final_model/"
 # model_path = "saved_models/curr_final_model/"
 
 
@@ -71,8 +71,8 @@ vae = convolutional_vae.ConvolutionalVAE(model_path=model_path)
 # we also need the layout/architecture of the model
 # model_name = "All_measurements_sept_oct_gcl_error0112"
 # model_name = 'all_oct_18_gcl_error0121'
-model_name = 'flux_oct_18_gcl_error0042'
-# model_name = "vib_oct_18_gcl_error0012"
+# model_name = 'flux_oct_18_gcl_error0042'
+model_name = "vib_oct_18_gcl_error0012"
 # model_name = "curr_oct_18_gcl_error0029"
 
 
@@ -154,7 +154,7 @@ meta_after = ds.metadata_test[rows,:]
 meta_after = meta_after.reshape(meta_after.shape[1:])
 
 p = plotter.Plotter()
-p.name = "- VAE - Flux"
+p.name = "- VAE - Vibration"
 p.model = vae
 p.X_train = ds.X_train
 p.X_test = data
@@ -203,7 +203,7 @@ pca.training(ds.X_train, None, None, None, None)
 
 # p = plotter.Plotter()
 
-p.name = "- PCA - Flux"
+p.name = "- PCA - Vibration"
 p.model = pca
 
 # Add the same plots that we do for the vae models
