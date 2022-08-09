@@ -89,31 +89,60 @@ class Plotter:
         # display a 2D plot of the digit classes in the latent space
         latent_space_tsne = manifold.TSNE(2, verbose=True, n_iter=2000)
         z = self.model.encode(self.X_test)
+        test_length = 0
+        train_length = 0
+        anomaly_length = 0
+        after_anomaly_length = 0
+
         color = ['g'] * z.shape[0]
-        markers = ['s'] * z.shape[0]
+        test_length = z.shape[0]
+        anomaly_length = test_length
+        train_length = test_length
+        after_anomaly_length = test_length
+        # markers = ['s'] * z.shape[0]
         z_test = self.model.encode(self.X_test)
         plt.figure(figsize=(6, 6))
         if anomaly:
             z_anomaly = self.model.encode(self.X_anomaly)
             z = np.concatenate([z, z_anomaly], 0)
             color = np.concatenate([color, ['r'] * z_anomaly.shape[0]], 0)
-            markers = np.concatenate([markers, ['o'] * z_anomaly.shape[0]], 0)
+            anomaly_length += z_anomaly.shape[0]
+            train_length = anomaly_length
+            after_anomaly_length = anomaly_length
+            # markers = np.concatenate([markers, ['o'] * z_anomaly.shape[0]], 0)
         if train:
             z_train = self.model.encode(self.X_train)
             z = np.concatenate([z, z_train], 0)
             color = np.concatenate([color, ['b'] * z_train.shape[0]], 0)
-            markers = np.concatenate([markers, ['D'] * z_train.shape[0]], 0)
+            train_length += z_train.shape[0]
+            after_anomaly_length = train_length
+            # markers = np.concatenate([markers, ['D'] * z_train.shape[0]], 0)
         if after_anomaly:
             z_after_anom = self.model.encode(self.X_after)
             z = np.concatenate([z, z_after_anom], 0)
             color = np.concatenate([color, ['g'] * z_after_anom.shape[0]], 0)
-            markers = np.concatenate([markers, ['s'] * z_after_anom.shape[0]], 0)
+            after_anomaly_length += z_after_anom.shape[0]
+            # markers = np.concatenate([markers, ['s'] * z_after_anom.shape[0]], 0)
 
 
         xa_tsne = latent_space_tsne.fit_transform(z)
         # see if this works, otherwise we have to do each one seperately...
-        plt.scatter(xa_tsne[:, 0], xa_tsne[:, 1],
-                    c=color, alpha=0.5, marker=markers)
+        # you always have test
+        plt.scatter(xa_tsne[0:test_length, 0], xa_tsne[0:test_length, 1],
+                    c='g', alpha=0.5, marker='s')
+
+        if anomaly:
+            plt.scatter(xa_tsne[test_length:anomaly_length, 0], xa_tsne[test_length:anomaly_length, 1],
+                        c='r', alpha=0.5, marker='o')
+
+        if train:
+            plt.scatter(xa_tsne[after_anomaly_length:train_length, 0], xa_tsne[after_anomaly_length:train_length, 1],
+                        c='b', alpha=0.5, marker='D')
+
+        if after_anomaly:
+            plt.scatter(xa_tsne[train_length:after_anomaly_length, 0], xa_tsne[train_length:after_anomaly_length, 1],
+                        c='g', alpha=0.5, marker='s')
+
         plt.title("t-SNE Representation of latent space " + self.name)
         f = self.image_folder + self.name
         if anomaly:
