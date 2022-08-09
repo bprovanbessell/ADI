@@ -90,25 +90,30 @@ class Plotter:
         latent_space_tsne = manifold.TSNE(2, verbose=True, n_iter=2000)
         z = self.model.encode(self.X_test)
         color = ['g'] * z.shape[0]
+        markers = ['s'] * z.shape[0]
         z_test = self.model.encode(self.X_test)
         plt.figure(figsize=(6, 6))
         if anomaly:
             z_anomaly = self.model.encode(self.X_anomaly)
             z = np.concatenate([z, z_anomaly], 0)
             color = np.concatenate([color, ['r'] * z_anomaly.shape[0]], 0)
+            markers = np.concatenate([markers, ['o'] * z_anomaly.shape[0]], 0)
         if train:
             z_train = self.model.encode(self.X_train)
             z = np.concatenate([z, z_train], 0)
             color = np.concatenate([color, ['b'] * z_train.shape[0]], 0)
+            markers = np.concatenate([markers, ['D'] * z_train.shape[0]], 0)
         if after_anomaly:
             z_after_anom = self.model.encode(self.X_after)
             z = np.concatenate([z, z_after_anom], 0)
             color = np.concatenate([color, ['g'] * z_after_anom.shape[0]], 0)
+            markers = np.concatenate([markers, ['s'] * z_after_anom.shape[0]], 0)
 
 
         xa_tsne = latent_space_tsne.fit_transform(z)
+        # see if this works, otherwise we have to do each one seperately...
         plt.scatter(xa_tsne[:, 0], xa_tsne[:, 1],
-                    c=color, alpha=0.5)
+                    c=color, alpha=0.5, marker=markers)
         plt.title("t-SNE Representation of latent space " + self.name)
         f = self.image_folder + self.name
         if anomaly:
@@ -198,10 +203,10 @@ class Plotter:
         if test:
             time_list = self.meta_test[:, 2]
             plt.scatter([datetime.fromtimestamp(x) for x in self.meta_test[:, 2]],
-                        self.model_mse(self.X_test), c='g')
+                        self.model_mse(self.X_test), c='g', marker='s')
         if train:
             f += "_train"
-            plt.scatter([datetime.fromtimestamp(x) for x in self.meta_train[:, 2]], self.model_mse(self.X_train), c='b')
+            plt.scatter([datetime.fromtimestamp(x) for x in self.meta_train[:, 2]], self.model_mse(self.X_train), c='b', marker='D')
             if test:
                 time_list = np.concatenate([time_list, self.meta_train[:, 2]], 0)
             else:
@@ -210,13 +215,13 @@ class Plotter:
         if anomaly:
             f += "_anomaly"
             plt.scatter([datetime.fromtimestamp(x) for x in self.meta_anomaly[:, 2]],
-                        self.model_mse(self.X_anomaly), c='r')
+                        self.model_mse(self.X_anomaly), c='r', marker='o')
             time_list = np.concatenate([time_list, self.meta_anomaly[:, 2]], 0)
 
         if after_anomaly:
             f += "_after"
             plt.scatter([datetime.fromtimestamp(x) for x in self.meta_after[:, 2]],
-                        self.model_mse(self.X_after), c='g')
+                        self.model_mse(self.X_after), c='g', marker='s')
             time_list = np.concatenate([time_list, self.meta_after[:, 2]], 0)
 
         width = np.diff(time_list).min()
