@@ -332,17 +332,17 @@ class Plotter:
             mean_vib = np.transpose(np.mean(abs, axis=1))
             time_list = self.meta_test[:, 2]
             plt.scatter([datetime.fromtimestamp(x) for x in self.meta_test[:, 2]],
-                        mean_vib[0], c='limegreen', label="test vibx")
+                        mean_vib[0], c='limegreen', label="test vibx", marker='s')
             plt.scatter([datetime.fromtimestamp(x) for x in self.meta_test[:, 2]],
-                        mean_vib[1], c='forestgreen', label="test vibz")
+                        mean_vib[1], c='forestgreen', label="test vibz", marker='s')
         if train:
             f += "_train"
             abs = np.absolute(self.X_train)
             mean_vib = np.transpose(np.mean(abs, axis=1))
             plt.scatter([datetime.fromtimestamp(x) for x in self.meta_train[:, 2]],
-                        mean_vib[0], c='cornflowerblue', label="train vibx")
+                        mean_vib[0], c='cornflowerblue', label="train vibx", marker='D')
             plt.scatter([datetime.fromtimestamp(x) for x in self.meta_train[:, 2]],
-                        mean_vib[1], c='royalblue', label="train vibz")
+                        mean_vib[1], c='royalblue', label="train vibz", marker='D')
             if test:
                 time_list = np.concatenate([time_list, self.meta_train[:, 2]], 0)
             else:
@@ -353,18 +353,18 @@ class Plotter:
             abs = np.absolute(self.X_anomaly)
             mean_vib = np.transpose(np.mean(abs, axis=1))
             plt.scatter([datetime.fromtimestamp(x) for x in self.meta_anomaly[:, 2]],
-                        mean_vib[0], c='lightcoral', label="anomaly vibx")
+                        mean_vib[0], c='lightcoral', label="anomaly vibx", marker='o')
             plt.scatter([datetime.fromtimestamp(x) for x in self.meta_anomaly[:, 2]],
-                        mean_vib[1], c='firebrick', label="anomaly vibz")
+                        mean_vib[1], c='firebrick', label="anomaly vibz", marker='o')
             time_list = np.concatenate([time_list, self.meta_anomaly[:, 2]], 0)
 
         if after_anomaly:
             abs = np.absolute(self.X_after)
             mean_vib = np.transpose(np.mean(abs, axis=1))
             plt.scatter([datetime.fromtimestamp(x) for x in self.meta_after[:, 2]],
-                        mean_vib[0], c='limegreen', label="test vibx")
+                        mean_vib[0], c='limegreen', label="test vibx", marker='s')
             plt.scatter([datetime.fromtimestamp(x) for x in self.meta_after[:, 2]],
-                        mean_vib[1], c='forestgreen', label="test vibz")
+                        mean_vib[1], c='forestgreen', label="test vibz", marker='s')
             time_list = np.concatenate([time_list, self.meta_anomaly[:, 2]], 0)
 
 
